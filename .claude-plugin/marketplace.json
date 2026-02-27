@@ -4,8 +4,8 @@
     "name": "Krzysztof Surdy"
   },
   "metadata": {
-    "description": "Agent AI skill sets for Design Patterns, Refactoring, and SOLID Principles",
-    "version": "2.0.0"
+    "description": "Agent AI skill sets — Knowledge (Design Patterns, Refactoring, SOLID), Workflows (Ticket Lifecycle, PR Writing, Report Generation), and Frameworks (Symfony)",
+    "version": "3.0.0"
   },
   "plugins": [
     {
@@ -14,7 +14,7 @@
       "source": "./",
       "strict": false,
       "skills": [
-        "./skills/design-patterns"
+        "./skills/knowledge/design-patterns"
       ]
     },
     {
@@ -23,7 +23,7 @@
       "source": "./",
       "strict": false,
       "skills": [
-        "./skills/refactoring"
+        "./skills/knowledge/refactoring"
       ]
     },
     {
@@ -32,7 +32,52 @@
       "source": "./",
       "strict": false,
       "skills": [
-        "./skills/solid"
+        "./skills/knowledge/solid"
+      ]
+    },
+    {
+      "name": "ticket-workflow",
+      "description": "End-to-end ticket workflow — from ticket analysis through investigation, planning, TDD implementation, committing, and PR creation. Adapts to your environment via a supplement file created on first run.",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/workflows/ticket-workflow"
+      ]
+    },
+    {
+      "name": "pr-message-writer",
+      "description": "Write comprehensive pull request messages with structured technical documentation, testing instructions, and verification queries. Framework-agnostic with customizable templates.",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/workflows/pr-message-writer"
+      ]
+    },
+    {
+      "name": "report-generator",
+      "description": "Generate a polished standalone HTML report summarizing changes, findings, debug investigations, or architectural decisions. Opens automatically in the browser.",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/workflows/report-generator"
+      ]
+    },
+    {
+      "name": "agentic-rules-writer",
+      "description": "Generate a rules file for any AI coding agent. Interactive setup that scans installed skills, asks about workflow preferences, and writes a tailored instruction file for Claude Code, Cursor, Windsurf, Copilot, Gemini, Roo Code, or Amp. Supports global, project team-shared, and project dev-specific scopes.",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/workflows/agentic-rules-writer"
+      ]
+    },
+    {
+      "name": "symfony-virtuoso",
+      "description": "All 38 Symfony component skills — APIs, code patterns, configuration, and common use cases for PHP 8.3+ and Symfony 7.x",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/frameworks/php/symfony"
       ]
     }
   ]
