@@ -2,26 +2,26 @@
 
 ## Overview
 
-A Long Method is a code smell where a method contains excessive lines of code, typically more than ten lines. Methods that grow incrementally without refactoring become bloated, difficult to understand, and hard to maintain. The cumulative effect of "just adding a few more lines" creates unwieldy functions that lack clarity and obscure intent.
+A Long Method is a code smell indicating that a method has accumulated far more logic than it should contain -- generally anything beyond ten lines deserves scrutiny. Methods tend to grow organically as developers add "just one more thing," and over time they become dense, tangled, and resistant to change. The longer a method gets, the harder it is to name accurately, test thoroughly, and reason about confidently.
 
 ## Why It's a Problem
 
-- **Reduced Readability**: Long methods are harder to understand at a glance
-- **Lower Reusability**: Tightly-coupled logic cannot be extracted and reused elsewhere
-- **Testing Complexity**: Large methods require more test cases and setup
-- **Hidden Duplication**: Similar logic can hide within long methods, creating maintenance burdens
-- **Performance Obscurity**: Genuine optimization opportunities are hidden among unnecessary code
-- **Maintenance Costs**: Changes to one feature often require modifying the entire method
+- **Hard to Read**: Dense methods force readers to hold too much context in their head at once
+- **Difficult to Reuse**: When logic is tangled together inside a single method, individual pieces cannot be extracted for use elsewhere
+- **Painful to Test**: Each additional responsibility in a method multiplies the number of test scenarios required
+- **Duplication Hides in Plain Sight**: Repeated patterns buried inside long methods are easy to miss, leading to inconsistent fixes
+- **Optimization Blind Spots**: Real performance bottlenecks get lost among irrelevant code
+- **Risky to Modify**: Touching one part of a long method risks breaking unrelated behavior in the same block
 
 ## Signs and Symptoms
 
-- Methods exceeding 10-20 lines of code
-- Methods with multiple levels of indentation (nested loops, conditionals)
-- Local variables that serve only temporary purposes
-- Methods doing multiple unrelated tasks
-- Difficulty naming the method accurately (if it requires "and/or", it's doing too much)
-- Large conditional blocks handling different scenarios
-- Loop bodies with complex logic
+- Methods stretching beyond 10-20 lines
+- Deeply nested control structures (loops inside conditionals inside loops)
+- Temporary local variables used only as intermediate holders
+- A single method juggling multiple unrelated tasks
+- The method name would need "and" or "or" to describe what it does accurately
+- Large conditional branches managing different execution paths
+- Complex logic embedded directly inside loop bodies
 
 ## Before/After Examples
 
@@ -171,47 +171,29 @@ class OrderProcessor
 
 ## Recommended Refactorings
 
-1. **Extract Method**: The primary refactoring technique. Create new methods for logical blocks within the original method. Each new method should have a single responsibility.
+1. **Extract Method**: The go-to technique. Identify logical blocks within the method and pull them into their own well-named methods, each focused on a single task.
 
-2. **Replace Temp with Query**: Remove local variables that serve as temporary holders. Convert them to method calls that compute the value on-demand.
+2. **Replace Temp with Query**: Eliminate temporary local variables by converting them into method calls that compute the value when needed. This removes obstacles to further extraction.
 
-3. **Introduce Parameter Object**: If a method has many parameters or passes multiple values together, group them into a dedicated object.
+3. **Introduce Parameter Object**: When a method juggles many parameters or passes groups of values together, bundle them into a dedicated object. This also works well with **Preserve Whole Object** -- pass the source object rather than extracting individual fields.
 
-4. **Replace Method with Method Object**: When other techniques fail, move the entire method logic to a separate class dedicated to that operation.
+4. **Replace Method with Method Object**: A last-resort technique for when local variable entanglement makes extraction impossible. Move the entire method into its own class where local variables become fields.
 
-5. **Decompose Conditional**: Extract complex conditional logic into separate named methods that describe the condition.
+5. **Decompose Conditional**: Pull complex conditional logic into descriptive named methods, making the branching structure self-documenting.
 
-6. **Use Enums and Readonly Classes**: Leverage PHP 8.1+ features to create self-documenting, immutable data structures.
+6. **Use Enums and Readonly Classes**: Take advantage of PHP 8.1+ features to build self-describing, immutable data structures that reduce the need for inline logic.
+
+Note that shorter methods have negligible performance overhead from additional calls -- modern runtimes optimize this well, and the readability gains far outweigh any micro-cost.
 
 ## Exceptions
 
-- **Procedural Script**: Simple scripts that perform sequential operations may legitimately be longer without being a smell.
-- **Domain-Specific Logic**: Complex mathematical or algorithmic methods might require more lines; if well-structured with helper methods, this is acceptable.
-- **Legacy Constraints**: Some refactoring may not be possible due to external dependencies; prioritize high-impact refactoring.
+- **Procedural Scripts**: Straightforward scripts performing sequential operations may legitimately run longer without being problematic.
+- **Algorithmic Methods**: Complex mathematical or scientific computations sometimes need more lines; if they are well-organized with helper methods, this is acceptable.
+- **Legacy Constraints**: External dependencies may prevent certain refactorings; focus effort where the payoff is greatest.
 
 ## Related Smells
 
-- **Duplicate Code**: Often hidden within long methods; refactoring reveals duplication
-- **Feature Envy**: Long methods frequently access other objects' data excessively
-- **Primitive Obsession**: Overuse of primitives instead of objects; see Introduce Parameter Object
-- **Data Clumps**: Groups of variables that move together; candidate for Parameter Object
-
-## Refactoring.guru Guidance
-
-### Signs and Symptoms
-A method contains too many lines of code. Generally, any method longer than ten lines should make you start asking questions.
-
-### Reasons for the Problem
-Methods grow incrementally without refactoring because developers find it simpler to add code than create new methods. It is often harder to create a new method than to add to an existing one, resulting in accumulated complexity and tangled code structures.
-
-### Treatment
-- **Extract Method** to reduce method body length
-- **Replace Temp with Query**, **Introduce Parameter Object**, or **Preserve Whole Object** when local variables interfere with extraction
-- **Replace Method with Method Object** when other approaches fail
-- **Decompose Conditional** for complex conditionals
-- **Extract Method** for loops with complex bodies
-
-### Payoff
-- Short methods improve code longevity and maintainability
-- Longer methods become difficult to understand and retain unwanted duplicate code
-- Performance concerns from additional method calls prove negligible in practice
+- **Duplicate Code**: Often lurks inside long methods; breaking them apart exposes the repetition
+- **Feature Envy**: Long methods frequently reach into other objects' data excessively
+- **Primitive Obsession**: Overuse of raw types instead of objects; Introduce Parameter Object is a shared remedy
+- **Data Clumps**: Groups of variables that travel together are strong candidates for Parameter Object extraction

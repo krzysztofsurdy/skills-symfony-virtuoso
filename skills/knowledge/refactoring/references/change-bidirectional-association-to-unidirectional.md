@@ -1,29 +1,29 @@
 ## Overview
 
-Change Bidirectional Association to Unidirectional is a refactoring technique that removes unused associations between classes to simplify code structure. When one class in a bidirectional relationship doesn't utilize the other class's features, the association should be eliminated. This technique reduces code complexity while maintaining system functionality.
+This refactoring strips away an unnecessary back-reference between two classes that are linked bidirectionally. When one side of the relationship never actually uses its link to the other, that link is dead weight. Removing it yields simpler classes with fewer obligations.
 
 ## Motivation
 
 ### When to Apply
 
-- **Unused associations**: One class doesn't actually use the back-reference to the other
-- **Alternative access patterns**: Objects can be retrieved through database queries or method parameters instead
-- **Memory inefficiency**: Circular references prevent proper garbage collection
-- **Tight coupling concerns**: Bidirectional associations force classes to know about each other
-- **Simplified maintenance**: Code with fewer dependencies is easier to understand and modify
+- **Unused back-reference**: One class holds a reference to the other but never accesses it
+- **Alternative lookup paths**: The referenced object can be obtained through queries, parameters, or service calls instead
+- **Memory overhead**: Circular references hinder garbage collection and waste memory
+- **Excessive coupling**: Both classes are forced to know about each other when only one truly needs to
+- **Maintenance burden**: Fewer dependencies make code easier to read and change
 
 ### Why It Matters
 
-Bidirectional associations are inherently more difficult to maintain than unidirectional ones because they require extra code for object creation, deletion, and synchronization. Classes in bidirectional associations cannot function independently, creating tight coupling that makes systems brittle. Any changes in one component may affect the other, increasing the risk of bugs.
+Bidirectional links carry a maintenance cost: they require synchronization code during object creation, modification, and destruction. Classes entangled in two-way references cannot be understood or modified independently. When one side of the link goes unused, the coupling is pure overhead.
 
 ## Mechanics: Step-by-Step
 
-1. **Verify necessity**: Confirm that one side of the association is truly unused or can access data through alternative means
-2. **Check access patterns**: Ensure alternative methods exist (database queries, method parameters, service lookups)
-3. **Replace field usage**: Substitute direct field access with method parameters or alternative retrieval methods
-4. **Remove assignments**: Delete code that assigns the associated object to the back-reference field
-5. **Delete unused field**: Remove the now-unused back-reference field from the class
-6. **Test thoroughly**: Verify that all functionality remains intact
+1. **Confirm the link is unnecessary**: Verify that one side never reads or writes the back-reference, or can obtain the same information through other means
+2. **Identify alternative access paths**: Determine whether the needed data can come from method parameters, repository lookups, or service calls
+3. **Redirect existing usage**: Replace any remaining direct field access with the alternative path
+4. **Clean up assignment code**: Remove statements that set the back-reference during object creation or updates
+5. **Delete the field**: Remove the now-unused reference field from the class
+6. **Run the test suite**: Confirm that all behavior remains correct
 
 ## Before: PHP 8.3+ Example
 
@@ -165,25 +165,25 @@ class Employee
 
 ## Benefits
 
-- **Reduced Complexity**: Fewer bidirectional dependencies mean simpler class designs and easier maintenance
-- **Improved Garbage Collection**: Removal of circular references prevents memory leaks in languages with manual memory management
-- **Lower Coupling**: Classes become more independent and can be understood in isolation
-- **Easier Testing**: Independent classes are simpler to unit test without complex setup
-- **Simplified Object Lifecycle**: No need to manage back-references during object creation and deletion
-- **Improved Encapsulation**: Each class exposes only the associations it actually uses
+- **Simpler Classes**: Dropping the unused link reduces the amount of code each class must maintain
+- **Better Memory Behavior**: Eliminating circular references helps garbage collectors reclaim memory efficiently
+- **Reduced Coupling**: Each class can evolve without worrying about its effect on the other
+- **Straightforward Testing**: Independent classes need less setup in unit tests
+- **Cleaner Lifecycle Management**: No synchronization logic is needed for the removed direction
+- **Stronger Encapsulation**: Classes expose only the associations they genuinely depend on
 
 ## When NOT to Use
 
-- **Both directions are essential**: If both sides genuinely use the relationship, keep it bidirectional
-- **Performance requirements**: If access from the reverse direction requires expensive database queries
-- **True mutual dependencies**: When classes truly need tight coupling for domain logic
-- **Existing API contracts**: If changing the association breaks public API contracts
-- **Insufficient refactoring analysis**: When you're unsure if the association is truly unused
+- **Both directions are actively used**: If both sides read the reference, the bidirectional link is justified
+- **Performance-sensitive reverse lookups**: When replacing the direct reference with a database query would be too slow
+- **Genuine mutual dependency**: Some domain relationships are inherently two-way
+- **Published API constraints**: Removing the association may break consumers who depend on it
+- **Incomplete analysis**: If you are unsure whether the back-reference is truly unused, investigate further before removing it
 
 ## Related Refactorings
 
-- **Change Unidirectional Association to Bidirectional**: The opposite refactoring when you need to add a back-reference
-- **Extract Class**: To reduce coupling by splitting responsibilities across more classes
-- **Move Method**: To relocate methods closer to the data they operate on
-- **Hide Delegate**: To encapsulate associations behind access methods
-- **Remove Middle Man**: To eliminate intermediary objects managing relationships
+- **Change Unidirectional Association to Bidirectional**: The reverse operation, adding a back-reference when needed
+- **Extract Class**: Separates responsibilities to further reduce coupling
+- **Move Method**: Shifts behavior closer to the data it operates on
+- **Hide Delegate**: Wraps associations behind accessor methods to limit exposure
+- **Remove Middle Man**: Eliminates intermediary objects that manage relationships unnecessarily

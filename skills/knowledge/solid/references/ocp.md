@@ -2,28 +2,28 @@
 
 ## Definition
 
-Software entities (classes, modules, functions) should be open for extension but closed for modification. You should be able to add new behavior to a system without altering existing, tested code.
+Software entities (classes, modules, functions) should welcome extension but resist modification. It should be possible to introduce new behavior into a system without altering existing, already-tested code.
 
-Bertrand Meyer originally formulated this principle, and Robert C. Martin later refined it for object-oriented design. The key insight: changing working code introduces risk. Instead, design systems so new requirements are met by writing *new* code that plugs into existing structures.
+Bertrand Meyer first articulated this principle, and Robert C. Martin later adapted it for object-oriented design. The central idea is straightforward: modifying working code carries risk. Instead, architect systems so that new requirements are fulfilled by writing *new* code that integrates with existing structures.
 
 ## Why It Matters
 
-Every time you modify existing code to add a feature, you risk breaking something that already works. OCP pushes you toward designs where:
+Each time you edit existing code to accommodate a new feature, you risk destabilizing something that already works. OCP steers you toward designs where:
 
-- **New features = new code** — existing classes remain untouched
-- **Testing burden stays low** — you only test new additions, not re-test everything
-- **Deployment risk decreases** — unchanged modules don't need re-deployment
-- **Parallel development improves** — teams add features independently without merge conflicts
+- **New features mean new code** — existing classes stay untouched
+- **The testing overhead remains manageable** — you only validate new additions rather than re-verifying the entire system
+- **Deployment risk drops** — modules that have not changed need no redeployment
+- **Teams can work concurrently** — developers add features independently without stepping on each other
 
 ## Detecting Violations
 
-Signs that OCP is being violated:
+Indicators that OCP is not being followed:
 
-- **Growing switch/match statements** — adding a new type means adding another case
-- **If-else chains based on type** — `if ($shape instanceof Circle)` scattered everywhere
-- **Shotgun surgery** — adding one feature touches 5+ files
-- **"Just add another case" mentality** — the pattern of extending by editing
-- **Fear of changing existing code** — indicates the design doesn't support safe extension
+- **Expanding switch/match blocks** — introducing a new type means appending another case
+- **If-else chains based on type** — `if ($shape instanceof Circle)` scattered throughout the codebase
+- **Shotgun surgery** — introducing a single feature requires touching five or more files
+- **The "just add another case" habit** — a pattern of extending functionality by editing existing code
+- **Reluctance to touch existing code** — this suggests the design does not support safe extension
 
 ## Before/After — PHP 8.3+
 
@@ -207,11 +207,11 @@ final readonly class Notifier
 
 ## Techniques for Achieving OCP
 
-1. **Strategy Pattern** — inject different algorithms via interfaces
-2. **Template Method** — define skeleton in base class, let subclasses fill in steps
-3. **Decorator Pattern** — wrap existing behavior with additional features
-4. **Plugin Architecture** — load extensions dynamically
-5. **Event/Observer Pattern** — let new listeners react to existing events
+1. **Strategy Pattern** — inject interchangeable algorithms through interfaces
+2. **Template Method** — outline the algorithm skeleton in a base class and let subclasses fill in the specifics
+3. **Decorator Pattern** — layer additional behavior on top of existing objects
+4. **Plugin Architecture** — discover and load extensions dynamically at runtime
+5. **Event/Observer Pattern** — allow new listeners to respond to existing events without touching the event source
 
 ## Examples in Other Languages
 
@@ -447,12 +447,12 @@ public:
 
 ## Common Pitfalls
 
-- **Speculative generality** — Don't abstract prematurely. Wait until you actually need a second implementation before creating an interface.
-- **Over-engineering** — A simple helper function doesn't need a plugin architecture. Apply OCP where change is *likely*.
-- **Leaky abstractions** — If every new implementation requires changes to the interface, the abstraction boundary is wrong.
+- **Speculative generality** — Do not abstract prematurely. Wait until a second implementation is genuinely needed before extracting an interface.
+- **Over-engineering** — A straightforward helper function does not warrant a plugin architecture. Reserve OCP for areas where change is *probable*.
+- **Leaky abstractions** — If every new implementation demands changes to the interface itself, the abstraction boundary is drawn in the wrong place.
 
 ## Related Principles
 
-- **Strategy Pattern** — the most common way to implement OCP
-- **Liskov Substitution (LSP)** — subtypes must be usable through the base interface for OCP to work
-- **Dependency Inversion (DIP)** — abstractions that enable extension are the same abstractions DIP demands
+- **Strategy Pattern** — the most prevalent technique for achieving OCP
+- **Liskov Substitution (LSP)** — subtypes must behave correctly through the base interface for OCP to function
+- **Dependency Inversion (DIP)** — the abstractions that permit extension are the same abstractions DIP calls for

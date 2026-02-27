@@ -2,30 +2,30 @@
 
 ## Definition
 
-A class should have one, and only one, reason to change. Every module or class should own a single part of the functionality provided by the software, and that responsibility should be entirely encapsulated by the class.
+Every class should be accountable for exactly one aspect of the system's functionality. That aspect should be fully contained within the class, and the class should have no other obligations.
 
-Robert C. Martin defines "responsibility" as "a reason for change." If you can think of more than one motive for changing a class, then that class has more than one responsibility.
+In Robert C. Martin's framing, "responsibility" equates to "a reason for change." When you can identify multiple, independent motivations for modifying a class, that class carries more than one responsibility.
 
 ## Why It Matters
 
-When a class handles multiple concerns, changes to one concern risk breaking the other. This creates fragile code where unrelated features are coupled through shared state and methods. SRP reduces this coupling by ensuring each class focuses on a single axis of change.
+When a single class juggles several concerns, a modification to one concern can inadvertently destabilize another. This produces brittle code where unrelated features are tied together through shared internal state. SRP addresses this by confining each class to a single dimension of change.
 
-**Benefits of applying SRP:**
-- Changes are localized — modifying logging doesn't risk breaking business logic
-- Classes become easier to name — if naming is hard, the class probably does too much
-- Testing is simpler — each class has a clear, testable contract
-- Reuse improves — focused classes are more likely to be useful elsewhere
-- Teams can work in parallel — different responsibilities live in different files
+**Advantages of following SRP:**
+- Changes stay contained — updating the notification system does not jeopardize the business rules
+- Naming becomes straightforward — difficulty choosing a class name often signals that the class is overloaded
+- Testing is more targeted — each class presents a well-defined, verifiable contract
+- Reusability increases — narrowly focused classes fit naturally into other contexts
+- Parallel development is easier — separate responsibilities reside in separate files, reducing merge friction
 
 ## Detecting Violations
 
-Look for these warning signs:
+Watch for these indicators:
 
-- **Class name includes "And" or "Manager"** — `UserAndEmailManager` screams multiple responsibilities
-- **Methods that don't use the same fields** — if half the methods ignore half the properties, the class likely bundles two concerns
-- **Unrelated imports** — a class importing both database drivers and email libraries probably does too much
-- **Long class files** — not a guarantee, but classes exceeding 200-300 lines often violate SRP
-- **Change frequency from different sources** — if marketing requests change the same file as infrastructure requests, SRP is violated
+- **Class name contains "And" or "Manager"** — `UserAndEmailManager` is a clear sign of bundled concerns
+- **Methods that operate on disjoint subsets of fields** — when half the methods never touch half the properties, the class likely merges two distinct concerns
+- **Disparate imports** — a class pulling in both persistence drivers and email libraries is probably overextended
+- **Excessive line count** — not definitive, but classes growing beyond 200-300 lines frequently break SRP
+- **Changes driven by different stakeholders** — when marketing and operations both trigger edits to the same file, responsibilities have been conflated
 
 ## Before/After — PHP 8.3+
 
@@ -519,12 +519,12 @@ public:
 
 ## Common Pitfalls
 
-- **Over-splitting**: Don't create a class per method. SRP groups related methods under one *reason to change*, not one method per class.
-- **Confusing "responsibility" with "action"**: A `UserRepository` doing CRUD is fine — all those methods change for the same reason (persistence strategy).
-- **God service classes**: `ApplicationService` or `UtilityHelper` are red flags — they accumulate unrelated logic over time.
+- **Over-splitting**: Avoid creating one class per method. SRP clusters related methods that share a single *reason to change*, not one method per class.
+- **Confusing "responsibility" with "action"**: A `UserRepository` performing CRUD operations is perfectly valid — every method changes for the same reason (the persistence strategy).
+- **God service classes**: Names like `ApplicationService` or `UtilityHelper` are warning signs — they tend to accumulate unrelated logic over time.
 
 ## Related Principles
 
-- **Interface Segregation (ISP)** — applies SRP at the interface level
-- **Separation of Concerns** — a broader architectural principle that SRP implements at the class level
-- **Cohesion** — SRP maximizes cohesion by keeping related functionality together
+- **Interface Segregation (ISP)** — applies the same single-focus idea at the interface level
+- **Separation of Concerns** — a broader architectural guideline that SRP realizes at the class level
+- **Cohesion** — SRP drives high cohesion by keeping related behavior grouped together

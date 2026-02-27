@@ -2,28 +2,28 @@
 
 ## Overview
 
-The Abstract Factory pattern is a creational design pattern that provides an interface for creating families of related or dependent objects without specifying their concrete classes. It lets a system work with objects from different families without coupling the code to specific implementations.
+The Abstract Factory is a creational pattern centered on producing groups of related objects through a shared interface, without tying client code to any particular concrete class. It lets you swap entire product families by changing the factory, keeping the rest of your application untouched.
 
 ## Intent
 
-- Define an interface for creating families of related or dependent objects
-- Encapsulate the creation of objects in a factory class hierarchy
-- Allow client code to remain independent of the concrete products being created
-- Ensure that related products work together seamlessly
+- Establish a contract for producing families of interdependent objects
+- Organize object creation behind a factory hierarchy so variants are managed centrally
+- Keep consuming code agnostic to the actual product types it works with
+- Guarantee that objects from the same family are always compatible with each other
 
 ## Problem & Solution
 
 ### Problem
 
-When building a complex system that needs to support multiple variants of related objects, you face several challenges:
+Building a system that must support multiple product families introduces several pain points:
 
-1. **Tight Coupling**: Creating objects directly in client code creates dependencies on concrete classes
-2. **Inconsistency**: Different clients might create incompatible combinations of related objects
-3. **Difficult Maintenance**: Adding new families of products requires changes throughout the codebase
+1. **Direct instantiation scatters knowledge**: Client code that calls `new ConcreteProductX()` becomes coupled to specific implementations
+2. **Mismatched combinations**: Without guardrails, different parts of the code might assemble incompatible products together
+3. **Rigid extension paths**: Introducing a new product family means hunting through the codebase for every creation site
 
 ### Solution
 
-Create an abstract factory that defines methods for creating each type of product. Concrete factories implement these methods, encapsulating the creation logic for specific families. Client code works exclusively with abstract interfaces, remaining independent of concrete implementations.
+Define an abstract factory interface with a method for each product type. Each product family gets its own concrete factory that knows how to build the right set of objects. Clients depend only on the abstract factory and the abstract product interfaces, so switching families is a one-line change at the composition root.
 
 ## Structure
 
@@ -44,11 +44,11 @@ AbstractProductB (interface)
 
 ## When to Use
 
-- Systems need to work with multiple families of related products
-- You want to provide a library of products without exposing implementation details
-- Product families must be used together and you need to ensure consistency
-- Adding new product families in the future without modifying existing code
-- You need to isolate concrete product classes from client code
+- Your application needs to work with several distinct families of related objects
+- You want to ship a toolkit of products while hiding their concrete implementations
+- Consistency within a family is essential and must be enforced at the structural level
+- You anticipate adding new families later and want to avoid touching existing client code
+- Client code should never reference concrete product classes directly
 
 ## Implementation
 
@@ -243,32 +243,32 @@ $migration = $factory->createMigration();
 
 ## Real-World Analogies
 
-**Furniture Store**: A furniture store has different style categories (Modern, Victorian, ArtDeco). Each style factory produces matching chairs, tables, and sofas. A customer selects one style factory, and all furniture comes from that family, ensuring consistency.
+**Furniture Collections**: Think of a furniture showroom organized by style -- Mid-Century Modern, Industrial, Scandinavian. When you pick a style, every piece (sofa, table, lamp) comes from that collection, guaranteeing everything looks right together.
 
-**Operating System UI**: An OS provides factories for creating buttons, windows, and dialogs. The Windows factory creates Windows-style components, while the macOS factory creates macOS-style components.
+**Cross-Platform UI Kits**: Desktop operating systems ship their own widget toolkits. A "create dialog" call on Windows produces Windows-styled controls, while the same call on macOS produces native macOS controls. The application code stays the same either way.
 
 ## Pros and Cons
 
 ### Advantages
-- **Isolates Concrete Classes**: Client code depends only on abstract interfaces
-- **Ensures Consistency**: Related products are guaranteed to work together
-- **Easy to Add Families**: New product families can be added without modifying existing code
-- **Single Responsibility**: Product creation is separated from usage
-- **Open/Closed Principle**: System is open for extension but closed for modification
+- **Decouples client from concrete types**: All creation goes through abstract interfaces, so nothing in your business logic knows about specific product classes
+- **Guarantees family consistency**: Since one factory builds all related products, you never get an accidental mix of incompatible parts
+- **Straightforward to extend**: Adding a whole new product family means writing one new factory class -- no changes to existing code
+- **Clean separation of creation and use**: Object construction logic lives in one place, not scattered across consumers
+- **Supports the Open/Closed Principle**: The system grows through new classes rather than editing existing ones
 
 ### Disadvantages
-- **Increased Complexity**: More classes and interfaces to manage
-- **Overkill for Simple Cases**: Can over-engineer if only one family exists
-- **Adding New Product Types**: Requires changing all factory implementations
-- **Less Flexible Than Builder**: Not ideal when object configuration varies significantly
+- **More moving parts**: Each new family means a factory class plus one class per product type
+- **Unnecessary for simple scenarios**: If you only ever have one product family, this pattern is overhead
+- **Difficult to add new product types**: Introducing a new product to the family requires updating every factory implementation
+- **Not as flexible as Builder**: When individual products need varied configuration, Abstract Factory alone may not be sufficient
 
 ## Relations with Other Patterns
 
-- **Factory Method**: Abstract Factory is often implemented using Factory Methods
-- **Singleton**: Concrete factories are often implemented as Singletons
-- **Prototype**: Can be combined to handle object cloning within families
-- **Builder**: Alternative pattern when constructing complex objects with many variants
-- **Strategy**: Both encapsulate interchangeable alternatives but at different levels
+- **Factory Method**: Abstract Factory typically relies on Factory Methods internally for each product creation call
+- **Singleton**: Concrete factories often exist as singletons since you typically need only one per family
+- **Prototype**: You can combine the two by having factories clone template objects instead of calling constructors
+- **Builder**: When object construction involves many steps and options, Builder is the better fit; Abstract Factory works best when creation is straightforward but families must be coordinated
+- **Strategy**: Both patterns let you swap implementations behind an interface, but they operate at different granularities -- Strategy swaps algorithms, Abstract Factory swaps object families
 
 ## Examples in Other Languages
 
@@ -507,5 +507,3 @@ def main():
 if __name__ == "__main__":
     main()
 ```
-
-*Source: [sourcemaking.com/design_patterns/abstract_factory](https://sourcemaking.com/design_patterns/abstract_factory)*

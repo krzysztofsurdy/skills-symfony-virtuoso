@@ -2,24 +2,24 @@
 
 ## Overview
 
-A method or function has more than three or four parameters, making it difficult to understand, test, and use. This code smell typically emerges when algorithms are merged or when object creation logic is pushed to the calling code. Long parameter lists violate the principle of least astonishment and become increasingly confusing as parameters accumulate.
+A method or function accepts more than three or four parameters, making call sites confusing and error-prone. This smell frequently surfaces when multiple algorithms are consolidated into one method, or when callers are forced to assemble data that the method could retrieve on its own. As parameters accumulate, the method becomes increasingly difficult to call correctly, test in isolation, and maintain over time.
 
 ## Why It's a Problem
 
-- **Reduced Readability**: Callers struggle to remember parameter order and meaning
-- **Testing Complexity**: Creating test fixtures requires passing numerous arguments
-- **Maintenance Burden**: Changes to parameters ripple through entire codebase
-- **Hidden Dependencies**: Parameter relationships and constraints aren't explicit
-- **Coupling Issues**: Passing many primitive values tightly couples caller to implementation
+- **Confusing Call Sites**: Callers must remember the correct order and meaning of each argument, especially when multiple parameters share the same type
+- **Testing Friction**: Setting up test cases requires constructing numerous arguments, often with values irrelevant to the behavior under test
+- **Ripple Effects**: Adding, removing, or reordering parameters forces changes at every call site
+- **Implicit Relationships**: Constraints and dependencies between parameters remain hidden rather than being captured in a type
+- **Tight Coupling**: Passing many primitive values binds the caller directly to the method's internal expectations
 
 ## Signs and Symptoms
 
-- Methods with 4+ parameters
-- Parameters with similar types that could be grouped
-- Callers passing calculated values as parameters
-- Difficulty remembering parameter order when calling methods
-- Repeated parameter patterns across multiple methods
-- Parameters that are only used together
+- Methods accepting four or more parameters
+- Multiple parameters of the same type that could be logically grouped
+- Callers computing values solely to pass them as arguments
+- Developers frequently checking the signature to recall parameter order
+- The same parameter combinations appearing across several methods
+- Parameters that are never used independently of each other
 
 ## Before/After
 
@@ -171,49 +171,34 @@ $processor->processOrder($request);
 ## Recommended Refactorings
 
 ### 1. Introduce Parameter Object
-Combine related parameters into a single value object. Group logically cohesive data that travels together, reducing parameter count while increasing semantic clarity.
+Bundle related parameters into a single value object. Group data that naturally belongs together, cutting down the parameter count while making the conceptual relationship explicit.
 
 ### 2. Replace Parameter with Method Call
-When a parameter is merely the result of another object's method, retrieve it directly inside the method instead of passing it. Eliminates unnecessary parameters and reduces coupling.
+When a parameter value is simply the result of calling a method on another object, have the receiving method retrieve it directly. This eliminates unnecessary arguments and reduces coupling between caller and callee.
 
 ### 3. Preserve Whole Object
-Pass the source object itself rather than extracting and passing individual values. This is effective when the caller already has access to the object, though consider circular dependency risks.
+Instead of extracting individual fields from an object and passing them separately, pass the entire object. This works well when the caller already holds a reference, though be mindful of introducing circular dependencies.
 
 ### 4. Use Enums for Options
-Replace boolean flags and string choices with enums for type safety and clarity at call sites.
+Swap boolean flags and string-based choices for enums. This gives call sites type safety and makes the intent immediately clear.
 
 ### 5. Extract to Builder Pattern
-For complex object construction with many optional parameters, use a builder to make call sites more readable.
+For constructing complex objects with many optional parameters, a builder makes call sites readable and avoids telescoping constructors.
+
+Note that refactoring long parameter lists often exposes previously hidden duplicate code, since the same parameter groupings tend to appear in multiple places.
 
 ## Exceptions
 
 When NOT to refactor:
-- **Framework Requirements**: Some frameworks mandate specific signatures
-- **Public APIs**: Changing signatures breaks client code; add overloads instead
-- **Performance Critical**: If parameters are frequently accessed, object wrapping may add negligible overhead but consider profiling
-- **Intentional Flexibility**: Some methods legitimately need many parameters for algorithmic control
-- **Legacy Constraints**: When refactoring would require changes across large codebases
+- **Framework Requirements**: Some frameworks enforce specific method signatures
+- **Public APIs**: Changing signatures breaks consumer code; introduce overloads or new methods instead
+- **Performance Sensitivity**: Object wrapping adds negligible overhead in most cases, but profile before deciding in hot paths
+- **Intentional Flexibility**: Some methods genuinely require many parameters for algorithmic control
+- **Legacy Constraints**: When the refactoring would cascade across too large a surface area to be practical
 
 ## Related Smells
 
-- **Data Clumps**: Parameters that should be grouped into objects
-- **Primitive Obsession**: Using primitives instead of value objects
-- **Feature Envy**: Method using many values from another object (suggests moving the method)
-- **Message Chains**: Accessing deeply nested values (related to Preserve Whole Object solution)
-
-## Refactoring.guru Guidance
-
-### Signs and Symptoms
-More than three or four parameters for a method. The method has grown unwieldy with excessive parameters, making it difficult to understand and use effectively.
-
-### Reasons for the Problem
-Methods develop lengthy parameter lists when multiple algorithms merge into a single function or when code is refactored to increase class independence. Parameters may also accumulate when objects created elsewhere are passed as arguments instead of being accessed directly.
-
-### Treatment
-- **Replace Parameter with Method Call** when arguments are results of calling another object's methods
-- **Preserve Whole Object** instead of passing individual data points extracted from another object
-- **Introduce Parameter Object** to bundle related parameters from different sources into a single parameter
-
-### Payoff
-- More readable, shorter code
-- Refactoring may reveal previously unnoticed duplicate code, leading to further improvements and simplification
+- **Data Clumps**: Parameters that always travel together and should be grouped into objects
+- **Primitive Obsession**: Raw types standing in for value objects
+- **Feature Envy**: A method pulling many values from another object (suggests the method belongs there instead)
+- **Message Chains**: Deep object traversal to extract values (related to the Preserve Whole Object solution)

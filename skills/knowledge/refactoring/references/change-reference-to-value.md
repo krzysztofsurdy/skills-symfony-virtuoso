@@ -1,38 +1,38 @@
 ## Overview
 
-Change Reference to Value is a refactoring technique that transforms a reference object (mutable object that is identity-based) into a value object (immutable object that is equality-based). This refactoring is beneficial when you have objects that should be treated based on their content rather than their identity.
+Change Reference to Value converts an identity-based, mutable reference object into an immutable value object whose equality is determined by its content. Apply this when objects are logically defined by their data rather than by which specific instance you hold.
 
 ## Motivation
 
-In object-oriented design, objects can be classified as either:
+Objects in object-oriented systems fall into two broad categories:
 
-- **Reference Objects**: Identity matters more than content. Two objects with identical data are still considered different.
-- **Value Objects**: Content matters; two objects with identical data are considered equal.
+- **Reference objects**: Identity is what matters. Two objects with the same data are still distinct entities.
+- **Value objects**: Content is what matters. Two objects holding the same data are interchangeable.
 
-You should apply this refactoring when:
+Consider this refactoring when:
 
-1. An object is small and logically immutable
-2. The object is frequently compared by value rather than identity
-3. You're creating many instances of semantically identical objects
-4. The reference-based approach causes confusion or inefficiency
-5. You need reliable equality comparisons based on content
+1. The object is small and naturally immutable
+2. Comparisons throughout the codebase are based on content, not identity
+3. Many separate instances carry identical data
+4. Identity-based semantics cause confusion or lead to subtle bugs
+5. You need predictable, content-based equality checks
 
 ## Mechanics
 
 ### Before Refactoring
 
-1. Identify a reference object that should be treated as a value
-2. Verify the object has few fields and no mutable state
-3. Check all places where instances are created and compared
+1. Locate a reference object that would be better treated as a value
+2. Confirm it has a small number of fields and no meaningful mutable state
+3. Audit every place the object is created and compared
 
 ### Steps to Refactor
 
-1. Make the class immutable (remove setters, final properties)
-2. Implement proper equality comparison (`__equals()` or PHP 8.1+ implementation)
-3. Implement hashability if needed for collections
-4. Update any identity-based comparisons to equality-based
-5. Create factory methods for value object instantiation
-6. Remove mutable operations
+1. Make the class immutable by removing setters and marking properties as final/readonly
+2. Implement content-based equality (e.g., an `equals()` method or PHP 8.1+ readonly semantics)
+3. Add hashing support if the object will be stored in hash-based collections
+4. Replace any identity comparisons (`===`) with equality method calls
+5. Provide factory or constructor-based creation; remove mutation methods
+6. Eliminate any remaining mutable operations
 
 ## Before/After PHP 8.3+ Code
 
@@ -162,26 +162,26 @@ final readonly class Money
 
 ## Benefits
 
-- **Simplified Logic**: Equality comparisons based on content instead of identity
-- **Immutability**: Eliminates whole classes of bugs from unexpected mutations
-- **Better Performance**: Value objects can be safely cached and reused
-- **Clearer Semantics**: The code explicitly conveys that objects are interchangeable
-- **Type Safety**: Readonly properties prevent accidental modifications
-- **Easier Testing**: No need to track object instances, only values matter
+- **Predictable Equality**: Comparisons reflect data content rather than object identity
+- **Safety through Immutability**: Ruling out mutation prevents a wide class of state-related bugs
+- **Caching and Reuse**: Immutable value objects can be freely shared and cached
+- **Clear Semantics**: The code communicates that two objects with the same data are equivalent
+- **Compile-Time Guarantees**: Readonly properties enforce immutability at the language level
+- **Simple Testing**: Tests verify data values without tracking specific object instances
 
 ## When NOT to Use
 
-- The object has mutable state that changes over time
-- Object identity is fundamental to the design (like User or Entity objects)
-- The object maintains references to other mutable objects
-- You need polymorphic behavior through inheritance
-- The object's lifecycle requires tracking and state changes
-- Performance is critical and object creation overhead matters significantly
+- The object has state that legitimately changes over its lifetime
+- Object identity is central to the domain (entities like User or Order)
+- The object holds references to other mutable objects
+- You rely on polymorphic behavior through inheritance hierarchies
+- The object participates in lifecycle management that requires tracking
+- Object creation cost is significant and reuse via reference is important
 
 ## Related Refactorings
 
-- **Replace Data Class with Object** (opposite refactoring)
-- **Extract Value Object** - Separate immutable concerns into dedicated value classes
-- **Replace Type Code with Enum** - Use enums for value objects with limited options
-- **Remove Setting Method** - Part of making objects immutable
-- **Introduce Parameter Object** - Combine multiple parameters into a value object
+- **Replace Data Class with Object** (the opposite direction)
+- **Extract Value Object** - Carve out immutable concerns into standalone value classes
+- **Replace Type Code with Enum** - Use enums for value objects with a fixed set of options
+- **Remove Setting Method** - A prerequisite step toward immutability
+- **Introduce Parameter Object** - Bundle multiple parameters into a single value object
