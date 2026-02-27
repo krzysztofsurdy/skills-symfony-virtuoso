@@ -1,25 +1,24 @@
 ## Overview
 
-Speculative Generality is a code smell that occurs when developers write code in anticipation of features that may never be needed. This results in unused abstract classes, unnecessary method parameters, unimplemented interfaces, or delegation layers that add complexity without providing value. The code exists "just in case," but the anticipated future requirements never materialize.
+Speculative Generality is a code smell that arises when developers build abstractions for hypothetical future needs that never materialize. The result is unused abstract classes, unnecessary method parameters, unimplemented interfaces, and delegation layers that add structural weight without delivering any value. The code sits idle "just in case," making the system harder to work with for no practical benefit.
 
 ## Why It's a Problem
 
-- **Increased Complexity**: Unused code makes the codebase harder to understand and navigate
-- **Maintenance Burden**: Developers must maintain, test, and potentially update code that serves no purpose
-- **Misleading Intent**: Unused code sends confusing signals about the system's actual functionality
-- **Harder Refactoring**: Future changes become more difficult when navigating unnecessary abstractions
-- **Performance Impact**: Additional layers may introduce minor performance overhead
-- **Testing Overhead**: More code requires more tests, even if unnecessary
+- **Unnecessary Complexity**: Unused abstractions clutter the codebase and make navigation harder
+- **Wasted Maintenance Effort**: Developers must keep, test, and update code that contributes nothing to the application
+- **Misleading Signals**: Unused structures suggest functionality or extensibility that does not actually exist
+- **Refactoring Resistance**: Unnecessary layers make genuine changes harder by adding obstacles to navigate around
+- **Minor Performance Cost**: Extra delegation layers can introduce small overhead, though this is usually secondary to the cognitive cost
+- **Testing Waste**: Dead abstractions still demand test coverage to satisfy code quality metrics
 
 ## Signs and Symptoms
 
-- Unused abstract classes or interfaces with no concrete implementations
-- Methods with parameters that are never referenced in the method body
-- Classes that exist purely to delegate to another class
-- "Helper" methods that are never called
-- Unused generic type parameters
-- Abstract methods defined but never overridden
-- Fields initialized but never used
+- Abstract classes or interfaces with no concrete implementations
+- Method parameters that are never read inside the method body
+- Classes whose sole purpose is forwarding calls to another class
+- Helper methods that no caller ever invokes
+- Unused generic type parameters or abstract methods never overridden
+- Fields that are initialized but never subsequently accessed
 
 ## Before/After Examples
 
@@ -183,34 +182,7 @@ Replace method calls with direct code if the method adds no meaningful abstracti
 
 ## Related Smells
 
-- **Dead Code**: Unreachable or unused code blocks
-- **Lazy Class**: A class that does too little to justify its existence
-- **Middle Man**: A class that exists primarily to delegate to another
-- **Feature Envy**: Methods that use more features of another class than their own
-
-## Refactoring.guru Guidance
-
-### Signs and Symptoms
-
-There is an unused class, method, field, or parameter.
-
-### Reasons for the Problem
-
-Sometimes code is created "just in case" to support anticipated future features that never materialize. As a result, code becomes hard to understand and support.
-
-### Treatment
-
-- **Collapse Hierarchy**: Remove unnecessary abstract classes.
-- **Inline Class**: Remove unnecessary delegation classes.
-- **Inline Method**: Delete unused methods.
-- **Remove Parameter**: Eliminate unused method parameters.
-
-### Payoff
-
-- Slimmer code.
-- Easier maintenance.
-
-### When to Ignore
-
-- If you are working on a framework, it is eminently reasonable to create functionality not used in the framework itself, as long as it is needed by framework users.
-- Keep elements if unit tests require them for accessing class information or performing testing-specific actions.
+- **Dead Code**: Unreachable or unused code blocks -- closely related, but Dead Code refers to code that was once active
+- **Lazy Class**: A class that contributes too little to justify its existence in the codebase
+- **Middle Man**: A class that exists solely to forward calls to another, adding a layer without adding value
+- **Feature Envy**: Methods that rely more heavily on another class's features than their own

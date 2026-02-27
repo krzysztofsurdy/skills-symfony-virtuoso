@@ -2,19 +2,19 @@
 
 ## Overview
 
-Collapse Hierarchy is a refactoring technique that eliminates unnecessary class hierarchies by merging subclasses with their superclasses when they have become practically identical. This refactoring simplifies code structure and reduces cognitive overhead when class hierarchies no longer provide meaningful distinction between parent and child classes.
+Collapse Hierarchy merges a subclass into its superclass (or vice versa) when the two have become so similar that maintaining separate classes provides no value. The goal is to remove structural overhead that no longer serves a purpose.
 
 ## Motivation
 
-Over time, as a program evolves, subclasses may lose their distinct functionality through feature removals or method relocations. The superclass and subclass become nearly indistinguishable, making the hierarchy redundant and confusing. Collapsing the hierarchy removes this unnecessary complexity and makes the codebase easier to understand and maintain.
+As a codebase evolves, subclasses sometimes lose the distinctive behavior that justified their existence. Methods get moved, features get removed, and eventually the parent and child become nearly identical. At that point the hierarchy is noise -- it forces readers to navigate between classes without gaining any insight. Collapsing the two into one class restores simplicity.
 
 ## Mechanics
 
-1. Identify a superclass and subclass that have become practically identical
-2. Use Pull Up (if removing the subclass) or Push Down (if removing the superclass) to consolidate members
-3. Update all references to use the remaining class
-4. Remove the empty class
-5. Test thoroughly to ensure no behavioral changes
+1. Identify a parent-child pair where the subclass adds little or no distinct behavior
+2. Pull members up into the superclass or push them down into the subclass, depending on which class you want to keep
+3. Update all references throughout the codebase to use the surviving class
+4. Delete the now-empty class
+5. Run your tests to confirm nothing has changed behaviorally
 
 ## Before/After Examples
 
@@ -110,24 +110,24 @@ final readonly class Vehicle
 
 ## Benefits
 
-- **Reduced Complexity**: Fewer classes mean less cognitive load and fewer potential points of failure
-- **Improved Clarity**: Methods are centralized in a single location rather than scattered across a hierarchy
-- **Easier Maintenance**: Changes to shared functionality occur in one place instead of multiple classes
-- **Simplified Navigation**: Developers don't need to traverse inheritance chains to understand the code
+- **Less Structural Overhead**: Fewer classes means less indirection and fewer files to manage
+- **Centralized Logic**: All behavior lives in one place instead of being scattered across a hierarchy
+- **Lower Maintenance Cost**: Modifications happen in a single class rather than requiring coordination between parent and child
+- **Faster Comprehension**: Developers understand the design without tracing through inheritance chains
 
 ## When NOT to Use
 
-- **Multiple Subclasses**: If you have multiple subclasses, collapsing could force unrelated classes to share an inappropriate parent, violating the Liskov Substitution Principle
-- **Distinct Behaviors**: If subclasses provide significantly different behavior or have different responsibilities, preserve the hierarchy
-- **API Compatibility**: If the class hierarchy is part of a public API, collapsing may break downstream code
+- **Multiple subclasses with real differences**: Merging would force unrelated behaviors into one class, violating the Liskov Substitution Principle
+- **Meaningful behavioral variation**: If subclasses carry genuinely distinct responsibilities, the hierarchy is earning its keep
+- **Public API stability**: Collapsing classes that are part of an external API may break consumers
 
 ## Related Refactorings
 
-- **Pull Up Field/Method**: Move members from subclass to superclass
-- **Push Down Field/Method**: Move members from superclass to subclass
-- **Extract Superclass**: Create a common superclass for related classes
-- **Replace Type Code with Subclasses**: Opposite refactoring that creates subclasses for type variants
-- **Replace Type Code with State/Strategy**: Alternative to introducing subclasses
+- **Pull Up Field/Method**: Moves members from subclass to superclass
+- **Push Down Field/Method**: Moves members from superclass to subclass
+- **Extract Superclass**: The opposite direction -- creating a hierarchy where none existed
+- **Replace Type Code with Subclasses**: Introduces subclasses to represent type variants
+- **Replace Type Code with State/Strategy**: An alternative to subclassing for behavioral variation
 
 ## Examples in Other Languages
 

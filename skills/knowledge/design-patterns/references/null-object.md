@@ -1,13 +1,13 @@
 ## Overview
 
-The Null Object pattern is a behavioral design pattern that eliminates the need for explicit null checks by introducing an object that does nothing. Instead of returning `null` or checking for `null` values throughout your code, you return a special "null object" that implements the expected interface but performs no action or returns default values.
+The Null Object pattern is a behavioral design pattern that replaces absent or missing references with a concrete object that implements the expected interface but performs no meaningful work. Instead of scattering `null` checks throughout the codebase, callers receive a benign stand-in that responds to every method call with safe, do-nothing defaults.
 
 ## Intent
 
-- Eliminate null pointer exceptions (or null check conditionals)
-- Provide a default behavior for missing or absent objects
-- Simplify client code by removing null validation logic
-- Encapsulate the concept of "nothing" as a proper object
+- Remove the need for defensive null checks and conditional guards
+- Represent the absence of a real collaborator as a legitimate, polymorphic object
+- Streamline client code by guaranteeing that every reference points to a usable object
+- Encapsulate the concept of "nothing to do" behind the same interface as the real thing
 
 ## Problem/Solution
 
@@ -87,13 +87,12 @@ readonly class NullUser implements User {
 
 ## When to Use
 
-- When you want to eliminate null checks throughout your application
-- When you need a default behavior for absent objects
-- When multiple null checks create complex conditional logic
-- In composite structures where some elements may be "empty"
-- When working with external libraries that might return null
-- In IoC containers and dependency injection scenarios
-- When implementing optional configuration or feature toggles
+- When defensive null checks are spreading across the codebase and cluttering the logic
+- When you want a safe fallback that satisfies the interface contract without side effects
+- When composite or collection structures need "empty" nodes that participate in traversal without special handling
+- When external libraries or APIs may return null and you want a clean boundary
+- When dependency injection containers should always provide a working collaborator, even when the real one is absent
+- When feature toggles need a way to silently disable behavior at the object level
 
 ## Implementation (PHP 8.3+ Strict Types)
 
@@ -155,29 +154,25 @@ if ($user->isActive()) {
 
 ## Real-World Analogies
 
-- **Empty seat in a meeting**: A chair that exists but no person sits in it
-- **Placeholder UI component**: A component that renders but displays nothing
-- **Silent logger**: A logger that accepts messages but writes them nowhere
-- **Dummy employee**: A temporary staff member who performs required duties with no-op behaviors
-- **Empty parking space**: A space that can be referenced but has no car
+- **Autopilot Disengaged**: When an aircraft's autopilot is off, the flight control system still expects inputs from the autopilot module. A "null autopilot" provides neutral, zero-correction inputs so the system continues operating normally without special-case logic.
+- **Default Ringtone**: A phone without a custom ringtone assigned does not crash when a call arrives. It falls back to a default silent or system tone -- a null object for the ringtone slot.
+- **Placeholder Thumbnail**: A media gallery displays a generic grey box for images that have not loaded yet. The placeholder conforms to the same layout contract as a real thumbnail without requiring any special rendering path.
 
 ## Pros and Cons
 
 ### Pros
-- Eliminates null checks and defensive programming
-- Simplifies client code and improves readability
-- Encapsulates the concept of absence as a proper object
-- Supports polymorphism naturally
-- Easier to test - no special null handling
-- Reduces likelihood of null pointer exceptions
+- Eliminates scattered conditional checks and the errors they cause when forgotten
+- Client code reads more naturally because every reference is guaranteed to be valid
+- The null object participates in polymorphism like any other implementation
+- Testing becomes simpler because there is no need to mock or verify null-handling branches
+- Reduces the surface area for NullPointerException-style runtime failures
 
 ### Cons
-- May hide logic errors where null return was intentional
-- Can create false sense of security if not applied consistently
-- Debugging can be harder when operations silently do nothing
-- Requires discipline - all code paths must return consistent types
-- May increase class count if many null objects needed
-- Could be overkill for simple operations
+- Silent no-ops can mask genuine bugs where a null return signals an error condition
+- If the pattern is applied inconsistently, developers may still write null checks out of habit
+- Tracking down why an operation had no effect is harder when the code does not throw or log
+- Each interface requires its own null object class, which adds to the class count
+- Overly simple scenarios gain little benefit from the extra abstraction
 
 ## Relations with Other Patterns
 

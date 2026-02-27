@@ -2,15 +2,15 @@
 
 ## Overview
 
-The Object Pool pattern is a behavioral design pattern that improves performance by reusing objects instead of creating and destroying them repeatedly. Objects are created once and placed in a "pool" where they can be requested, used, and returned for reuse. This is especially valuable when instantiation is expensive, such as with database connections, thread pools, or large data structures.
+The Object Pool pattern is a creational design pattern that avoids the cost of repeated object construction and destruction by maintaining a reservoir of pre-built, reusable instances. When a client needs an object, it borrows one from the pool; when finished, it returns the object so the next client can use it. This recycling approach pays off most when instantiation is expensive -- database connections, network sockets, heavyweight data structures, or thread handles.
 
 ## Intent
 
-- Improve performance by reusing existing objects instead of creating new ones
-- Reduce the overhead of object creation and garbage collection
-- Maintain a collection of reusable objects that clients can acquire and return
-- Control the number of active objects in the system
-- Ensure efficient resource management in performance-critical applications
+- Eliminate repeated construction and teardown costs by recycling existing instances
+- Lower garbage-collection pressure by keeping a stable set of long-lived objects
+- Provide a checkout/return lifecycle that lets clients share a bounded set of resources
+- Cap the number of concurrently active instances to stay within system resource limits
+- Deliver predictable latency by pre-allocating objects rather than building them on demand
 
 ## Problem & Solution
 
@@ -43,13 +43,13 @@ ReusableObject (the pooled object)
 
 ## When to Use
 
-- Object creation is expensive (database connections, thread pools, socket connections)
-- Objects are frequently created and destroyed in your application
-- You have performance-sensitive code where garbage collection pauses matter
-- A limited number of objects can handle the system's workload
-- Objects can be reset to a clean state for reuse
-- You want to control resource consumption limits
-- Working in multi-threaded environments where object reuse improves efficiency
+- Construction cost is high (database connections, thread handles, socket connections)
+- Objects are created and discarded at a high rate throughout the application's lifetime
+- Garbage-collection pauses are unacceptable in latency-sensitive code
+- A bounded number of instances is sufficient to serve the entire workload
+- Objects can be cleanly reset to a neutral state between uses
+- You need an upper bound on resource consumption
+- Multi-threaded workloads benefit from sharing a fixed set of pre-warmed instances
 
 ## Implementation
 
@@ -232,38 +232,38 @@ $pool->releaseWorker($worker);
 
 ## Real-World Analogies
 
-**Library Books**: A library maintains a pool of books. Instead of buying a new book each time someone wants to read, the library checks out existing books. Books are returned to the shelf for the next reader. This is more efficient than creating a new copy for each person.
+**Tool Crib at a Factory**: A manufacturing plant keeps a shared inventory of expensive power tools. Workers check out the tool they need, use it, and return it to the crib for the next person. Buying a new tool for every task would be wasteful; sharing a finite set keeps costs down.
 
-**Car Rental Fleet**: A car rental company maintains a fleet of cars. Customers reserve available cars, use them, and return them. Creating a new car for each rental would be impractical; reusing cars is efficient.
+**City Bike-Share Program**: A network of docking stations holds bicycles that anyone can unlock, ride, and return. The system does not build a new bike per trip -- it recycles a fixed fleet, rebalancing stations as needed to meet demand.
 
-**Swimming Pool Changing Rooms**: A swimming facility has a limited number of changing rooms. Visitors use a room, exit, and it's cleaned for the next visitor. Having one room per person would be wasteful.
+**Hotel Laundry Service**: A hotel owns a set number of towels and linens. Used items are collected, washed, and returned to the supply closet rather than discarded. The pool size is tuned so that clean inventory is always available without over-purchasing.
 
 ## Pros and Cons
 
 ### Advantages
-- **Performance Improvement**: Eliminates expensive object creation overhead
-- **Memory Efficiency**: Reduces garbage collection pressure and memory consumption
-- **Resource Control**: Limits the number of objects and resources in use
-- **Predictable Behavior**: Pool size provides capacity guarantees
-- **Reduced Latency**: Objects are ready to use immediately without initialization
-- **Scalability**: Handles high-throughput scenarios effectively
+- **Faster acquisition**: Borrowing a ready-made object is far cheaper than constructing one from scratch
+- **Lower memory churn**: A stable pool reduces allocation and deallocation traffic, easing garbage-collection load
+- **Bounded resource use**: The pool enforces a hard cap on how many instances exist at any time
+- **Predictable capacity**: Pre-allocation guarantees that peak demand can be served without construction delays
+- **Reduced startup latency**: Objects are warmed up once and ready to go on first request
+- **Throughput-friendly**: High-volume workloads avoid the serialization bottleneck of repeated instantiation
 
 ### Disadvantages
-- **Complexity**: More code to manage pool lifecycle and object reuse
-- **Thread Safety**: Requires careful synchronization in multi-threaded environments
-- **State Management**: Objects must be properly reset between uses
-- **Memory Footprint**: Maintains all objects in memory even when unused
-- **Debugging Difficulty**: Harder to diagnose issues with reused objects
-- **Resource Leaks**: Forgetting to return objects can exhaust the pool
+- **Management overhead**: Pool lifecycle, validation, and eviction logic add code complexity
+- **Concurrency hazards**: Multi-threaded access requires synchronization to avoid double-checkouts
+- **Reset discipline**: Every returned object must be scrubbed to a clean state or stale data leaks between clients
+- **Idle memory cost**: All pooled objects occupy memory even during low-traffic periods
+- **Harder debugging**: Shared, recycled instances make it trickier to trace which client caused a problem
+- **Leak risk**: A client that forgets to return an object silently drains the pool until it is exhausted
 
 ## Relations with Other Patterns
 
-- **Singleton**: Pool managers are often implemented as Singletons
-- **Factory Method**: Used to create objects initially for the pool
-- **Strategy**: Pool implementations can vary (eager loading, lazy loading)
-- **Flyweight**: Similar goal of sharing objects, but focuses on intrinsic/extrinsic state
-- **Proxy**: Can wrap pooled objects to track acquisition and release
-- **Observer**: Notify listeners when pool availability changes
+- **Singleton**: The pool manager itself is frequently a singleton to ensure one global pool
+- **Factory Method**: The pool uses a factory to create the initial batch of objects
+- **Strategy**: Eagerly pre-allocating versus lazily creating on demand are two pool strategies that can be swapped
+- **Flyweight**: Both share objects, but Flyweight shares immutable intrinsic state while Object Pool lends mutable instances
+- **Proxy**: A proxy can wrap pooled objects to automatically track acquisition and return
+- **Observer**: Interested parties can subscribe to pool events like exhaustion or replenishment
 
 ## Examples in Other Languages
 
@@ -496,5 +496,3 @@ def main():
 if __name__ == "__main__":
     main()
 ```
-
-*Source: [sourcemaking.com/design_patterns/object_pool](https://sourcemaking.com/design_patterns/object_pool)*

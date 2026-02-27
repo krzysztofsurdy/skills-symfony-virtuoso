@@ -2,26 +2,26 @@
 
 ## Overview
 
-Primitive Obsession is a code smell where developers excessively rely on basic data types (int, string, float, array) instead of creating small, meaningful objects to represent domain concepts. This creates scattered logic, poor encapsulation, and makes code harder to maintain and evolve.
+Primitive Obsession is the habit of using basic data types -- strings, integers, floats, arrays -- to represent domain concepts that deserve their own objects. Instead of an `Email` class with validation, you pass a raw string. Instead of a `Money` value object, you pass a float and a currency string separately. The result is logic scattered across the codebase, domain rules that are enforced inconsistently (or not at all), and code that fails to express the actual business vocabulary.
 
 ## Why It's a Problem
 
-- **Scattered Logic**: Related data and operations live in multiple places instead of being cohesive
-- **Weak Encapsulation**: No validation or behavior bundled with data
-- **Reduced Type Safety**: Primitives accept any value; domain constraints aren't enforced
-- **Hidden Intent**: Magic numbers and string constants obscure business meaning
-- **Duplicate Validation**: Validation logic repeats across the codebase
-- **Harder to Extend**: Adding related behavior requires modifying multiple locations
+- **Fragmented Logic**: Data and the operations that belong to it are spread across multiple classes instead of living together
+- **No Built-In Validation**: Primitives accept any value -- a string meant to hold an email will happily accept "not-an-email"
+- **Weak Type Safety**: The compiler and IDE cannot distinguish between two strings that represent fundamentally different concepts
+- **Obscured Meaning**: Magic numbers and string constants hide business intent behind opaque values
+- **Repeated Validation**: The same constraints are checked in multiple places, leading to inconsistencies when one is updated and others are not
+- **Expensive Extensions**: Adding behavior related to a domain concept requires hunting down every location that manipulates the primitive
 
 ## Signs and Symptoms
 
-- Using integers to represent enumerated values (roles, statuses, permissions)
-- Passing multiple related primitives as separate parameters
-- String constants used as object keys in associative arrays
-- Magic numbers scattered throughout code
-- Validation logic duplicated in different functions
-- Comments explaining what a primitive value represents
-- Parameters like `$status`, `$type`, `$role` that accept any string
+- Integers standing in for enumerated values (roles, statuses, permission levels)
+- Multiple related primitives passed as separate parameters (amount + currency, latitude + longitude)
+- String constants used as keys in associative arrays to simulate object fields
+- Magic numbers embedded directly in business logic
+- The same validation logic duplicated across different functions or classes
+- Comments explaining what a primitive value actually represents
+- Parameters named `$status`, `$type`, or `$role` that accept any arbitrary string
 
 ## Before/After
 
@@ -182,28 +182,9 @@ Primitive Obsession is acceptable when:
 
 ## Related Smells
 
-- **Data Clumps**: Multiple primitives that should be grouped together
-- **Magic Numbers**: Unexplained numeric constants lacking semantic meaning
-- **Duplicate Code**: Validation and constraints scattered across codebase
-- **Feature Envy**: Classes accessing primitive fields from other objects excessively
+- **Data Clumps**: Groups of primitives that always appear together -- the natural next step from Primitive Obsession is bundling them into an object
+- **Magic Numbers**: Unexplained numeric literals embedded in logic, which proper value objects or enums would eliminate
+- **Duplicate Code**: The same validation and constraint checks scattered across the codebase because there is no central type to enforce them
+- **Feature Envy**: Classes reaching into other objects to manipulate primitive fields, a pattern that disappears when those fields become rich objects
 
-## Refactoring.guru Guidance
-
-### Signs and Symptoms
-- Use of primitives instead of small objects for simple tasks (such as currency, ranges, special strings for phone numbers)
-- Using constants to encode information (e.g., `USER_ADMIN_ROLE = 1`)
-- Using string constants as field names in data arrays
-
-### Reasons for the Problem
-Creating a primitive field is much easier than making a whole new class, leading to accumulation of primitive fields over time. Programmers use primitives to simulate custom types through numbered or string-based constants, and sometimes use string constants as array indices for field simulation.
-
-### Treatment
-- **Replace Data Value with Object** for grouping related primitive fields
-- **Introduce Parameter Object** or **Preserve Whole Object** when primitives appear in method parameters
-- **Replace Type Code with Class**, **Replace Type Code with Subclasses**, or **Replace Type Code with State/Strategy** for coded data
-- **Replace Array with Object** when arrays contain mixed variables
-
-### Payoff
-- Improved code flexibility through object-oriented design
-- Enhanced clarity and organization with data operations grouped logically
-- Simplified duplicate code detection
+The root cause is often pragmatic: creating a primitive field is faster than introducing a new class. But this shortcut accumulates over time. Replacing primitives with small objects improves type safety, centralizes validation, and makes duplicate code detection straightforward since the logic now lives in one place.

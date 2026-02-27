@@ -1,16 +1,16 @@
 ## Overview
 
-Parameterize Method is a refactoring technique that consolidates multiple similar methods into a single method by introducing parameters to handle the differing values. This technique eliminates duplicate code while making the codebase more flexible and maintainable.
+Parameterize Method merges several methods that do nearly the same thing into one method governed by a parameter. When multiple methods share the same structure but differ only in a literal value or a small constant, introducing a parameter to capture that difference removes the duplication and yields a single, flexible entry point.
 
 ## Motivation
 
-When you have several methods that perform nearly identical operations with only minor variations, duplicate code accumulates. This leads to:
+Codebases accumulate look-alike methods that vary in only a constant or threshold. This repetition leads to:
 
-- **Increased maintenance burden**: Changes must be applied to multiple locations
-- **Higher bug potential**: Inconsistencies between similar methods
-- **Poor extensibility**: Adding new variants requires creating new methods
+- **Multiplied maintenance**: Every fix or enhancement must be applied across all variants
+- **Divergence risk**: Over time the copies drift apart, introducing subtle inconsistencies
+- **Difficult extension**: Each new variant demands yet another near-duplicate method
 
-By introducing a parameter to handle the differences, you create a single, unified method that serves multiple purposes, reducing complexity and improving code quality.
+Replacing the set of methods with one parameterized version gives you a single source of truth, a smaller API surface, and a straightforward path to supporting additional variants.
 
 ## Mechanics
 
@@ -79,11 +79,11 @@ $transferPrice = $processor->getPrice($product, 'transfer');
 
 ## Benefits
 
-- **Reduced code duplication**: Single source of truth for similar logic
-- **Easier maintenance**: Changes apply uniformly across all variants
-- **Simpler extension**: Adding new variants requires minimal changes
-- **Improved readability**: Clear intent through parameter names and constants
-- **Better testability**: Fewer methods to test and maintain
+- **Single source of truth**: Identical logic lives in one place, eliminating drift between copies
+- **Lower maintenance cost**: Bug fixes and enhancements apply once
+- **Easy extension**: Adding a new variant is a configuration change, not a new method
+- **Cleaner API**: Callers see one well-named method rather than a family of near-duplicates
+- **Simpler testing**: One method with parameterized test cases replaces many individual test methods
 
 ## When NOT to Use
 

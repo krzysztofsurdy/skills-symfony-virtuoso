@@ -2,27 +2,27 @@
 
 ## Overview
 
-A "Large Class" occurs when a single class contains too many fields, methods, or lines of code, handling multiple responsibilities that should be separated. Classes naturally grow as code evolves, but excessive growth indicates poor separation of concerns and violations of the Single Responsibility Principle (SRP).
+A Large Class has accumulated too many fields, methods, or lines of code, handling responsibilities that should belong to separate, focused classes. Growth is natural as a codebase evolves, but unchecked expansion signals poor separation of concerns and a violation of the Single Responsibility Principle. The class becomes a gravitational center that attracts new code because adding to it is easier than creating something new.
 
 ## Why It's a Problem
 
-Large classes are difficult to understand, test, and maintain. They:
-- Violate the Single Responsibility Principle
-- Increase cognitive load when reading and modifying code
-- Make testing more complex and fragile
-- Encourage code duplication as developers extract functionality elsewhere
-- Complicate version control with merge conflicts
-- Hide implementation details that could be simplified
+Large classes create compounding difficulties:
+- They violate the Single Responsibility Principle by bundling unrelated concerns
+- Cognitive load spikes when developers try to understand the class as a whole
+- Testing becomes complex, fragile, and slow as the class touches many concerns
+- Duplication creeps in as developers copy logic elsewhere rather than untangling the class
+- Merge conflicts multiply because many developers touch the same file
+- Opportunities for simplification hide inside the sheer volume of code
 
 ## Signs and Symptoms
 
-- Class contains 15+ public methods (excluding getters/setters)
-- Class exceeds 500-1000 lines of code
-- Multiple unrelated instance fields with different lifecycles
-- Methods operate on different subsets of fields
-- Class name uses vague terms like "Manager," "Handler," "Helper," or "Service"
-- Difficult to find specific functionality without searching the entire class
-- Test class mirrors the structure of the large class perfectly
+- More than 15 public methods (excluding simple accessors)
+- The class exceeds 500-1000 lines of code
+- Multiple unrelated instance fields with different lifecycles or usage patterns
+- Methods that operate on distinct, non-overlapping subsets of the class's fields
+- Vague class names like "Manager," "Handler," "Helper," or "Service"
+- Locating specific functionality requires searching through the entire class
+- The corresponding test class mirrors the production class structure exactly
 
 ## Before/After
 
@@ -216,30 +216,14 @@ Large classes are acceptable when:
 
 ## Related Smells
 
-- **God Class**: An extreme version of Large Class that knows about other objects' internals
-- **Feature Envy**: Methods that use more methods from another class than their own
-- **Data Clumps**: Related fields should be extracted together into a class
-- **Middle Man**: Too many delegating methods to extracted classes; consider direct access
-- **Lazy Class**: Opposite problem—classes with too little responsibility should be eliminated
+- **God Class**: The extreme form of Large Class -- a class that not only does too much but also intimately knows other objects' internals
+- **Feature Envy**: Methods inside a large class that primarily use another class's data suggest those methods belong elsewhere
+- **Data Clumps**: Groups of related fields that should be extracted together into their own class
+- **Middle Man**: After extracting classes, beware of leaving behind shells that only delegate -- those become Middle Man
+- **Lazy Class**: The inverse problem -- classes with too little responsibility that should be merged back
 
 ---
 
 **Metrics to Watch**: Classes over 500 LOC, methods over 20, cyclomatic complexity per method > 10
 
-## Refactoring.guru Guidance
-
-### Signs and Symptoms
-A class contains many fields, methods, and lines of code. Classes accumulate functionality over time as programs grow, with developers often preferring to add features to existing classes rather than creating new ones.
-
-### Reasons for the Problem
-Classes begin small but expand gradually. Programmers tend to take the path of least resistance by placing new functionality into established classes instead of establishing separate components.
-
-### Treatment
-- **Extract Class**: Helps if part of the behavior of the large class can be spun off into a separate component
-- **Extract Subclass**: Helps if part of the behavior can be implemented in different ways or is used in rare cases
-- **Extract Interface**: Helps if it is necessary to have a list of the operations and behaviors that the client can use
-- **Duplicate Observed Data**: Useful when splitting graphical interface classes, requiring data storage in multiple locations
-
-### Payoff
-- Developers avoid memorizing extensive class attributes
-- Dividing large classes frequently eliminates code duplication and redundant functionality
+The root cause is almost always the path of least resistance: it is easier to add a method to an existing class than to design a new one. Over time this incremental growth produces classes that no single developer can hold in their head. Splitting a large class into focused components not only improves comprehension but frequently reveals hidden duplication that the sheer size of the original class concealed.

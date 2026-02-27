@@ -2,24 +2,24 @@
 
 ## Overview
 
-The Middle Man code smell occurs when a class exists primarily to delegate method calls to another class without adding meaningful functionality. This unnecessary indirection creates extra layers in your code architecture, making it harder to understand and maintain. The intermediary class serves no clear purpose and obscures the actual implementation details.
+The Middle Man smell appears when a class contributes nothing beyond forwarding method calls to another class. It sits between the caller and the actual implementation, adding a layer of indirection without adding any meaningful logic, transformation, or abstraction. The class is effectively an empty relay.
 
-This smell often emerges as a result of over-correcting Message Chains or when a class's responsibilities gradually migrate elsewhere, leaving behind an empty shell.
+This commonly happens in two ways: as an overcorrection when eliminating Message Chains (hiding too much delegation), or when a class gradually loses its responsibilities to other classes and becomes a hollow shell.
 
 ## Why It's a Problem
 
-- **Increased Complexity**: Extra layers of delegation obscure the real implementation and make code harder to follow
-- **Reduced Clarity**: Developers must trace through multiple classes to understand actual behavior
-- **Maintenance Burden**: Changes must be propagated through unnecessary intermediary classes
-- **Performance Impact**: Extra method calls add subtle overhead
-- **Violates DRY**: The delegating class adds no unique behavior, only repetition
+- **Obscured Logic**: Extra delegation layers hide where work actually happens, making the code harder to trace
+- **Cognitive Overhead**: Developers must navigate through intermediary classes to understand real behavior
+- **Maintenance Cost**: Any changes to the delegated interface require updating the pass-through class as well
+- **Subtle Performance Drag**: Additional method hops add minor overhead
+- **No Added Value**: The class exists without contributing unique behavior -- it only repeats what another class already provides
 
 ## Signs and Symptoms
 
-- A class has no behavior of its own, only forwarding calls to another class
-- Most or all public methods are simple wrappers around another object's methods
-- The class exists solely to reduce coupling without providing an abstraction benefit
-- Removing the class would not impact functionality, only the call path
+- A class contains no logic of its own; every public method simply calls through to another object
+- The majority of methods are one-line wrappers around a delegate
+- The class was introduced to decouple components, but it provides no real abstraction benefit
+- Deleting the class and having clients call the delegate directly would change nothing functionally
 
 ## Before/After
 
@@ -142,30 +142,6 @@ Do **not** remove the middle man class in these scenarios:
 
 ## Related Smells
 
-- **Message Chains**: The opposite problem—too many intermediate objects. Fixing Message Chains sometimes creates Middle Man
-- **Feature Envy**: A class that relies too heavily on another class's methods
-- **Inappropriate Intimacy**: When a class knows too much about another class's internals
-
-## Refactoring.guru Guidance
-
-### Signs and Symptoms
-
-If a class performs only one action, delegating work to another class, why does it exist at all?
-
-### Reasons for the Problem
-
-- Over-elimination of Message Chains: developers may aggressively refactor chained calls and inadvertently create unnecessary intermediary classes.
-- Gradual work migration: over time, a class's functionality moves to other classes, leaving behind an empty shell that merely delegates.
-
-### Treatment
-
-- **Remove Middle Man**: If most of a class's methods delegate to another class, eliminate the intermediary and have clients interact directly with the end object.
-
-### Payoff
-
-- Less bulky code.
-
-### When to Ignore
-
-- Do not delete a middle man that has been created for a reason, such as avoiding interclass dependencies.
-- Do not remove classes that serve as intentional Proxy or Decorator patterns where intermediation has a deliberate architectural purpose.
+- **Message Chains**: The inverse problem -- too many intermediaries in a call chain. Aggressively fixing Message Chains is a common way to accidentally create Middle Man
+- **Feature Envy**: A class that leans heavily on another class's methods, suggesting the logic belongs elsewhere
+- **Inappropriate Intimacy**: When classes are too tightly coupled to each other's internals

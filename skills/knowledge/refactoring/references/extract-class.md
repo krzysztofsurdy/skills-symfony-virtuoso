@@ -1,30 +1,26 @@
 ## Overview
 
-Extract Class is a refactoring technique that improves code organization by breaking down a large, overly-responsible class into smaller, more focused classes. When a class accumulates too many responsibilities or contains features that naturally belong together, Extract Class creates a new class to encapsulate that subset of functionality.
-
-This refactoring technique is essential for maintaining the Single Responsibility Principle (SRP) and reducing code complexity as applications grow.
+Extract Class splits a class that has taken on too many responsibilities into two or more focused classes. When a class accumulates unrelated fields and methods, carving out a cohesive subset into its own class restores clarity and keeps each class aligned with the Single Responsibility Principle.
 
 ## Motivation
 
-Classes often grow over time, accumulating responsibilities that were originally related but have naturally separated. Several signals indicate when Extract Class is needed:
+Classes tend to grow organically. Features get added, fields multiply, and before long the class handles concerns that have little to do with each other. Signs that extraction is overdue include:
 
-- **Multiple Reasons to Change**: If a class has multiple reasons to change, it likely violates SRP
-- **Feature Envy**: Methods within a class frequently access features of another class more than its own
-- **Duplicated Code**: Related code patterns appear in different classes
-- **Difficult Testing**: A class is hard to test because it handles multiple concerns
-- **Size and Complexity**: The class becomes difficult to understand due to its length and interconnected logic
-- **Unclear Purpose**: The class description requires multiple "ifs" or "ands" to describe what it does
+- **Multiple reasons to change**: Different kinds of requirements drive modifications to the same class
+- **Feature envy**: Methods spend more time working with another class's data than their own
+- **Repeated patterns**: Similar groups of fields and methods appear in several places
+- **Hard-to-test code**: The class requires elaborate setup because it juggles too many concerns
+- **Excessive size**: The class is long and difficult to hold in your head
+- **Vague purpose**: Describing what the class does requires several conjunctions
 
 ## Mechanics
 
-The Extract Class refactoring follows these steps:
-
-1. **Identify Cohesive Features**: Analyze the class to find attributes and methods that form a cohesive group
-2. **Create New Class**: Create a new class to represent the extracted concept
-3. **Move Fields**: Move the relevant fields from the original class to the new class
-4. **Move Methods**: Move the methods that operate on those fields to the new class
-5. **Update References**: Update the original class to use an instance of the new class
-6. **Test Thoroughly**: Ensure all existing functionality remains intact
+1. **Spot the cohesive subset**: Identify fields and methods that naturally belong together
+2. **Create a new class**: Give it a name that reflects the extracted concept
+3. **Relocate fields**: Move the relevant fields into the new class
+4. **Relocate methods**: Move methods that operate primarily on those fields
+5. **Wire up the original class**: Replace the moved fields and methods with a reference to the new class
+6. **Verify behavior**: Run the tests to confirm nothing has changed
 
 ## Before/After PHP 8.3+ Code
 
@@ -150,29 +146,27 @@ echo $person->getOfficeAddress()->toString();    // 123 Main St
 
 ## Benefits
 
-- **Improved Clarity**: Each class has a single, well-defined responsibility
-- **Better Testability**: Smaller classes are easier to test in isolation
-- **Enhanced Reusability**: Extracted classes can be used in other contexts
-- **Reduced Complexity**: Fewer responsibilities per class reduce cognitive load
-- **Easier Maintenance**: Changes to one concern don't affect others
-- **Type Safety**: Strong types replace scattered primitive values (especially in PHP 8.3+)
-- **Follows SOLID**: Directly supports the Single Responsibility and Open/Closed principles
+- **Focused Classes**: Each class does one thing and does it well
+- **Easier Testing**: Smaller classes need less setup and fewer test scenarios
+- **Greater Reuse**: Extracted classes like TelephoneNumber and Address can serve other parts of the system
+- **Lower Cognitive Load**: Developers understand a class faster when it handles a single concern
+- **Independent Change**: Modifications to one concern do not ripple into unrelated code
+- **Stronger Types**: Rich types replace scattered primitives, especially with PHP 8.3+ readonly support
+- **SOLID Alignment**: Directly supports the Single Responsibility and Open/Closed principles
 
 ## When NOT to Use
 
-Extract Class is not always appropriate:
-
-- **Premature Extraction**: Don't extract before you're confident about the separation. Over-extraction leads to design fragmentation
-- **Insufficient Cohesion**: If the extracted subset lacks clear cohesion, the extraction may not be justified
-- **Performance Critical Code**: In rare performance-critical paths, additional object creation might be problematic
-- **Simple Value Objects**: Sometimes using arrays or simple objects is sufficient; avoid over-engineering
-- **Early Design Phases**: Focus on getting functionality working first; refactor as patterns become clear
+- **Premature extraction**: Wait until the separation is clear; extracting too early can fragment the design
+- **No natural cohesion**: If the subset of fields and methods does not form a coherent concept, the extraction will feel forced
+- **Performance-critical code**: Rarely, the extra object allocation matters; profile before ruling this out
+- **Trivial classes**: When the data is simple and has no behavior, a plain array or simple object may suffice
+- **Early development**: Focus on getting the feature working first and extract once patterns emerge
 
 ## Related Refactorings
 
-- **Extract Method**: Extract methods before extracting a class to better identify cohesive groups
-- **Move Method/Field**: Move individual members between classes when Extract Class seems too large
-- **Extract Interface**: After extracting a class, consider extracting an interface if multiple implementations are needed
-- **Replace Temp with Query**: Often used alongside Extract Class to reduce temporary variables
-- **Replace Method with Method Object**: An alternative when a method has many local variables
-- **Introduce Parameter Object**: Group parameters into objects when methods have many related parameters
+- **Extract Method**: Often a preliminary step that reveals which groups of code belong together
+- **Move Method/Field**: The fine-grained counterpart for shifting individual members between classes
+- **Extract Interface**: Useful after extraction when multiple implementations of the new concept are likely
+- **Replace Temp with Query**: Helps eliminate temporary variables before extraction
+- **Replace Method with Method Object**: An alternative when a single method has too many local variables
+- **Introduce Parameter Object**: Groups related parameters into a new class

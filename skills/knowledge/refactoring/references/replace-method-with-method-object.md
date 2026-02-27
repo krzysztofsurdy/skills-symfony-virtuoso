@@ -1,32 +1,32 @@
 ## Overview
 
-Replace Method with Method Object is a refactoring technique that transforms a complex method into a dedicated class. The method becomes the primary operation of this new object, while local variables become instance attributes. This pattern is particularly useful for methods with many parameters, complex logic, or interdependent local variables.
+Replace Method with Method Object extracts a complex method into its own dedicated class. The method's logic becomes the central operation of this new object, its parameters become constructor arguments, and its local variables become instance fields. This technique is especially helpful when a method has grown unwieldy due to many parameters, tangled logic, or heavily interdependent local variables.
 
 ## Motivation
 
 ### Problem
-- **Complex methods**: Methods with multiple parameters and local variables become difficult to understand
-- **Poor reusability**: Logic is tied to a single class and cannot be easily extracted or tested independently
-- **Limited decomposition**: Breaking the method into smaller pieces within the same class is awkward
-- **Testing difficulties**: Testing specific branches of complex logic requires instantiating the entire parent class
-- **Parameter passing**: Methods with many parameters lead to verbose signatures and maintenance issues
+- **Unwieldy methods**: Methods packed with parameters and local variables become hard to follow
+- **Low reusability**: Logic locked inside a single class cannot be extracted or tested on its own
+- **Difficult decomposition**: Splitting the method into smaller pieces within the same class feels awkward
+- **Testing friction**: Exercising specific branches of intricate logic means instantiating the entire host class
+- **Bloated signatures**: Methods with long parameter lists are cumbersome to call and maintain
 
 ### Solution
-Create a new class where:
-- The method becomes a public operation (usually `__invoke()` or `execute()`)
-- Parameters become constructor arguments
-- Local variables become instance properties
-- Method logic moves into the class
+Introduce a new class where:
+- The method becomes a public operation (typically `__invoke()` or `execute()`)
+- Parameters are received through the constructor
+- Local variables are promoted to instance properties
+- The original logic migrates into the class
 
 ## Mechanics
 
-1. Create a new class named appropriately (e.g., `CalculateOrderTotal`, `GenerateReport`)
-2. Move all method parameters to the constructor
-3. Move all local variables to instance properties
-4. Copy the method's logic into a `__invoke()` or `execute()` method
-5. Replace the original method with an instantiation and call to the new class
-6. Test thoroughly to ensure identical behavior
-7. Consider extracting sub-methods within the Method Object
+1. Create a new class with a descriptive name (e.g., `CalculateOrderTotal`, `GenerateReport`)
+2. Accept all method parameters through the constructor
+3. Promote local variables to instance properties
+4. Move the method body into a `__invoke()` or `execute()` method
+5. Replace the original method with an instantiation and invocation of the new class
+6. Run the full test suite to confirm identical behavior
+7. Decompose the new class into private helper methods as appropriate
 
 ## Before/After Examples
 
@@ -137,29 +137,29 @@ class OrderProcessor
 
 ## Benefits
 
-- **Improved Readability**: Method Object divides complex logic into named private methods that explain intent
-- **Better Testability**: Method Object can be tested independently without the parent class
-- **Enhanced Decomposition**: Complex logic is broken into manageable pieces within a focused class
-- **Reusability**: Method Object can be instantiated in different contexts
-- **Single Responsibility**: Each class has one reason to change
-- **Easier Debugging**: State is encapsulated and easier to inspect
-- **Callable Pattern**: Using `__invoke()` makes the object callable and elegant in PHP 8.3+
+- **Readable structure**: Complex logic splits into named private methods that describe each step's purpose
+- **Independent testability**: The method object can be instantiated and tested without the original host class
+- **Clean decomposition**: Intricate logic breaks down into manageable pieces within a cohesive class
+- **Portability**: The method object can be used from different contexts and callers
+- **Single Responsibility**: Each class exists for exactly one reason
+- **Easier inspection**: State lives in instance fields, making it straightforward to inspect during debugging
+- **Callable syntax**: Using `__invoke()` makes the object callable, yielding elegant PHP 8.3+ usage
 
 ## When NOT to Use
 
-- **Simple Methods**: If the method is straightforward and easy to understand, don't over-engineer
-- **Performance Critical**: Creating objects has minimal overhead, but if called billions of times, consider alternatives
-- **One-time Logic**: For truly single-use logic, the overhead may not justify the benefit
-- **Simple Parameter Passing**: If the method only passes parameters without complex logic, extract a smaller method instead
-- **Existing Architecture**: Don't apply this pattern if your codebase already uses a different architectural style
+- **Straightforward methods**: If the method is short and easy to understand, creating a whole class is overkill
+- **Hot paths**: Object construction has negligible cost, but if called billions of times, weigh the trade-off
+- **Truly one-off logic**: For genuinely unrepeated logic, the overhead of a dedicated class may not pay for itself
+- **Simple parameter forwarding**: If the method just passes arguments without complex logic, extract a smaller helper instead
+- **Conflicting architecture**: Do not introduce this pattern if the codebase follows a different architectural convention
 
 ## Related Refactorings
 
-- **Extract Method**: Often the first step when identifying complex logic within a method
-- **Extract Class**: Similar concept but applied at a broader scope to extract responsibilities
-- **Decompose Conditional**: Useful for breaking down complex conditional logic before extracting a Method Object
-- **Introduce Parameter Object**: Combine with this pattern to group related parameters
-- **Strategy Pattern**: Method Objects often evolve into Strategy implementations with multiple variants
+- **Extract Method**: Often the first refactoring to try when complex logic appears inside a method
+- **Extract Class**: A broader variant that pulls out entire responsibilities rather than a single operation
+- **Decompose Conditional**: Helpful for simplifying branching logic before promoting it to a method object
+- **Introduce Parameter Object**: Pairs well with this technique to bundle related constructor arguments
+- **Strategy Pattern**: Method objects frequently evolve into Strategy implementations with interchangeable variants
 
 ## Examples in Other Languages
 

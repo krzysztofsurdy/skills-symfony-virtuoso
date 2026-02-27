@@ -2,18 +2,18 @@
 
 ## Overview
 
-Pull Up Field is a refactoring technique that consolidates duplicate fields by moving them from multiple subclasses to their shared superclass. When two or more subclasses contain identical fields, this refactoring eliminates duplication by centralizing the field definition in the parent class.
+Pull Up Field moves a field that appears in multiple subclasses into their common superclass. When two or more child classes declare the same field for the same purpose, centralizing the declaration in the parent removes the redundancy and establishes a single authoritative location for the shared state.
 
 ## Motivation
 
-Code duplication across class hierarchies creates several problems:
+Repeated field declarations across sibling classes produce several downsides:
 
-- **Maintenance burden**: Changes to a field must be applied in multiple locations
-- **Inconsistency risk**: Subclasses may handle the same field differently over time
-- **Reduced cohesion**: Related state is scattered across the hierarchy
-- **Blocks further consolidation**: Other duplicate methods cannot be easily moved up without addressing field duplication first
+- **Scattered updates**: Renaming or changing the field type must be done in every subclass
+- **Silent divergence**: Subclasses may gradually handle the field differently, introducing subtle bugs
+- **Blocked consolidation**: Methods that depend on the duplicated field cannot be pulled up until the field itself is consolidated
+- **Obscured intent**: The fact that the field is shared across the hierarchy is not visible from any single class
 
-By pulling fields up to the superclass, you create a single source of truth for shared state and enable further refactorings.
+Lifting the field into the parent creates one definition that all subclasses inherit, enabling further refactorings and making the shared nature of the data explicit.
 
 ## Mechanics
 
@@ -147,11 +147,11 @@ class Designer extends Employee
 
 ## Benefits
 
-- **Eliminates duplication**: Removes redundant field declarations across subclasses
-- **Improves maintainability**: Changes to shared fields only need to be made once
-- **Strengthens type safety**: All instances use the same field definition
-- **Enables further refactoring**: Makes it easier to pull up methods that depend on these fields
-- **Clarifies class hierarchy**: Expresses the intended shared state more explicitly
+- **Single definition**: One field declaration replaces several identical ones
+- **Uniform behavior**: All subclasses share the same storage and access rules
+- **Stronger type guarantees**: A centralized declaration enforces a consistent type across the hierarchy
+- **Unlocks further refactoring**: Methods that use the field can now be pulled up as well
+- **Visible hierarchy design**: The parent class clearly communicates which state is shared
 
 ## When NOT to Use
 

@@ -5,7 +5,7 @@ description: SOLID principles for object-oriented design — Single Responsibili
 
 # SOLID Principles
 
-Five foundational principles of object-oriented design that produce systems which are easier to maintain, test, and extend. Introduced by Robert C. Martin (Uncle Bob), the acronym was coined by Michael Feathers.
+Five core principles of object-oriented design that lead to systems which are simpler to maintain, test, and extend. Robert C. Martin (Uncle Bob) formalized these ideas, and Michael Feathers coined the SOLID acronym.
 
 ## Principle Index
 
@@ -19,14 +19,14 @@ Five foundational principles of object-oriented design that produce systems whic
 
 ## Why SOLID Matters
 
-Without SOLID, codebases develop these symptoms over time:
+Without SOLID, codebases gradually develop these problems:
 
-- **Rigidity** — a single change cascades through many unrelated modules
-- **Fragility** — touching one area breaks another seemingly unrelated area
-- **Immobility** — components are so entangled they can't be reused elsewhere
-- **Viscosity** — doing things the right way is harder than hacking around the design
+- **Rigidity** — one change ripples through many unrelated modules
+- **Fragility** — modifying one area breaks another seemingly unconnected area
+- **Immobility** — components are so intertwined that extracting them for reuse is impractical
+- **Viscosity** — doing things correctly is harder than hacking around the design
 
-SOLID addresses each of these by establishing clear boundaries, explicit contracts, and flexible extension points.
+SOLID tackles each of these by defining clear boundaries, explicit contracts, and flexible points for extension.
 
 ## Quick Decision Guide
 
@@ -105,24 +105,24 @@ class PlaceOrderHandler {
 
 ## Relationships Between Principles
 
-The five principles reinforce each other:
+The five principles complement and reinforce one another:
 
-- **SRP + ISP**: Both reduce the surface area of a class/interface to a focused concern
-- **OCP + DIP**: Abstractions enable extension without modification
-- **LSP + OCP**: Correct substitutability is required for polymorphic extension
-- **ISP + DIP**: Segregated interfaces make it easier to depend on the right abstraction
+- **SRP + ISP**: Both narrow the surface area of a class or interface to a single, focused concern
+- **OCP + DIP**: Abstractions are the mechanism that enables extension without modification
+- **LSP + OCP**: Correct substitutability is essential for polymorphic extension to work
+- **ISP + DIP**: Well-segregated interfaces make it easier to depend on precisely the right abstraction
 
 ## Common Misconceptions
 
-- **"One method per class"** — SRP means one *reason to change*, not one method. A class can have many methods if they all serve the same responsibility.
-- **"Never modify existing code"** — OCP doesn't forbid bug fixes. It means *new behavior* should be addable without changing existing working code.
-- **"Always use interfaces"** — DIP says depend on abstractions. Sometimes a well-designed base class is the right abstraction. Don't create interfaces for classes that will never have a second implementation.
-- **"Inheritance is bad"** — LSP doesn't discourage inheritance. It sets rules for *correct* inheritance so subtypes remain substitutable.
+- **"One method per class"** — SRP means one *reason to change*, not one method. A class can contain many methods as long as they all serve the same responsibility.
+- **"Never modify existing code"** — OCP does not prohibit bug fixes. It means *new behavior* should be introducible without changing existing working code.
+- **"Always use interfaces"** — DIP calls for depending on abstractions. Sometimes a well-crafted base class is the appropriate abstraction. Do not create interfaces for classes that will never have a second implementation.
+- **"Inheritance is bad"** — LSP does not discourage inheritance. It establishes rules for *correct* inheritance so that subtypes remain safely substitutable.
 
 ## Best Practices
 
-- Apply SOLID gradually — don't refactor everything at once
-- Use SOLID as a diagnostic tool: when code is hard to change, check which principle is violated
-- Combine with design patterns — Strategy (OCP), Adapter (DIP), and Decorator (OCP) directly implement SOLID
-- Write tests first — TDD naturally drives toward SOLID designs
+- Adopt SOLID incrementally — do not refactor everything in one pass
+- Treat SOLID as a diagnostic tool: when code resists change, check which principle is being violated
+- Pair with design patterns — Strategy (OCP), Adapter (DIP), and Decorator (OCP) are direct implementations of SOLID ideas
+- Write tests first — TDD naturally steers designs toward SOLID compliance
 - Target PHP 8.3+ with strict typing, readonly classes, and enums

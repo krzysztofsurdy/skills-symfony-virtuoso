@@ -1,27 +1,25 @@
 ## Overview
 
-Extract Interface is a refactoring technique that creates a new interface containing a set of common operations used by multiple clients or shared between different classes. This technique improves code organization by making shared responsibilities explicit and enabling polymorphic behavior without requiring inheritance hierarchies.
-
-Unlike **Extract Superclass**, which consolidates both code and interface, Extract Interface isolates only the common interface contract, leaving duplicate implementation logic intact.
+Extract Interface creates a formal contract from a set of methods that multiple clients rely on or that several classes implement in common. Unlike Extract Superclass, which shares both interface and implementation, Extract Interface isolates the contract alone, leaving each implementing class free to provide its own logic.
 
 ## Motivation
 
 ### Explicit Role Definition
-Interfaces communicate the specialized roles classes play in different contexts. By extracting an interface, you make code intent clearer and define explicit contracts that other classes must fulfill.
+Interfaces declare the roles a class plays in different contexts. Extracting an interface makes that role visible in the type system and defines a clear boundary between what callers can expect and how the class delivers it.
 
-### Multiple Implementations
-When designing systems that require pluggable implementations, establishing a common interface ensures all variants conform to the same contract without artificial inheritance relationships.
+### Pluggable Implementations
+When a system needs interchangeable variants -- payment gateways, notification channels, storage backends -- an interface ensures every variant conforms to the same contract without forcing them into an artificial inheritance tree.
 
 ### Dependency Inversion
-Extracting interfaces decouples your code from concrete implementations, allowing clients to depend on abstractions rather than concrete classes. This improves testability and flexibility.
+Clients that depend on an interface rather than a concrete class become insulated from implementation changes. This makes the code easier to test with mocks and more flexible when requirements shift.
 
 ## Mechanics
 
-1. **Create an empty interface** with a descriptive name reflecting the responsibility
-2. **Declare common operations** within the interface that shared clients depend on
-3. **Configure classes to implement** the new interface
-4. **Update client code** to type-hint against the new interface instead of concrete classes
-5. **Optional: Rename or remove** the original class if it no longer serves a purpose
+1. **Define the interface** with a name that reflects the responsibility it represents
+2. **Declare the methods** that shared clients depend on
+3. **Have classes implement** the new interface
+4. **Update client type hints** to reference the interface instead of concrete classes
+5. **Optional**: Remove the concrete class from client signatures entirely if no class-specific features are needed
 
 ## Before/After
 
@@ -129,27 +127,27 @@ readonly class RefundService
 
 ## Benefits
 
-- **Clearer Contracts**: Interfaces explicitly define what clients can depend on
-- **Easier Testing**: Mock interfaces rather than concrete classes in unit tests
-- **Loose Coupling**: Clients depend on abstractions, not concrete implementations
-- **Polymorphism**: Swap implementations without modifying client code
-- **Better Documentation**: Interface names and methods communicate intent
-- **Scalability**: Add new implementations without touching existing code
+- **Defined Contracts**: Interfaces make explicit what callers are allowed to depend on
+- **Simplified Testing**: Mock the interface instead of the concrete class in unit tests
+- **Loose Coupling**: Clients are insulated from implementation details
+- **Swappable Implementations**: Different concrete classes can be substituted without touching client code
+- **Clear Communication**: Interface names and method signatures document the expected behavior
+- **Easy Extension**: New implementations can be added without modifying existing code
 
 ## When NOT to Use
 
-- **Single Implementation**: If only one class implements the interface, extract a more specific interface or leave code as-is
-- **Shared Implementation Logic**: Use Extract Superclass instead if classes share implementation code
-- **Too Many Methods**: An interface with many unrelated methods likely violates the Interface Segregation Principle
-- **One-Time Usage**: Don't extract interfaces prematurely without evidence of multiple implementations
-- **Artificial Abstractions**: Avoid creating interfaces just for the sake of it; ensure they represent genuine abstractions
+- **Only one implementation exists**: An interface with a single implementor may be premature abstraction
+- **Shared implementation needed**: If classes share code as well as a contract, Extract Superclass is a better fit
+- **Interface is too broad**: A large interface with unrelated methods likely violates the Interface Segregation Principle -- split it first
+- **No evidence of variation**: Do not create interfaces speculatively; wait until a second implementation is needed
+- **Artificial abstractions**: An interface should represent a genuine concept, not exist for the sake of having one
 
 ## Related Refactorings
 
-- **Extract Superclass**: Extract common code AND interface from classes with shared implementation
-- **Extract Class**: Move related responsibilities to a new class without inheritance
-- **Remove Middle Man**: Simplify excessive abstraction layers if they become confusing
-- **Interface Segregation**: Split overly broad interfaces into smaller, more focused ones
+- **Extract Superclass**: Shares both contract and implementation between classes
+- **Extract Class**: Moves responsibilities to a new class without inheritance
+- **Remove Middle Man**: Strips excessive abstraction layers that obscure rather than clarify
+- **Interface Segregation**: Splits an overly broad interface into narrower, focused ones
 
 ## Examples in Other Languages
 

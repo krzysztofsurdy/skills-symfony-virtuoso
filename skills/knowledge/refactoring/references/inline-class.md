@@ -1,24 +1,24 @@
 ## Overview
 
-Inline Class is a refactoring technique that removes a class by distributing its functionality to its single caller or merging it with another class. This refactoring eliminates unnecessary abstraction layers when a class has become too simple or is tightly coupled to a single consumer.
+Inline Class dissolves a class that no longer earns its keep by folding its fields and methods into the class that uses it. When a class has shrunk to the point where it adds more indirection than value, merging it into its sole consumer simplifies the codebase.
 
 ## Motivation
 
-Classes exist to help organize and encapsulate related functionality. However, not all abstractions are beneficial. A class may become a candidate for inlining when:
+Not every abstraction pays for itself. A class may become a candidate for inlining when:
 
-- **Reduced responsibility**: A class has become too small and simple, offering little value as a separate entity.
-- **Single responsibility violation**: The class is only used by one other class, indicating tight coupling that could be simplified.
-- **Over-engineering**: The initial design created more abstraction than necessary for the problem domain.
-- **Maintenance burden**: The class adds cognitive overhead without providing clear benefits.
-- **Refactoring aftermath**: After other refactorings, a class may no longer justify its existence.
+- **It has too little substance**: After other refactorings, the class holds only a field or two and a trivial method
+- **Only one consumer exists**: A single class uses it, making the separation purely ceremonial
+- **The original split was premature**: The design introduced more structure than the problem warranted
+- **Reading the code is harder**: Tracing through the extra class adds cognitive cost without illuminating intent
+- **It outlived its purpose**: Subsequent refactorings have shifted responsibilities elsewhere, leaving the class hollow
 
 ## Mechanics
 
-1. **Analyze dependencies**: Ensure the class has minimal usage (ideally one consumer).
-2. **Move members**: Migrate all fields and methods from the inline class to the consuming class.
-3. **Update references**: Replace all references to the inlined class with the consuming class.
-4. **Remove class**: Delete the now-empty class definition.
-5. **Compile and test**: Verify that the refactoring maintains behavior without introducing regressions.
+1. **Check usage**: Confirm the class has a single consumer (or very few)
+2. **Migrate members**: Move all fields and methods from the inlined class into the consumer
+3. **Redirect references**: Update all code that references the inlined class to use the consumer instead
+4. **Delete the class**: Remove the now-empty class file
+5. **Verify with tests**: Run the full suite to confirm behavior is preserved
 
 ## Before/After: PHP 8.3+ Code
 
@@ -113,26 +113,25 @@ echo $person->getTelephoneNumber();
 
 ## Benefits
 
-- **Simplified codebase**: Fewer classes reduce the cognitive load and navigation overhead.
-- **Clearer intent**: When there's a single responsibility, merging can make the relationship explicit.
-- **Reduced indirection**: Direct method calls eliminate intermediate objects and method delegations.
-- **Better maintainability**: Fewer moving parts make the code easier to understand and modify.
-- **Improved testability**: Testing can focus on the unified class rather than multiple interdependent classes.
-- **Performance**: Eliminates object instantiation and method delegation overhead.
+- **Fewer moving parts**: One less class to navigate, name, and maintain
+- **Direct relationships**: Data and the methods that use it live in the same place
+- **Less indirection**: No delegation layer between the consumer and the data
+- **Easier comprehension**: Readers see everything in one class instead of chasing references
+- **Simpler testing**: Tests target a single class rather than a pair of collaborators
+- **Reduced overhead**: Eliminates object creation and method delegation costs
 
 ## When NOT to Use
 
-- **Multiple consumers**: If the class is used by several clients, inlining creates duplication and complexity.
-- **Meaningful domain concept**: Classes representing domain entities should be preserved for clarity and expressiveness.
-- **Plugin or extension points**: Classes designed for polymorphism or inheritance should not be inlined.
-- **Distinct responsibilities**: If the class manages distinct concerns, preserving separation is valuable.
-- **Future extensibility**: If you anticipate the class may gain additional uses or responsibilities.
-- **Third-party interfaces**: Classes implementing contracts external to your module shouldn't be inlined.
+- **Multiple consumers**: If several classes depend on the class, inlining duplicates code and spreads responsibility
+- **Meaningful domain concept**: If the class represents a real-world entity, preserving it keeps the model honest
+- **Polymorphic use**: Classes designed for substitution or extension should not be collapsed
+- **Distinct responsibilities**: If the class manages a genuinely separate concern, merging muddies the consumer
+- **Anticipated growth**: If the class is likely to gain new behavior or additional consumers, keep it
+- **External contracts**: Classes that implement interfaces consumed by other modules or libraries must stay
 
 ## Related Refactorings
 
-- **Extract Class**: The opposite refactoring; splits responsibilities into new classes.
-- **Hide Delegate**: Encapsulates object interaction patterns (consider before inlining).
-- **Replace Temp with Query**: Simplifies by removing intermediate variables.
-- **Consolidate Duplicate Code**: Merges similar methods when inlining multiple classes.
-- **Collapse Hierarchy**: Removes unnecessary inheritance layers, a similar pattern for class hierarchies.
+- **Extract Class**: The inverse -- splitting a class when it takes on too many responsibilities
+- **Hide Delegate**: Consider hiding the delegation before deciding to inline
+- **Replace Temp with Query**: Simplifies code by removing intermediate variables during inlining
+- **Collapse Hierarchy**: A parallel refactoring that merges a subclass into its parent

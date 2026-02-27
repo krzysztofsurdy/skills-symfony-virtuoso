@@ -1,24 +1,24 @@
 ## Overview
 
-Feature Envy occurs when a method accesses the data of another object more than its own data. This code smell represents a coupling problem where methods show more interest in another class's internal state than in their own object's data. It violates the principle of encapsulation and indicates that logic should be relocated closer to the data it manipulates.
+Feature Envy describes a method that reaches into another object's data far more than it uses its own. The method is effectively doing work that belongs to the other class -- it is "envious" of that class's fields and methods. This violates encapsulation and is a strong signal that the logic should live closer to the data it operates on.
 
 ## Why It's a Problem
 
-Feature Envy creates several critical issues:
+Feature Envy introduces several compounding issues:
 
-- **Tight Coupling**: Methods depend heavily on another class's internal structure, making refactoring risky
-- **Low Cohesion**: Related data and behavior become scattered across multiple classes
-- **Maintenance Burden**: Changes to one class's structure require updates in multiple locations
-- **Reduced Reusability**: Tightly coupled code is harder to reuse in different contexts
-- **Testing Complexity**: Methods become harder to test in isolation due to external dependencies
+- **Tight Coupling**: The method becomes deeply dependent on another class's internal layout, making both classes resistant to change
+- **Scattered Cohesion**: Data and the behavior that acts on it end up in different classes, weakening the conceptual integrity of both
+- **Ripple Effects**: Structural changes to the data-holding class force updates in every envious method across the codebase
+- **Poor Reusability**: Code tangled with another object's internals is difficult to extract and reuse in other contexts
+- **Testing Friction**: Envious methods require elaborate setup to satisfy external dependencies, making unit tests harder to write and maintain
 
 ## Signs and Symptoms
 
-- A method calls multiple getters on another object
-- The method accesses another object's fields more frequently than its own
-- A method works more with another class's data than the class containing the method
-- You find yourself checking the same conditions on another object repeatedly
-- Helper methods exist primarily to access another object's state
+- A method makes multiple getter calls on a single external object
+- The method references another object's fields more often than its own class's fields
+- Logic in the method is primarily concerned with data belonging to a different class
+- The same conditions on another object are checked repeatedly across methods
+- Helper methods exist mainly to reach into another object's state
 
 ## Before and After
 
@@ -165,32 +165,9 @@ Feature Envy is sometimes acceptable:
 
 ## Related Smells
 
-- **Inappropriate Intimacy**: When classes know too much about each other's private implementation
-- **Message Chains**: Calling multiple methods in sequence (like `object->method1()->method2()`) is often a symptom
-- **Lazy Class**: When an object doesn't do much and mostly delegates to others
-- **Anemic Domain Model**: Domain objects lack behavior, forcing logic into service classes
+- **Inappropriate Intimacy**: Classes that dig into each other's private implementation details -- a broader form of the same coupling issue
+- **Message Chains**: Traversing a chain of method calls (like `object->a()->b()->c()`) is often a symptom of envy for data buried deep in the object graph
+- **Lazy Class**: An object that does very little itself and mostly delegates, pushing logic outward where it becomes envious
+- **Anemic Domain Model**: Domain objects that hold data but no behavior, forcing all logic into service classes that are inherently envious
 
-## Refactoring.guru Guidance
-
-### Signs and Symptoms
-
-A method accesses the data of another object more than its own data.
-
-### Reasons for the Problem
-
-This smell may occur after fields are moved to a data class. If so, the operations on that data should be moved to the data class as well.
-
-### Treatment
-
-- **Move Method**: As a rule, if things change at the same time, keep them in the same place. Move the method to the class whose data it primarily uses.
-- **Extract Method**: If only a part of a method accesses another object's data, extract that part into its own method and move it.
-- When a method uses functions from several other classes, determine which class contains most of the data used and place the method there.
-
-### Payoff
-
-- Less code duplication (if the data-handling code is consolidated in a central location).
-- Better code organization (methods are next to the data they use).
-
-### When to Ignore
-
-Sometimes behavior is intentionally kept separate from the class that holds the data. The usual advantage of this is the ability to dynamically change the behavior (see Strategy, Visitor, and other patterns).
+A useful rule of thumb: if things change together, keep them together. When a method uses data from several classes, determine which class owns the majority of that data and place the method there. The exception is when behavior is intentionally kept separate to enable runtime flexibility -- patterns like Strategy and Visitor deliberately separate behavior from data.

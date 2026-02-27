@@ -1,29 +1,30 @@
 ## Overview
 
-The Inline Method refactoring technique is used to eliminate simple methods that add little value. When a method is straightforward and its name doesn't reveal something important about the intent of the code, inlining the method body directly into the caller can simplify the codebase. This refactoring is the reverse operation of "Extract Method."
+Inline Method removes a method whose body is just as clear as its name and replaces every call with the method's contents. This is the reverse of Extract Method and is appropriate when a level of indirection adds no value.
 
 ## Motivation
 
-Methods are created for various reasons:
-- **Excessive indirection**: Sometimes you create a method to add an indirection layer that no longer serves a purpose
-- **Simple calculations**: A method that merely wraps a single expression may not justify its existence
-- **Convenience methods**: Methods added "just in case" often end up being called only once
-- **Poor naming**: When a method's name doesn't clarify intent, it creates confusion rather than clarity
-- **Easy refactoring path**: Sometimes inlining is a stepping stone to better refactoring
+Methods exist to give names to operations and to enable reuse. But not every method earns its keep:
 
-Inlining can reduce the overhead of method calls and make the code flow more apparent, especially when the method body is trivial.
+- **Pointless indirection**: A method that wraps a single trivial expression does not improve readability
+- **Name adds no insight**: When the method name says nothing more than the body already does
+- **Single-call convenience methods**: A method created "just in case" that ended up with only one caller
+- **Misleading names**: When a method name is less clear than the code it contains
+- **Stepping stone**: Inlining a method is often a preparatory step before applying a different refactoring
+
+Removing such methods makes the flow of the code more direct and easier to follow.
 
 ## Mechanics
 
 ### Step-by-Step Process
 
-1. **Check for overrides**: Verify the method is not overridden in subclasses. If it is, skip inlining.
-2. **Find all callers**: Locate every place where the method is called.
-3. **Replace calls with body**: For each call, replace the method invocation with the method's body.
-4. **Handle parameters**: Substitute method parameters with actual arguments passed in the call.
-5. **Handle return values**: Replace the method call with the returned expression (if any).
-6. **Remove the method**: Delete the original method definition.
-7. **Test**: Run tests to ensure behavior is preserved.
+1. **Check for overrides**: If the method is overridden in subclasses, do not inline it
+2. **Locate all call sites**: Find every place the method is invoked
+3. **Substitute the body**: Replace each call with the method's implementation
+4. **Map parameters to arguments**: Substitute formal parameters with the actual values passed at each call site
+5. **Handle return values**: Replace the method call with the returned expression where applicable
+6. **Delete the method**: Remove the now-unused method definition
+7. **Run the tests**: Confirm identical behavior
 
 ## Before/After Examples
 
@@ -204,29 +205,28 @@ echo $invoice->getTotal();
 
 ## Benefits
 
-- **Reduced complexity**: Eliminates unnecessary layers of indirection
-- **Improved readability**: When method names don't add clarity, their removal can make code clearer
-- **Better performance**: Removes method call overhead (minor in most cases)
-- **Easier comprehension**: Direct code makes it obvious what's happening without context switching
-- **Prepares for refactoring**: Often used as a step before applying other refactorings
+- **Less indirection**: Readers follow the logic directly without jumping to another method
+- **Clearer flow**: When a method name does not add meaning, its removal makes the code more transparent
+- **Smaller class surface**: Fewer methods to scan and understand
+- **Direct comprehension**: The computation is visible where it happens
+- **Enables further refactoring**: Inlining often precedes other transformations like Extract Class or Move Method
 
 ## When NOT to Use
 
-- **Polymorphism**: Never inline methods that are overridden in subclasses
-- **Public API**: Don't inline public methods that are part of a stable interface used by external code
-- **Complex logic**: If a method contains intricate logic, keep it separate for clarity and testability
-- **Reused extensively**: If a method is called from many places, inlining creates duplication
-- **Important business logic**: Methods with significant business meaning should remain for intent documentation
-- **Recursive methods**: Methods that call themselves cannot be easily inlined
-- **Test dependencies**: Methods specifically designed for testing should be preserved
+- **Polymorphic methods**: Never inline methods that subclasses override
+- **Published APIs**: Public methods used by external consumers must remain stable
+- **Meaningful abstractions**: If the method encapsulates non-trivial logic, keep it for clarity and testability
+- **Multiple call sites**: Inlining a method called from many places creates duplication
+- **Business-significant names**: Methods whose names convey important domain meaning should stay
+- **Recursive methods**: Self-referencing methods cannot be meaningfully inlined
+- **Test hooks**: Methods designed specifically for testing should be preserved
 
 ## Related Refactorings
 
-- **Extract Method**: The reverse operation; use when code is too complex or needs reuse
-- **Replace Method with Method Object**: When inlining would create overly complex expressions
-- **Simplify Method**: Complement to inlining; use to reduce method complexity before inlining
-- **Remove Dead Code**: Often applied after identifying methods that are only called in one place
-- **Introduce Parameter Object**: When methods have too many parameters to inline effectively
+- **Extract Method**: The opposite operation, used when code is too complex or needs reuse
+- **Replace Method with Method Object**: An alternative when inlining would create unwieldy expressions
+- **Remove Dead Code**: Related cleanup that removes methods with zero callers
+- **Introduce Parameter Object**: Simplifies parameter lists that become unwieldy after inlining
 
 ## Examples in Other Languages
 

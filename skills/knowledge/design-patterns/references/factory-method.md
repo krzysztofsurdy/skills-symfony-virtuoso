@@ -2,16 +2,14 @@
 
 ## Overview
 
-The Factory Method is a creational design pattern that provides an interface for creating objects while letting subclasses decide which class to instantiate. Instead of directly instantiating objects using the `new` keyword, you delegate object creation to specialized factory methods.
-
-The pattern encapsulates the instantiation logic, making code more flexible, maintainable, and less coupled to concrete implementations.
+The Factory Method is a creational design pattern that delegates object instantiation to specialized methods rather than having client code call constructors directly. A base creator defines the contract for producing objects, while concrete subclasses determine which specific class gets instantiated. This indirection keeps client code decoupled from the concrete types it consumes.
 
 ## Intent
 
-- Define an interface for creating objects that lets subclasses decide which class to instantiate
-- Shift responsibility for object creation from client code to dedicated factory methods
-- Eliminate the need for client code to know about concrete classes
-- Enable easy addition of new product types without modifying existing code
+- Declare a creation interface and let subclasses choose the concrete class to build
+- Move instantiation logic out of client code and into dedicated factory methods
+- Free callers from needing to reference or import concrete product classes
+- Make it straightforward to introduce new product variants without touching existing consumers
 
 ## Problem & Solution
 
@@ -66,12 +64,12 @@ Create factory methods that encapsulate object creation logic. The client uses t
 
 Use the Factory Method pattern when:
 
-- A class cannot anticipate the type of objects it needs to create
-- You want to delegate object creation to subclasses
-- Object creation logic is complex or varies by type
-- You need to introduce new product types without modifying existing code
-- You want to reduce coupling between client code and concrete classes
-- Multiple if/else or switch statements are used for type checking
+- The exact type of object needed cannot be predicted until runtime
+- Subclasses should be the ones deciding which product class to instantiate
+- Object construction logic differs meaningfully across product types
+- New product variants should be addable without modifying callers
+- You want client code to program against abstractions, not concrete classes
+- Scattered conditional instantiation is creating maintenance headaches
 
 Avoid when:
 
@@ -302,37 +300,37 @@ echo $response->message;
 
 ## Real-World Analogies
 
-- **Restaurant Kitchen**: A customer orders a dish (interface). The kitchen has different chefs who specialize in different cuisines (concrete creators). Each chef knows how to prepare their specific dishes (factory methods).
+- **Staffing Agency**: A company tells an agency it needs a software engineer. The agency (factory) selects and sends the right candidate (concrete product) without the company managing the recruitment process or knowing which individual will arrive.
 
-- **Vehicle Manufacturing**: A car manufacturer (factory) produces different vehicle types (sedans, SUVs, trucks) without customers needing to know the manufacturing process. Different plants (factories) specialize in different models.
+- **Vending Machine**: You press a button for "hot beverage." The machine's internal mechanism (factory method) decides whether to brew coffee, tea, or hot chocolate based on the selection, dispensing the result through the same slot.
 
-- **Document Generation**: An application needs to generate various document types (PDF, Word, Excel). Each document type has its own generator, selected based on file extension.
+- **Print Shop**: A customer submits a document and selects the output format. The shop's production line (factory) routes the job to the right printer -- laser, inkjet, or large-format -- without the customer knowing which machine handles it.
 
 ## Pros and Cons
 
 ### Pros
 
-- **Loose Coupling**: Client code doesn't depend on concrete classes
-- **Open/Closed Principle**: Add new types without modifying existing code
-- **Single Responsibility**: Separates object creation from usage
-- **Code Reusability**: Factory logic can be reused across the application
-- **Centralized Configuration**: Manage all creation logic in one place
+- **Loose Coupling**: Client code programs against interfaces, not concrete implementations
+- **Open/Closed Principle**: New product types slot in by adding new factory subclasses, not editing existing code
+- **Single Responsibility**: Construction logic lives in one dedicated place, separate from usage
+- **Code Reusability**: Multiple consumers share the same factory without duplicating creation logic
+- **Centralized Configuration**: All instantiation decisions are consolidated in one location
 
 ### Cons
 
-- **Added Complexity**: More classes and interfaces than direct instantiation
-- **Overhead**: For simple cases with one implementation, adds unnecessary abstraction
-- **Learning Curve**: Developers unfamiliar with the pattern may find it confusing
-- **Maintenance**: Requires discipline to properly implement and maintain
+- **Added Complexity**: The pattern introduces additional interfaces and classes beyond direct construction
+- **Overhead**: When only one product type exists, the factory layer adds ceremony with no payoff
+- **Learning Curve**: Developers unfamiliar with the pattern may find the indirection confusing at first
+- **Maintenance**: Each new product type requires a corresponding factory class
 
 ## Relations with Other Patterns
 
-- **Singleton Pattern**: Factory methods often create singleton instances
-- **Strategy Pattern**: Often used together to encapsulate algorithm selection
-- **Template Method**: Factory method is a special case of Template Method
-- **Abstract Factory**: Factory Method is the basis for Abstract Factory
-- **Dependency Injection**: Modern alternative using DI containers for automatic object creation
-- **Builder Pattern**: For complex object construction; Factory Method for simple creation
+- **Singleton**: Factories often manage singleton instances to ensure one product per type
+- **Strategy**: Frequently paired with Factory Method to select algorithms at runtime
+- **Template Method**: Factory Method can be seen as a specialized form of Template Method focused on creation
+- **Abstract Factory**: Abstract Factory typically uses Factory Methods internally for each product it creates
+- **Dependency Injection**: Modern DI containers serve a similar purpose, automating object wiring at the composition root
+- **Builder**: Builder handles multi-step construction of complex objects; Factory Method handles straightforward single-step creation
 
 ## Tips for Implementation
 
@@ -561,5 +559,3 @@ def main():
 if __name__ == "__main__":
     main()
 ```
-
-*Source: [sourcemaking.com/design_patterns/factory_method](https://sourcemaking.com/design_patterns/factory_method)*

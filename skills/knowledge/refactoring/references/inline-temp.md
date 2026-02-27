@@ -1,30 +1,29 @@
 ## Overview
 
-The Inline Temp refactoring technique eliminates unnecessary temporary variables by replacing them with the expressions that are assigned to them. This refactoring is typically applied when a temporary variable doesn't make the code more readable or when it's assigned a value only once and used only once. By removing these "pass-through" variables, you reduce visual noise and make the actual computation more apparent.
+Inline Temp removes a temporary variable that adds no clarity by replacing it with the expression it holds. When a variable is assigned once, used once, and its name does not reveal anything the expression itself does not already say, the variable is just a detour. Removing it makes the code more direct.
 
 ## Motivation
 
-Temporary variables are often introduced for various reasons:
+Temporary variables sometimes appear for valid reasons that no longer apply:
 
-- **Simple assignments**: A variable created to hold the result of a simple expression that's only used once
-- **Debugging convenience**: Variables added during development to make debugging easier but no longer needed
-- **Over-explanation**: Variables that don't actually clarify intent, just add lines of code
-- **Expression complexity**: Breaking complex expressions into steps that don't truly improve readability
-- **Single-use assignments**: Variables that are assigned once and immediately used in the next line
+- **Pass-through assignments**: A variable stores a value only to hand it to the next line
+- **Leftover debugging aids**: Variables introduced to inspect values during development that stayed
+- **Over-explanation**: Variables whose names restate the expression without adding insight
+- **Unnecessary decomposition**: Steps broken apart that do not actually improve readability
+- **Single-use intermediaries**: Variables that exist solely to bridge two adjacent lines
 
-When these variables don't provide meaningful insight into what the code does, inlining them makes the code more direct and often easier to understand at a glance.
+When a variable does not help the reader understand what the code does, removing it tightens the logic and often reveals further simplification opportunities.
 
 ## Mechanics
 
 ### Step-by-Step Process
 
-1. **Identify the temporary variable**: Find a variable that is assigned once and used once or a few times
-2. **Check usage patterns**: Verify that inlining won't create overly complex expressions
-3. **Replace all usages**: Replace each use of the variable with the right-hand side of its assignment
-4. **Handle side effects**: Ensure the expression has no side effects that would be duplicated
-5. **Remove the variable**: Delete the temporary variable declaration and assignment
-6. **Test**: Run tests to ensure behavior is preserved
-7. **Refactor further if needed**: Use Extract Variable if the resulting expression is too complex
+1. **Identify the variable**: Find a temporary that is assigned once and used once or a small number of times
+2. **Verify safety**: Confirm that the expression has no side effects that would be duplicated
+3. **Substitute each usage**: Replace every reference to the variable with the original expression
+4. **Delete the declaration**: Remove the variable and its assignment
+5. **Run the tests**: Confirm behavior is unchanged
+6. **Reassess**: If the resulting expression is too dense, consider Extract Variable for selected parts
 
 ## Before/After Examples
 
@@ -157,30 +156,28 @@ $discount = $processor->determineDiscount(1500, true);
 
 ## Benefits
 
-- **Reduced visual clutter**: Fewer variable declarations means less code to read
-- **Improved clarity**: Removes "pass-through" variables that don't add meaning
-- **Faster comprehension**: Shows the relationship between expressions directly
-- **Easier refactoring**: Often reveals opportunities for further improvements
-- **Lower memory footprint**: Eliminates unnecessary variable allocations (though modern optimizers often handle this)
-- **Clearer intent**: Removes redundant naming that doesn't clarify purpose
+- **Tighter code**: Fewer lines and variables to track
+- **Clearer data flow**: The relationship between expressions is visible without intermediate stops
+- **Faster reading**: Readers parse fewer declarations to understand what happens
+- **Reveals further refactoring**: Removing intermediaries often exposes opportunities like Extract Method
+- **Less noise**: Eliminates naming decisions that do not carry meaningful information
 
 ## When NOT to Use
 
-- **Complex expressions**: Don't inline if the result would be hard to understand at a glance
-- **Repeated usage**: Keep the variable if it's used multiple times in different contexts
-- **Side effects**: Don't inline if the expression has side effects that would be duplicated
-- **Clarity purpose**: If a variable name significantly documents intent, preserve it
-- **Performance-critical code**: When the expression involves expensive operations, a variable can serve as documentation and potential optimization point
-- **Method calls with state**: Be careful inlining calls that depend on or modify object state
-- **Debugging aid**: Variables added for debugging breakpoints may be worth keeping
+- **Readable names add meaning**: If the variable name conveys something the expression does not, keep it
+- **Multiple usages**: A variable used in several places prevents duplication of the expression
+- **Side-effect-producing expressions**: Inlining would evaluate the expression multiple times, duplicating side effects
+- **Complex expressions**: If the result would be a dense, hard-to-read compound expression, the variable is doing useful work
+- **Expensive computations**: A variable can document and cache the cost of an operation
+- **Stateful method calls**: Calls that depend on or modify object state should not be repeated
+- **Debugging breakpoints**: Variables kept specifically for breakpoint placement may be worth retaining during development
 
 ## Related Refactorings
 
-- **Extract Variable**: The reverse operation; use when expressions become too complex to inline
-- **Inline Method**: Similar concept but applied to methods instead of temporary variables
-- **Replace Temp with Query**: When a temp variable stores the result of a method call that could be called multiple times
-- **Simplify Expression**: Use before inlining if the original expression is overly complex
-- **Remove Dead Code**: Often identifies temp variables that are declared but never used
+- **Extract Variable**: The opposite -- introducing a named variable when an expression is too complex
+- **Inline Method**: The same principle applied to methods rather than temporary variables
+- **Replace Temp with Query**: Converts a temp into a method call, useful when the expression should be reusable
+- **Remove Dead Code**: Identifies variables that are declared but never read
 
 ## Examples in Other Languages
 

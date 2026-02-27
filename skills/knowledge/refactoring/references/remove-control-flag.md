@@ -2,9 +2,9 @@
 
 ## Overview
 
-The Remove Control Flag refactoring eliminates unnecessary boolean variables that serve as control flags for managing loop iterations or function execution. Instead of relying on flag variables, modern code should leverage language-specific flow control statements like `break`, `continue`, and `return` to achieve the same logic more cleanly.
+Remove Control Flag replaces boolean variables used to manage loop flow or early exits with direct control-flow statements such as `break`, `continue`, and `return`. These flag variables add indirection without adding clarity; the language already provides constructs purpose-built for controlling execution paths.
 
-Control flags are remnants of older programming practices that enforced single entry and exit points in functions. Modern languages encourage using proper control flow statements, resulting in clearer, more maintainable code.
+Control flags are a holdover from an era that valued single entry and single exit in every routine. Contemporary practice favors explicit flow control, which communicates intent more directly and keeps the code compact.
 
 ## Motivation
 
@@ -189,11 +189,11 @@ function validatePayment(Payment $payment): bool
 
 ## Benefits
 
-- **Clearer Code**: Intent becomes immediately obvious without tracking flag state
-- **Reduced Lines**: Eliminates unnecessary variable declarations and conditional checks
-- **Better Performance**: Fewer variables and conditionals to evaluate
-- **Idiomatic PHP**: Leverages language features as intended
-- **Easier Testing**: Simpler logic paths are easier to test and understand
+- **Transparent Flow**: The execution path is visible at each branch without tracking auxiliary state
+- **Fewer Moving Parts**: Removing flag variables shrinks the method's working set
+- **Improved Efficiency**: Loops exit as soon as the answer is found instead of running to completion
+- **Idiomatic Style**: Code uses language features as they were designed to be used
+- **Simpler Tests**: Fewer conditional paths mean fewer scenarios to exercise
 
 ## When NOT to Use
 

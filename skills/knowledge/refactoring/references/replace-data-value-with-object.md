@@ -1,6 +1,6 @@
 ## Overview
 
-Replace Data Value with Object is a refactoring technique that transforms simple primitive data values (strings, integers, arrays) into dedicated objects. This elevates data from passive containers to active entities capable of encapsulating behavior, validation, and business logic. The refactoring is particularly valuable when a single data value acquires multiple responsibilities or requires consistent handling across your codebase.
+Replace Data Value with Object promotes a bare primitive -- a string, integer, or similar simple type -- into a dedicated class. What starts as a single field often accumulates validation rules, formatting logic, and related operations that do not belong on the host class. Wrapping the value in its own object gives that behavior a proper home and turns a passive piece of data into an active participant in the domain model.
 
 ## Motivation
 
@@ -16,7 +16,7 @@ Replace Data Value with Object is a refactoring technique that transforms simple
 
 ### Why It Matters
 
-This refactoring strengthens type safety, centralizes validation and behavior, improves code clarity, and makes the domain model explicit. It bridges the gap between anemic data structures and rich domain models, allowing code to express business intent more naturally.
+Elevating a primitive to a first-class object centralizes validation, attaches behavior to the data it belongs with, and replaces vague types with explicit domain vocabulary. The result is a codebase where business rules are enforced at the point of creation rather than scattered across consumers.
 
 ## Mechanics: Step-by-Step
 
@@ -240,15 +240,13 @@ class OrderProcessor
 
 ## Benefits
 
-- **Type Safety**: Compiler-level protection against misusing primitive values
-- **Centralized Validation**: Business rules exist in one place, not scattered throughout code
-- **Encapsulated Behavior**: Related operations belong directly with their data
-- **Self-Documenting Code**: Domain concepts become explicit types in the codebase
-- **Immutability**: Value objects are typically immutable, preventing accidental mutations
-- **Equality by Value**: Objects can implement meaningful equality semantics
-- **Easier Testing**: Focused classes are simpler to test in isolation
-- **Reduced Coupling**: Calling code depends on domain abstractions, not primitives
-- **Domain-Driven Design**: Aligns code structure with business domain concepts
+- **Enforced invariants**: Validation happens once, at construction, rather than at every use site
+- **Behavior co-location**: Operations on the value live next to the value itself
+- **Explicit domain vocabulary**: Type names like `Email` and `Money` make code read like prose
+- **Immutability by design**: Value objects are typically `readonly`, eliminating accidental mutation
+- **Meaningful equality**: Objects can define what "same" means for their domain concept
+- **Isolated testability**: Each value object can be tested independently of the rest of the system
+- **Reduced primitive coupling**: Consumers depend on domain abstractions, not raw strings and integers
 
 ## When NOT to Use
 

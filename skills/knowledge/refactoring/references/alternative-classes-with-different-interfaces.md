@@ -2,23 +2,23 @@
 
 ## Overview
 
-This code smell occurs when two or more classes perform identical functions but expose different method names and signatures. It typically results from developers being unaware that functionally equivalent classes already exist in the codebase, leading to unnecessary duplication and inconsistent APIs.
+This smell arises when two or more classes do essentially the same thing but expose their functionality through different method names and signatures. It usually happens because a developer creates a new class without realizing that an equivalent one already exists -- different naming conventions, different file locations, or simply lack of communication between team members. The result is redundant implementations behind inconsistent APIs.
 
 ## Why It's a Problem
 
-- **Code Duplication**: Multiple implementations of the same logic increase maintenance burden
-- **Inconsistent API**: Different method names for identical operations confuse users and reduce intuitiveness
-- **Cognitive Load**: Developers must understand why multiple implementations exist
-- **Maintenance Nightmare**: Changes must be applied to multiple locations, risking bugs and inconsistencies
-- **Testing Overhead**: More code to test and maintain without functional benefit
+- **Redundant Logic**: The same behavior is implemented multiple times, multiplying maintenance effort
+- **Confusing API Surface**: Different method names for identical operations force users to guess which class to use
+- **Cognitive Overhead**: Developers waste time determining whether functionally similar classes actually differ in behavior
+- **Divergent Maintenance**: Bug fixes and enhancements must be applied to each copy, and missed copies introduce inconsistencies
+- **Unnecessary Test Burden**: Each implementation requires its own test coverage despite providing no unique functionality
 
 ## Signs and Symptoms
 
-- Classes with identical functionality but different method names
-- Similar algorithms implemented multiple times with slight variations
-- Developers wondering which class to use for a particular operation
-- Documentation explaining differences between functionally equivalent classes
-- Similar logic scattered across codebase with different naming conventions
+- Classes with different method names that perform the same operation
+- Nearly identical algorithms implemented independently with minor variations
+- Developers unsure which class to choose for a given task
+- Documentation that attempts to explain the distinction between functionally equivalent classes
+- Similar logic appearing under different naming conventions in different parts of the codebase
 
 ## Before/After
 
@@ -144,25 +144,9 @@ If only partial functionality overlaps, extract a readonly base class with share
 
 ## Related Smells
 
-- **Duplicate Code**: Often appears alongside alternative classes
-- **Data Clumps**: Multiple classes operating on similar data structures
-- **Inappropriate Intimacy**: Classes may be too similar to remain separate
-- **Lazy Class**: One of the alternatives may be truly unnecessary
+- **Duplicate Code**: Naturally accompanies alternative classes, since each implements the same logic independently
+- **Data Clumps**: Multiple classes operating on similar data structures often hints at a shared abstraction waiting to be extracted
+- **Inappropriate Intimacy**: Classes that are too similar to justify existing separately
+- **Lazy Class**: After unifying interfaces, one of the alternatives may turn out to be entirely redundant
 
-## Refactoring.guru Guidance
-
-### Signs and Symptoms
-Two classes perform identical functions but have different method names.
-
-### Reasons for the Problem
-The programmer who created one of the classes probably did not know that a functionally equivalent class already existed. This typically arises from insufficient communication between team members or lack of code review processes.
-
-### Treatment
-- **Rename Methods** to make them identical in all alternative classes
-- **Move Method**, **Add Parameter**, and **Parameterize Method** to make the signature and implementation of methods the same
-- **Extract Superclass** when only partial functionality is duplicated, converting existing classes into subclasses
-- Delete one of the redundant classes after standardizing interfaces
-
-### Payoff
-- Eliminates unnecessary duplicated code, making the resulting code less bulky
-- Code becomes more readable and understandable as developers no longer need to determine why duplicate classes exist
+The first step is standardizing the method names across all alternatives. Then use Move Method, Add Parameter, or Parameterize Method to align signatures and implementations. When only partial overlap exists, Extract Superclass lets both classes inherit shared behavior. Once the interfaces are unified, delete the redundant class -- the codebase becomes smaller, more consistent, and easier to navigate.

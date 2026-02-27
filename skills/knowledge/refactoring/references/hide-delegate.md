@@ -1,30 +1,30 @@
 ## Overview
 
-Hide Delegate is a refactoring technique that removes unnecessary intermediate methods that delegate to other objects. Instead of exposing internal object delegation, you create methods on a class that handle delegation internally. This simplifies the client code, reduces coupling, and provides a cleaner, more cohesive public interface.
+Hide Delegate shields client code from knowing about the internal objects a class delegates to. Instead of letting callers reach through one object to access another (`department->getManager()->getName()`), you add a method on the intermediate class that performs the delegation internally. Callers interact with a simpler, more stable interface.
 
 ## Motivation
 
 ### When to Apply
 
-- **Long chains of delegation**: Client code accesses `object->getDelegated()->getProperty()` instead of using a single method
-- **Unnecessary coupling**: Clients depend on internal object structure rather than stable interfaces
-- **Law of Demeter violations**: Code reaches through multiple layers to get needed data
-- **API clarity**: Internal implementation details leak into public contracts
-- **Object structure changes**: Refactoring internal objects breaks many client locations
-- **Feature envy**: A class uses another object's methods more than its own
+- **Chained method calls**: Client code navigates through multiple objects to reach the data it needs
+- **Excessive coupling**: Callers depend on the internal structure of objects they should not know about
+- **Law of Demeter violations**: Code talks to strangers instead of immediate neighbors
+- **Leaking internals**: Implementation details surface in the public API
+- **Fragile call sites**: Restructuring internal objects forces changes across many client locations
+- **Feature envy**: A class spends more time accessing another object's data than its own
 
 ### Why It Matters
 
-Hide Delegate reduces coupling between classes, improves encapsulation, and makes code more maintainable. When clients depend on internal delegation chains, changes to the internal structure require updating all clients. By providing dedicated methods, you create a stable interface that shields clients from internal complexity.
+When clients reach through delegation chains, they become tightly coupled to the internal wiring of the objects involved. Any change to that wiring -- renaming a method, replacing an internal object, reorganizing responsibilities -- ripples out to every call site. Providing a facade method on the owning class absorbs that change in a single place.
 
 ## Mechanics: Step-by-Step
 
-1. **Identify delegation chains**: Find places where clients access delegated objects
-2. **Create delegation method**: Add a new public method on the delegating class
-3. **Implement delegation**: Method delegates to the internal object and returns the result
-4. **Update clients**: Replace direct delegation calls with calls to the new method
-5. **Remove accessor if possible**: Delete the public getter for the delegated object if no longer needed
-6. **Test thoroughly**: Verify all client code still works correctly
+1. **Find delegation chains**: Locate places where client code accesses a delegated object's properties or methods
+2. **Add a wrapper method**: Create a method on the owning class that performs the delegation internally
+3. **Implement the delegation**: Have the new method call through to the internal object and return the result
+4. **Redirect callers**: Replace all chained calls with calls to the new method
+5. **Hide the accessor if possible**: Remove the public getter for the internal object if no caller still needs it
+6. **Verify with tests**: Confirm that all client code continues to work correctly
 
 ## Before: PHP 8.3+ Example
 
@@ -159,28 +159,27 @@ $employee->reportToManager();     // Output: Reporting to: John Smith
 
 ## Benefits
 
-- **Reduced Coupling**: Clients depend on stable public interfaces, not internal structure
-- **Encapsulation**: Internal implementation details remain hidden and can be changed safely
-- **Law of Demeter Compliance**: Clients only communicate with direct neighbors
-- **Cleaner API**: Public interface becomes more intuitive and easier to use
-- **Easier Refactoring**: Changing internal object relationships doesn't break client code
-- **Single Responsibility**: Delegating class has clearer purpose and boundaries
-- **Maintainability**: Centralized delegation logic is easier to modify and understand
+- **Weaker Coupling**: Clients depend on a stable surface API rather than the internal object graph
+- **Stronger Encapsulation**: Internal objects can be restructured without touching callers
+- **Demeter Compliance**: Each class communicates only with its direct collaborators
+- **Cleaner Public Interface**: The owning class presents a focused, intuitive set of methods
+- **Localized Change**: Modifications to internal delegation affect a single method, not every call site
+- **Clearer Boundaries**: Each class has a well-defined scope of responsibility
+- **Easier Comprehension**: Fewer indirections make the code faster to read and understand
 
 ## When NOT to Use
 
-- **True accessors needed**: If clients genuinely need the delegated object itself (not just properties/methods)
-- **Extensive delegation**: When hiding many different delegated objects becomes overly complex
-- **Transparent proxies**: Some patterns (Facade, Adapter) intentionally expose internal delegation
-- **Simple pass-through**: Single method delegations with obvious intent may not warrant hiding
-- **Performance critical**: In rare cases where method call overhead matters (typically negligible)
-- **Widespread external APIs**: When many external libraries depend on accessing the delegated object
+- **Clients genuinely need the delegated object**: Sometimes the caller requires the full object, not just a single property
+- **Excessive wrapping**: If hiding many different delegated objects bloats the owning class, the cure may be worse than the disease
+- **Intentional transparency**: Patterns like Facade and Adapter deliberately expose delegation
+- **Trivial pass-through**: A single, obvious delegation with no stability benefit may not be worth wrapping
+- **Negligible coupling risk**: If the internal structure is unlikely to change, the indirection adds little value
+- **External API dependency**: When third-party libraries expect access to the delegated object
 
 ## Related Refactorings
 
-- **Remove Middle Man**: Reverse operation - expose the delegated object directly when hiding becomes excessive
-- **Encapsulate Field**: Hide internal fields and provide controlled access methods
-- **Extract Class**: Extract delegation to a new class when responsibility grows
-- **Facade Pattern**: Similar structure but intentionally abstracts multiple subsystems
-- **Law of Demeter**: General principle that guides when to apply Hide Delegate
-- **Introduce Parameter Object**: Combine delegated data access into a single parameter object
+- **Remove Middle Man**: The inverse -- exposing the delegated object when too many wrapper methods accumulate
+- **Encapsulate Field**: Hides internal fields behind accessors, following the same encapsulation principle
+- **Extract Class**: Pulls delegation-heavy logic into its own class when responsibility grows
+- **Facade Pattern**: A broader application of the same idea, abstracting an entire subsystem
+- **Introduce Parameter Object**: Bundles delegated data into a single parameter to simplify method signatures

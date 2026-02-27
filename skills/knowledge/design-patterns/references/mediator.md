@@ -2,15 +2,15 @@
 
 ## Overview
 
-The Mediator pattern is a behavioral design pattern that promotes loose coupling by keeping objects from referring to each other explicitly, instead letting them communicate through a mediator object. This pattern is particularly useful when a set of objects need to communicate in complex ways, and the resulting interdependencies are unstructured and difficult to understand.
+The Mediator pattern is a behavioral design pattern that funnels all communication between a group of collaborating objects through a single coordinator. Instead of each object maintaining direct references to every peer it talks to, objects notify the mediator, which decides how to route and handle the interaction. This replaces a tangled mesh of point-to-point connections with a clean hub-and-spoke topology.
 
 ## Intent
 
-- Define an object that encapsulates how a set of objects interact
-- Promote loose coupling by keeping objects from referring to each other explicitly
-- Centralize complex communication and control logic
-- Make it easier to maintain, test, and modify interaction logic
-- Enable reuse of individual components in different contexts
+- Centralize the rules governing how a group of objects interact into one dedicated object
+- Eliminate direct references between collaborating objects so they remain independent
+- Consolidate scattered interaction logic into a single, inspectable location
+- Make individual components reusable in different contexts by removing peer dependencies
+- Simplify testing by isolating coordination logic from component behavior
 
 ## Problem & Solution
 
@@ -57,11 +57,11 @@ Create a mediator class that encapsulates all the communication logic between ob
 
 ## When to Use
 
-- A set of objects need to communicate in complex ways that result in dependencies that are unstructured and difficult to understand
-- Reusing an object is difficult because it refers to many other objects
-- Behavior distributed between several classes should be customizable without a lot of subclassing
-- You want to centralize control and decision-making about interactions
-- Objects should not directly reference each other because this makes them harder to test and reuse
+- A cluster of objects communicates in intricate ways that produce dependencies difficult to follow or modify
+- Reusing a single component proves impractical because it carries references to many specific peers
+- Interaction behavior that is spread across several classes needs to be customizable without deep subclassing
+- You want a single place to inspect and adjust how components coordinate
+- Components should be testable in isolation, without wiring up all their communication partners
 
 ## Implementation
 
@@ -234,35 +234,35 @@ class Button extends DialogElement {
 
 ## Real-World Analogies
 
-**Air Traffic Control**: Aircraft don't communicate directly with each other. Instead, they communicate with the control tower (mediator), which coordinates takeoffs, landings, and flight paths to prevent collisions.
+**Airport Control Tower**: Pilots never negotiate runway access directly with other aircraft. Every request goes through the tower, which has the full picture of traffic, weather, and runway status to coordinate safe movements.
 
-**Chat Application**: Users don't send messages directly to each other. Messages go through a chat server (mediator) which routes messages and maintains conversation history.
+**Stock Exchange Trading Floor**: Buyers and sellers do not find each other individually. The exchange acts as a mediator that matches orders, enforces rules, and settles trades on behalf of all participants.
 
-**Restaurant Kitchen**: Instead of cooks communicating directly with each other, they communicate through the head chef (mediator) who coordinates tasks and manages timing.
+**Event Coordinator at a Conference**: Speakers, sponsors, and attendees do not organize sessions among themselves. The event coordinator schedules talks, assigns rooms, and relays changes, keeping every party informed through a single point of contact.
 
 ## Pros and Cons
 
 ### Advantages
-- **Decouples Objects**: Objects no longer need to know about each other directly
-- **Centralizes Control Logic**: All communication rules are in one place, making them easier to modify
-- **Simplifies Object Relationships**: Converts many-to-many relationships into one-to-many
-- **Improves Reusability**: Individual objects can be used in different contexts with different mediators
-- **Single Responsibility**: Each object focuses on its own behavior, not coordination
+- **Loose coupling**: Components interact without holding references to one another
+- **Single coordination point**: All interaction rules live in one class, making them easy to audit and change
+- **Simplified relationships**: A web of many-to-many links collapses into a star of one-to-many links
+- **Portable components**: Individual objects can be dropped into a different mediator without modification
+- **Focused responsibilities**: Each object handles its own behavior while the mediator handles coordination
 
 ### Disadvantages
-- **God Object Problem**: Mediator can become overly complex if managing too many interactions
-- **Difficult Testing**: Complex mediators can be hard to unit test
-- **Performance**: Additional layer of indirection can impact performance in high-frequency communications
-- **Overkill for Simple Cases**: Can introduce unnecessary complexity for simple interactions
-- **Harder to Extend**: Changing communication patterns may require modifying the mediator extensively
+- **Bloated mediator**: A mediator managing too many interactions can turn into a monolithic god object
+- **Testing complexity**: A mediator with elaborate routing logic can be difficult to unit test in isolation
+- **Indirection cost**: An additional hop through the mediator adds latency in performance-sensitive paths
+- **Premature abstraction**: Simple two-object interactions do not warrant a mediator
+- **Rigid evolution**: Changing the coordination rules may require significant rework inside the mediator
 
 ## Relations with Other Patterns
 
-- **Observer**: Similar loose coupling but Observer is push-based while Mediator is more centralized
-- **Command**: Mediator can use Command objects to encapsulate requests
-- **Facade**: Both simplify complex subsystems, but Facade exposes a simpler interface while Mediator manages object interactions
-- **State**: Often used together; Mediator defines how state transitions trigger object communications
-- **Strategy**: Both encapsulate logic but Strategy is about behavior algorithms, Mediator is about interaction coordination
+- **Observer**: Both decouple communicating objects, but Observer uses a broadcast model while Mediator uses a centralized routing model
+- **Command**: Mediators can receive command objects rather than raw messages, making interactions storable and undoable
+- **Facade**: Facade simplifies a subsystem's interface for external callers; Mediator coordinates internal interactions among peers
+- **State**: Mediator and State are often combined so that state transitions trigger coordinated behaviors across colleagues
+- **Strategy**: Strategy swaps algorithms within a single object; Mediator swaps coordination rules across a group of objects
 
 ## Examples in Other Languages
 

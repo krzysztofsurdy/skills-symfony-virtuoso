@@ -1,40 +1,31 @@
 ## Overview
 
-Extract Variable is a refactoring technique that replaces expressions or sub-expressions with a variable that has a meaningful name. This improves code readability by breaking down complex expressions into smaller, understandable components with self-documenting names.
+Extract Variable assigns a complex or opaque expression to a named variable, making the code's intent explicit. By giving a meaningful name to a sub-expression, you turn cryptic inline logic into self-documenting code that is easier to read, debug, and maintain.
 
-The technique is particularly useful when dealing with complex conditional logic, mathematical operations, or object property chains where the intent is not immediately obvious from the expression itself.
+This technique is especially valuable for compound conditionals, chained property accesses, and mathematical formulas where the purpose is not obvious at a glance.
 
 ## Motivation
 
-**Improved Readability**: Complex expressions can be difficult to understand at a glance. Extracting them into named variables makes the intent clearer.
+**Clarity**: A descriptive variable name communicates what a value represents far more effectively than a raw expression.
 
-**Better Maintainability**: When an expression is used multiple times, extracting it to a variable reduces duplication and makes future changes easier.
+**Maintenance**: When the same expression appears in multiple places, extracting it into a variable eliminates duplication and provides a single point of change.
 
-**Easier Debugging**: Named variables make it simpler to set breakpoints and inspect values during debugging.
+**Debugging**: Named variables appear in debugger watches and stack traces, making it straightforward to inspect intermediate values.
 
-**Reusability**: Extracted variables can be reused elsewhere in the code, reducing duplication.
+**Reuse**: Once extracted, the variable can be referenced elsewhere in the same scope without recalculating the expression.
 
-**Semantic Clarity**: A well-named variable acts as inline documentation, explaining what the value represents.
+**Intent**: A well-chosen name acts as embedded documentation, explaining the "what" without needing a comment.
 
 ## Mechanics
 
-Follow these step-by-step instructions to apply the Extract Variable refactoring:
-
-1. **Identify the Expression**: Locate the complex expression or sub-expression that would benefit from a more meaningful name.
-
-2. **Create a New Variable**: Insert a new variable declaration before the expression is used.
-
-3. **Assign the Expression**: Assign the identified expression to the new variable.
-
-4. **Name Meaningfully**: Choose a name that clearly describes what the expression calculates or represents.
-
-5. **Replace Expression**: Replace the original expression with the new variable name.
-
-6. **Test**: Verify that the code behaves identically after the refactoring.
-
-7. **Consider Scope**: Ensure the variable is declared in the appropriate scope (method, block, or class level).
-
-8. **Remove Duplication**: Replace all identical expressions with the newly extracted variable.
+1. **Locate the expression**: Find a complex or repeated expression that would benefit from a name
+2. **Declare a variable**: Insert a variable declaration before the expression is first used
+3. **Assign the expression**: Set the variable to the identified expression
+4. **Choose a revealing name**: Pick a name that describes the value's meaning, not its computation
+5. **Replace the expression**: Swap the original expression with the variable name
+6. **Run the tests**: Confirm identical behavior
+7. **Expand scope if needed**: Place the variable at the appropriate scope level (method, block, or class)
+8. **Eliminate duplicates**: Replace all identical expressions with the new variable
 
 ## Before and After Examples
 
@@ -164,28 +155,28 @@ class PricingCalculator
 
 ## Benefits
 
-- **Enhanced Readability**: Code becomes self-documenting with clear, intention-revealing names
-- **Reduced Complexity**: Breaking down complex expressions makes logic easier to follow
-- **Easier Testing**: Extracted variables can be tested independently
-- **Improved Maintenance**: Changes to calculations need to happen in only one place
-- **Better Debugging**: Named variables allow for easier inspection and breakpoint setting
-- **Code Reusability**: Extracted variables eliminate duplication when expressions are used multiple times
+- **Self-Documenting Code**: Names convey meaning that raw expressions do not
+- **Simpler Expressions**: Breaking a formula into labeled parts makes each step obvious
+- **Targeted Testing**: Individual variables can be inspected and asserted on
+- **Single Point of Change**: A duplicated expression becomes a single assignment
+- **Debugging Support**: Named values are easy to watch and log
+- **Reduced Duplication**: Multiple uses of the same expression collapse into one variable
 
 ## When NOT to Use
 
-- **Simple Expressions**: If the expression is already clear and self-documenting (e.g., `$age = $currentYear - $birthYear`), extraction may add unnecessary verbosity
-- **One-Time Use**: Extracting variables used only once may reduce readability unless the expression is complex
-- **Performance-Critical Code**: In tight loops where micro-optimizations matter, introduce variables cautiously
-- **Inline Functions**: With modern PHP, inline arrow functions might be more appropriate than variables for certain transformations
-- **Already Refactored**: If the code is already using well-named helper methods, further variable extraction may be redundant
+- **Already clear expressions**: `$age = $currentYear - $birthYear` needs no further naming
+- **Single-use with obvious meaning**: Extracting a one-time expression that is already readable adds verbosity
+- **Tight performance loops**: In rare micro-optimization scenarios, an extra variable could matter -- measure first
+- **Arrow functions and pipelines**: Modern PHP or functional patterns may be more expressive than intermediate variables
+- **Well-named helper methods already exist**: If a method already encapsulates the expression, a variable on top of it is redundant
 
 ## Related Refactorings
 
-- **Extract Method**: When extracted variables form a logical unit, consider extracting a method instead
-- **Replace Temp with Query**: Convert temporary variables into method calls for better encapsulation
-- **Introduce Explaining Variable**: A specialized form of Extract Variable focused on breaking down complex expressions
-- **Rename Variable**: Complement this refactoring by ensuring variables have optimal names
-- **Decompose Conditional**: Use this technique to simplify complex conditional statements
+- **Extract Method**: When the extracted variable and its context form a logical unit worth naming as a method
+- **Replace Temp with Query**: Converts a temporary variable into a method call for stronger encapsulation
+- **Introduce Explaining Variable**: A specialized form of Extract Variable aimed at clarifying complex expressions
+- **Rename Variable**: Complements this refactoring by ensuring the chosen name is optimal
+- **Decompose Conditional**: Applies Extract Variable specifically to boolean expressions in conditionals
 
 ## Examples in Other Languages
 

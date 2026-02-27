@@ -5,27 +5,27 @@
 1. High-level modules should not depend on low-level modules. Both should depend on abstractions.
 2. Abstractions should not depend on details. Details should depend on abstractions.
 
-Robert C. Martin's DIP reverses the traditional dependency direction in software. Instead of business logic importing database drivers and HTTP libraries directly, it defines interfaces that infrastructure code must satisfy.
+DIP flips the conventional dependency direction in software architecture. Rather than having business logic import database drivers and HTTP libraries directly, it defines interfaces that infrastructure code must conform to.
 
 ## Why It Matters
 
-Without DIP, high-level business rules become entangled with low-level infrastructure. Changing your database from MySQL to PostgreSQL shouldn't require rewriting your order processing logic. DIP creates a boundary:
+Without DIP, high-level business rules become tangled with low-level infrastructure details. Switching your database from MySQL to PostgreSQL should not force you to rewrite your order processing logic. DIP establishes a clean boundary:
 
-- **Business logic stays pure** — no framework or infrastructure imports in domain code
-- **Infrastructure is swappable** — change databases, message queues, or APIs without touching business rules
-- **Testing is trivial** — inject test doubles instead of real infrastructure
-- **Deployment flexibility** — deploy the same business logic with different infrastructure configurations
-- **Team independence** — domain team and infrastructure team work on different sides of the interface
+- **Business logic remains infrastructure-free** — no framework or driver imports pollute domain code
+- **Infrastructure becomes interchangeable** — swap databases, message brokers, or external APIs without altering business rules
+- **Testing becomes straightforward** — inject test doubles in place of real infrastructure
+- **Deployment gains flexibility** — run the same business logic against different infrastructure configurations
+- **Teams operate independently** — the domain team and infrastructure team code against opposite sides of a shared interface
 
 ## Detecting Violations
 
-Signs of missing dependency inversion:
+Indicators that dependency inversion is absent:
 
-- **Direct `new` of infrastructure classes inside business logic** — `new MySqlConnection()` in a service class
+- **Direct `new` of infrastructure classes inside business logic** — `new MySqlConnection()` appearing in a service class
 - **Import statements pointing downward** — domain code importing from `Infrastructure\` or `vendor\` namespaces
-- **Hard-coded file paths, URLs, or connection strings** — configuration baked into logic
-- **"I can't test this without a database"** — if unit tests need external systems, DIP is violated
-- **Constructor creates its own dependencies** — instead of receiving them via injection
+- **Hardcoded file paths, URLs, or connection strings** — configuration embedded directly in logic
+- **"I can't test this without a database"** — if unit tests require external systems, DIP is being violated
+- **Constructors that create their own dependencies** — rather than receiving them through injection
 
 ## Before/After — PHP 8.3+
 
@@ -457,7 +457,7 @@ public:
 
 ## Who Owns the Abstraction?
 
-A critical detail often missed: **the abstraction belongs to the high-level module**, not the low-level one.
+A frequently overlooked detail: **the abstraction belongs to the high-level module**, not the low-level one.
 
 ```
 WRONG:
@@ -469,18 +469,18 @@ RIGHT:
   Infrastructure/ implements Domain/OrderRepository
 ```
 
-The domain layer defines what it needs. Infrastructure adapts to those needs. This is what "inversion" means — the dependency arrow points toward the domain, not away from it.
+The domain layer declares what it needs. Infrastructure adapts to satisfy those needs. This is what "inversion" refers to — the dependency arrow points toward the domain, not away from it.
 
 ## Common Pitfalls
 
-- **Interfaces that mirror implementations** — if your `DatabaseOrderRepository` interface has methods like `executeSql()`, you've just wrapped the detail in an abstraction name
-- **Single-implementation interfaces** — DIP doesn't mean "create an interface for everything." Only abstract at boundaries where substitution provides value (testing, swappability)
-- **Service locator anti-pattern** — `Container::get(OrderRepository::class)` still couples to the container. Use constructor injection instead.
-- **Abstracting too early** — wait until you need a second implementation or need testability before introducing the abstraction
+- **Interfaces that mirror implementations** — if your `DatabaseOrderRepository` interface exposes methods like `executeSql()`, you have merely wrapped the implementation detail in an abstraction name
+- **Single-implementation interfaces** — DIP does not mean "create an interface for everything." Only introduce abstractions at boundaries where substitution delivers real value (testing, swappability)
+- **Service locator anti-pattern** — `Container::get(OrderRepository::class)` still couples your code to the container. Prefer constructor injection instead.
+- **Abstracting prematurely** — hold off until you genuinely need a second implementation or require testability before introducing the abstraction
 
 ## Related Principles
 
-- **Open/Closed (OCP)** — DIP's abstractions are the extension points that OCP requires
-- **Interface Segregation (ISP)** — focused interfaces make better abstraction boundaries
-- **Clean Architecture** — DIP is the foundation of hexagonal/ports-and-adapters architecture
-- **Dependency Injection** — the mechanism (constructor injection, DI containers) that implements DIP
+- **Open/Closed (OCP)** — the abstractions DIP introduces are the extension points that OCP depends on
+- **Interface Segregation (ISP)** — focused interfaces make for stronger abstraction boundaries
+- **Clean Architecture** — DIP is the cornerstone of hexagonal and ports-and-adapters architecture
+- **Dependency Injection** — the mechanism (constructor injection, DI containers) through which DIP is realized in practice

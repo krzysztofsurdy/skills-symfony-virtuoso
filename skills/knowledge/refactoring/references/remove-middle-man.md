@@ -1,16 +1,16 @@
 ## Overview
 
-The "Remove Middle Man" refactoring eliminates intermediary wrapper methods that simply delegate to another object without adding value. When a class acts as a middle man purely forwarding requests to another object, it creates unnecessary indirection and complexity. This refactoring exposes the delegated object directly, simplifying the codebase and reducing coupling.
+Remove Middle Man eliminates a class that does nothing but forward requests to another object. When a class consists primarily of delegation methods -- each one simply calling the same method on an internal collaborator -- the intermediary adds indirection without adding value. Exposing the delegate directly lets clients talk to the real object and trims away the pass-through layer.
 
-This technique is the inverse of "Hide Delegate" and is applied when the middle man has become unnecessary complexity rather than a useful abstraction.
+This technique is the inverse of Hide Delegate and is applied when the middle man has become unnecessary complexity rather than a useful abstraction.
 
 ## Motivation
 
-- **Reduce unnecessary indirection**: Multiple levels of delegation obscure the actual object doing the work
-- **Improve code clarity**: Direct access to the real object makes intent clearer to readers
-- **Decrease maintenance burden**: Fewer wrapper methods to maintain when delegating repeatedly
-- **Simplify class hierarchy**: Removes redundant classes or methods that serve no strategic purpose
-- **Ease of evolution**: Direct access allows clients to adapt quickly without updating wrapper methods
+- **Cut unnecessary indirection**: Chains of forwarding methods obscure which object actually performs the work
+- **Surface the real collaborator**: Direct access makes the code's intent transparent to readers
+- **Shrink the maintenance footprint**: Every new method on the delegate no longer requires a matching wrapper
+- **Streamline the class tree**: Removing hollow intermediaries keeps the design lean
+- **Speed up evolution**: Clients can adopt new delegate capabilities immediately, without waiting for wrapper methods to be added
 
 ## Mechanics
 
@@ -147,11 +147,11 @@ echo $department->getManager()->getSalary();
 
 ## Benefits
 
-- **Reduced coupling**: Clients depend on the actual object, not a wrapper
-- **Better maintainability**: No need to add wrapper methods for each new feature
-- **Clearer intent**: Code reveals the actual relationships between objects
-- **Improved flexibility**: Clients can call any method on the delegated object
-- **Easier testing**: Can inject mock objects directly without wrapper complications
+- **Transparent relationships**: Clients see which object they are really working with
+- **Zero wrapper overhead**: New delegate methods are available immediately without mirroring
+- **Leaner classes**: The former middle man sheds boilerplate, or disappears entirely
+- **Direct mockability**: Tests can inject or stub the delegate without navigating an extra layer
+- **Honest design**: The architecture reflects actual responsibilities rather than ceremonial forwarding
 
 ## When NOT to Use
 

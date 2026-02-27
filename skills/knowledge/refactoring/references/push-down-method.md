@@ -2,19 +2,16 @@
 
 ## Overview
 
-Push Down Method is a refactoring technique used when a method in a superclass is utilized by only one or a few of its subclasses. The solution involves relocating that method to the appropriate subclass(es) where it's actually needed, rather than keeping it in the parent class where it may not be relevant to all children.
-
-This refactoring improves class coherence by ensuring methods reside in the classes that genuinely require them, making the codebase more intuitive and maintainable.
+Push Down Method relocates a method from a superclass into the specific subclass or subclasses that actually call it. When a parent class carries behavior that only a fraction of its children require, pushing the method down removes irrelevant operations from the parent and keeps each class focused on what it genuinely does.
 
 ## Motivation
 
-You should apply Push Down Method when:
+Apply Push Down Method when:
 
-- A method was intended to be universal for all classes but is used by only one or a few subclasses
-- Feature extraction or removal from a class hierarchy has left methods unused by some subclasses
-- A parent class contains behavior that doesn't apply to all children
-- Class hierarchy has evolved and methods are no longer relevant to all descendants
-- A refused bequest code smell is present (subclasses have unused inherited methods)
+- A method was designed for general use but turns out to be relevant to only one or a few subclasses
+- Hierarchy evolution or feature removal has left a method orphaned in the parent
+- The parent exposes behavior that does not apply to all descendants
+- Subclasses inherit methods they never invoke, producing a refused-bequest smell
 
 ## Mechanics
 
@@ -110,11 +107,11 @@ final class Motorcycle extends Vehicle
 
 ## Benefits
 
-- **Improved class coherence** - Methods reside where developers naturally expect to find them
-- **Cleaner abstractions** - The superclass no longer exposes methods irrelevant to some subclasses
-- **Reduced confusion** - Less likelihood of subclasses having unused inherited methods
-- **Better encapsulation** - Each class only exposes the interface it actually needs
-- **Easier maintenance** - Changes to a method only affect the subclass that uses it
+- **Focused parent class**: The superclass exposes only behavior common to all children
+- **Cleaner abstractions**: Irrelevant methods no longer appear on unrelated subclasses
+- **Less confusion**: Developers are not puzzled by inherited methods that have no meaning for certain classes
+- **Precise encapsulation**: Each class publishes exactly the interface it supports
+- **Localized impact**: Future changes to the method affect only the subclass that owns it
 
 ## When NOT to Use
 

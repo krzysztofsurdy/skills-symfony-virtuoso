@@ -1,24 +1,24 @@
 ## Overview
 
-The Comments code smell occurs when code is filled with explanatory comments meant to clarify what the code does. While comments can be valuable, excessive comments often indicate that the code structure itself needs improvement. The best code is self-documenting through meaningful names and clear structure.
+The Comments smell surfaces when code relies heavily on inline explanations to make itself understood. Comments are not inherently bad -- they become a smell when they substitute for clear code rather than supplementing it. If a block of code needs a comment to explain *what* it does, the real fix is usually restructuring the code so the comment becomes unnecessary. Truly self-documenting code communicates through well-chosen names, small focused methods, and explicit types.
 
 ## Why It's a Problem
 
-Comments are frequently created with good intentions, but they often mask deeper issues:
+Even well-intentioned comments introduce risks:
 
-- **They become maintenance burdens**: When code changes, comments frequently become outdated and misleading
-- **They indicate poor code design**: If code requires extensive comments to understand, the code structure is likely the problem, not the lack of documentation
-- **They hide bad naming**: Comments compensate for unclear method/variable names instead of addressing the root cause
-- **They duplicate information**: Comments often restate what the code already expresses clearly
-- **They create false security**: Developers may rely on comments instead of refactoring confusing code
+- **They rot quickly**: When code evolves, comments are often left behind, becoming misleading rather than helpful
+- **They mask structural weaknesses**: Heavy commenting usually signals that the code itself is too convoluted -- fixing the code is a better investment than annotating it
+- **They compensate for poor naming**: Instead of renaming a method or variable to be self-explanatory, developers add a comment alongside the unclear name
+- **They restate the obvious**: Comments that merely echo what the code already says add noise without value
+- **They discourage refactoring**: Developers may feel the code is "documented enough" and skip the structural improvements it actually needs
 
 ## Signs and Symptoms
 
-- Methods containing numerous explanatory comments
-- Comments describing what the code does rather than why
-- Comments explaining complex expressions or logic sections
-- Comments that become outdated as code changes
-- Comments that rephrase variable/method names that could be clearer
+- Methods peppered with inline explanations throughout
+- Comments that describe *what* the code does rather than *why* a non-obvious decision was made
+- Comments placed before complex expressions or logic blocks
+- Stale comments that no longer match the current code behavior
+- Comments that paraphrase variable or method names that could simply be renamed
 
 ## Before/After Examples
 
@@ -146,33 +146,7 @@ Comments are valuable and appropriate when:
 
 ## Related Smells
 
-- **Long Method**: Methods that require many comments are often too long and should be broken down
-- **Poor Naming**: Comments often compensate for unclear variable and method names
-- **Duplicate Code**: Repeated logic that's explained separately via comments
-- **Magic Numbers**: Unexplained constants that force developers to add clarifying comments
-
-## Refactoring.guru Guidance
-
-### Signs and Symptoms
-
-A method is filled with explanatory comments that attempt to clarify what the code does.
-
-### Reasons for the Problem
-
-Comments are usually created with the best of intentions, when the author realizes that their code is not intuitive or obvious. The best comment is a good name for a method or class.
-
-### Treatment
-
-- **Extract Variable**: If a comment explains a complex expression, break the expression into understandable sub-expressions using well-named intermediate variables.
-- **Extract Method**: If a comment explains a section of code, turn that section into a separate method. The method name should replace the comment.
-- **Rename Method**: If a method has been extracted but still needs a comment to explain what it does, give the method a self-explanatory name.
-- **Introduce Assertion**: If you need to assert rules about the state of the system, use an assertion instead of a comment.
-
-### Payoff
-
-- Code becomes more intuitive and self-documenting.
-
-### When to Ignore
-
-- Comments explaining **why** something is done (not what) remain valuable.
-- Comments documenting complex algorithms where simplification is not feasible.
+- **Long Method**: Methods that accumulate many comments are usually too long and should be decomposed
+- **Poor Naming**: Comments frequently serve as a bandage over unclear variable and method names
+- **Duplicate Code**: Identical logic explained separately in different locations via comments
+- **Magic Numbers**: Unexplained numeric constants that force developers to write clarifying comments

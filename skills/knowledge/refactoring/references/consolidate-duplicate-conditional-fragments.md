@@ -1,28 +1,23 @@
 ## Overview
 
-The **Consolidate Duplicate Conditional Fragments** refactoring addresses a common code smell where identical code appears across all branches of a conditional statement (if/else, switch, etc.). The solution is straightforward: move the duplicate code outside of the conditional structure.
-
-This refactoring technique helps maintain cleaner, more maintainable code by eliminating redundancy and making the conditional logic's actual differences more apparent.
+**Consolidate Duplicate Conditional Fragments** targets a situation where the same code appears inside every branch of a conditional. Since the code runs regardless of which branch is taken, it belongs outside the conditional entirely. Moving it out removes the duplication and highlights the genuine differences between branches.
 
 ## Motivation
 
-Duplicate code fragments frequently emerge in conditional branches through natural code evolution, particularly when:
+Identical code inside conditional branches tends to accumulate through organic growth: different developers add the same call to each branch, copy-paste shortcuts go uncleaned, or new branches inherit boilerplate from existing ones. The result is:
 
-- Different developers work on separate branches without coordinating changes
-- Copy-paste logic is used as a quick fix that never gets refactored
-- Conditional structures grow over time and common patterns aren't consolidated
-- Refactoring opportunities are overlooked during code reviews
-
-The presence of identical code in conditional branches increases maintenance burden, increases the risk of bugs when updates are needed, and obscures the actual logic differences between branches.
+- Maintenance overhead -- every change to the shared logic must be replicated across all branches
+- Obscured intent -- readers cannot immediately tell which parts of the branches actually differ
+- Increased bug risk -- forgetting to update one branch after changing the others introduces subtle inconsistencies
 
 ## Mechanics
 
-The refactoring process depends on where the duplicate code appears within the branches:
+Where you place the extracted code depends on its position within the branches:
 
-1. **Duplicates at the Beginning**: Move the common code before the conditional statement
-2. **Duplicates at the End**: Move the common code after the conditional statement
-3. **Scattered Duplicates**: If duplicates appear in multiple locations within branches, consolidate to the beginning or end based on logic flow
-4. **Verify Logic**: Ensure moving code doesn't alter the program's behavior or logic flow
+1. **Common code at the start of all branches**: Move it before the conditional
+2. **Common code at the end of all branches**: Move it after the conditional
+3. **Common code scattered within branches**: Reorganize to consolidate at the beginning or end, then extract
+4. **Verify correctness**: Confirm that relocating the code does not alter program behavior or evaluation order
 
 ## Before Code (PHP 8.3+)
 
@@ -62,7 +57,7 @@ class OrderProcessor {
 }
 ```
 
-The `$this->send()` call is moved after the conditional, eliminating duplication and clarifying that sending happens regardless of the deal type.
+The `$this->send()` call now lives after the conditional, making it clear that sending happens unconditionally while only the pricing and logging differ between branches.
 
 ### Extended Example with Multiple Conditions
 
@@ -106,26 +101,26 @@ In match expressions, duplicates at the end can be consolidated after the entire
 
 ## Benefits
 
-- **Code Deduplication**: Reduces redundancy and maintenance burden significantly
-- **Improved Clarity**: Makes conditional logic clearer by isolating the actual differences between branches
-- **Reduced Maintenance Risk**: Changes to common behavior only need to be made in one place
-- **Better Readability**: Developers can focus on what differs between branches rather than finding duplicates
-- **Easier Testing**: Shared logic is tested once, conditional branches test only differences
+- **Eliminates Redundancy**: Shared logic exists in exactly one place
+- **Highlights Branch Differences**: With the common code removed, what actually varies between branches stands out
+- **Safer Updates**: Changes to the shared behavior happen once instead of in every branch
+- **Improved Readability**: Developers see the structure of the decision without wading through repeated code
+- **Focused Tests**: Shared behavior is tested once; branch-specific behavior is tested per branch
 
 ## When NOT to Use
 
-- **Side Effects Matter**: If moving code outside the conditional could affect performance or side effects in unwanted ways
-- **Error Handling**: When duplicate code handles errors differently in each branch
-- **Scope-Dependent Code**: When the duplicate code relies on variables only available in specific conditional branches
-- **Complex Conditionals**: When consolidation would make the code harder to understand than leaving duplicates
-- **Partial Duplicates**: When only portions of statements are duplicated and extracting them would require additional refactoring
+- **Side-effect ordering matters**: If relocating the code would change the timing or order of side effects in harmful ways
+- **Branch-specific error handling**: When identical-looking code actually handles errors differently in each branch
+- **Variable scoping issues**: When the duplicated code depends on variables defined only within a particular branch
+- **Reduced clarity**: If extracting the code makes the overall flow harder to follow
+- **Partial overlap**: When branches share only part of a statement and splitting it would require further restructuring
 
 ## Related Refactorings
 
-- **Extract Method**: Use when duplicate fragments are lengthy; extract them into a dedicated method first
-- **Consolidate Conditional Expression**: Similar pattern for simplifying complex conditionals
-- **Replace Conditional with Polymorphism**: For object-oriented alternatives to large conditional blocks
-- **Duplicate Code Smell**: This refactoring directly eliminates the duplicate code code smell
+- **Extract Method**: When the duplicated fragment is lengthy, pull it into its own method first
+- **Consolidate Conditional Expression**: A related technique for simplifying the conditions themselves
+- **Replace Conditional with Polymorphism**: An object-oriented alternative for large conditional blocks
+- **Duplicate Code Smell**: This refactoring directly addresses the duplicate code smell
 
 ## Examples in Other Languages
 

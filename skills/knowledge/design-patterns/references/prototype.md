@@ -2,26 +2,26 @@
 
 ## Overview
 
-The Prototype pattern is a creational design pattern that allows you to create new objects by copying an existing object (the prototype) rather than creating them from scratch. This is particularly useful when object creation is expensive, complex, or when you need to maintain a registry of pre-configured objects.
+The Prototype pattern is a creational design pattern that produces new objects by duplicating an existing instance rather than constructing them from scratch. It is especially valuable when object creation is resource-intensive, involves complex setup, or when you want to maintain a catalog of ready-made object templates.
 
 ## Intent
 
-- Create new objects by cloning an existing prototype object
-- Reduce the cost of creating new objects when instantiation is expensive
-- Allow configuration of objects through prototypical inheritance
-- Provide a way to create a copy of an object without relying on its concrete class
+- Generate new objects by cloning a pre-existing prototype instance
+- Avoid the overhead of expensive or elaborate construction processes
+- Support configuring objects through prototype-based copying
+- Enable object duplication without depending on the concrete class
 
 ## Problem/Solution
 
 ### Problem
-Creating objects directly can be costly when:
-- Object initialization is computationally expensive
-- The object has many configuration properties
-- You need to create multiple similar variations of an object
-- The exact type of object isn't known at runtime
+Direct instantiation becomes impractical when:
+- Building an object requires significant computation or I/O
+- The object carries numerous configuration properties
+- You need many slight variations of the same base object
+- The concrete type to create is determined only at runtime
 
 ### Solution
-Instead of creating objects through their constructors, define a prototype object and clone it. This separates object creation logic from the client code and enables creating objects through copying rather than instantiation.
+Rather than invoking constructors directly, designate a prototype instance and clone it whenever a new object is needed. This decouples the creation logic from client code and replaces constructor calls with copy operations.
 
 ## Structure
 
@@ -45,12 +45,12 @@ Key participants:
 
 ## When to Use
 
-- Creating objects through direct instantiation is expensive or complex
-- You need to avoid subclasses of an abstract class
-- You want to decouple object creation from their concrete classes
-- Runtime configuration of objects is required
-- You need to copy objects while maintaining type safety
-- Avoiding deep knowledge of object structure is important
+- Object construction is costly or involves multi-step initialization
+- You want to sidestep creating parallel hierarchies of factory subclasses
+- Client code should remain independent of concrete product classes
+- Objects need to be configured and varied at runtime
+- Type-safe copying of objects is required
+- You prefer not to expose the internal structure of objects to callers
 
 ## Implementation (PHP 8.3+)
 
@@ -279,37 +279,37 @@ echo $doc2->describe(); // Document: title=Report, author=John Doe
 
 ## Real-World Analogies
 
-- **Photocopier**: Making copies of documents - you provide an original, the copier creates duplicates
-- **DNA Replication**: Cells duplicate their DNA before division, creating copies of genetic information
-- **Application Templates**: Software installers that clone a template installation to multiple machines
-- **Game Asset Cloning**: Video games cloning enemy/object prototypes rather than recreating from scratch
-- **Database Snapshots**: Creating database snapshots by copying the prototype configuration
+- **Photocopier**: You place an original document on the glass and the machine produces identical duplicates on demand
+- **DNA Replication**: Before a cell divides, it creates a full copy of its genetic material to pass along
+- **Application Templates**: Software deployment tools stamp out identical installations from a golden image
+- **Game Asset Cloning**: Game engines duplicate enemy or item prototypes at runtime instead of rebuilding each one from scratch
+- **Database Snapshots**: A snapshot captures the current configuration of a database so it can be reproduced elsewhere
 
 ## Pros and Cons
 
 ### Advantages
-- Reduces object creation cost for complex objects
-- Avoids subclassing to support different object variations
-- Simplifies object initialization when configuration is complex
-- Allows runtime creation of new object types
-- Efficient copying of pre-configured objects
-- Decouples clients from concrete classes
+- Cuts down the cost of creating complex, heavily initialized objects
+- Eliminates the need for parallel factory subclass hierarchies
+- Streamlines initialization when configuration is elaborate
+- Permits new object types to appear at runtime through cloning
+- Efficient reuse of pre-built object templates
+- Keeps client code independent of concrete product classes
 
 ### Disadvantages
-- Implementing clone() correctly can be complex, especially with circular references
-- Deep cloning can be more expensive than object creation
-- All clone() methods must be maintained when object structure changes
-- Can hide actual object dependencies and coupling
-- May introduce subtle bugs if shallow vs. deep copy semantics aren't clear
+- Correctly implementing clone() is difficult when objects contain circular references
+- Deep copying can sometimes be more expensive than fresh construction
+- Every clone() method must be updated whenever the object's internal structure changes
+- May obscure the true dependencies between objects
+- Bugs can creep in when shallow and deep copy semantics are confused
 
 ## Relations with Other Patterns
 
-- **Abstract Factory**: Both abstract object creation, but Prototype uses copying while Abstract Factory uses direct instantiation
-- **Factory Method**: Similar intent but Prototype clones existing objects while Factory Method creates new ones
-- **Singleton**: Opposite approach - Singleton ensures one instance, Prototype creates many
-- **Builder**: Both handle complex object creation; Builder constructs step-by-step, Prototype copies
-- **Composite**: Often used with Prototype to clone tree structures
-- **Decorator**: Can be combined with Prototype for object composition
+- **Abstract Factory**: Both abstract away creation, but Prototype relies on copying while Abstract Factory calls constructors
+- **Factory Method**: Shares the goal of hiding creation details; Factory Method builds new instances, Prototype duplicates existing ones
+- **Singleton**: Conceptually opposite -- Singleton restricts to one instance, Prototype encourages many copies
+- **Builder**: Both tackle complex object assembly; Builder does it step by step, Prototype does it in a single copy
+- **Composite**: Frequently combined with Prototype to clone entire tree structures
+- **Decorator**: Can be paired with Prototype to clone decorated objects
 
 ---
 
@@ -530,5 +530,3 @@ def main():
 if __name__ == "__main__":
     main()
 ```
-
-*Source: [sourcemaking.com/design_patterns/prototype](https://sourcemaking.com/design_patterns/prototype)*

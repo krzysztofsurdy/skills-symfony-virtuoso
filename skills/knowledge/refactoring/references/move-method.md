@@ -1,21 +1,22 @@
 ## Overview
 
-Move Method is a fundamental refactoring technique that relocates a method from one class to another. This refactoring is used when a method is more closely related to another class than the class it currently belongs to, improving encapsulation and reducing coupling between classes.
+Move Method transfers a method from one class to another where it fits more naturally. When a method depends more heavily on the data or behavior of a different class than the one housing it, relocating the method brings it closer to its actual collaborators, tightening cohesion and loosening inter-class dependencies.
 
 ## Motivation
 
-Methods often become misplaced when code evolves. A method might:
-- Use more features from another class than its own
-- Be called primarily by instances of a different class
-- Create tight coupling between unrelated classes
-- Violate the Single Responsibility Principle
+As codebases evolve, methods drift away from the data they operate on. Indicators that a method belongs elsewhere include:
 
-Moving the method to a more appropriate class:
-- Improves code organization and clarity
-- Reduces inter-class coupling
-- Enhances encapsulation
-- Makes the codebase easier to understand and maintain
-- Aligns with the principle that methods should be close to the data they manipulate
+- The method reads or writes fields of another class more than its own
+- Most callers belong to a different class
+- The method introduces unnecessary coupling between otherwise independent classes
+- Keeping it in place violates the Single Responsibility Principle
+
+Relocating the method to the class it interacts with most directly:
+
+- Aligns behavior with the data it manipulates
+- Cuts down on cross-class message traffic
+- Strengthens encapsulation within each class
+- Makes the code easier to navigate and reason about
 
 ## Mechanics
 
@@ -177,12 +178,12 @@ class PaymentProcessor
 
 ## Benefits
 
-- **Better Encapsulation**: Methods are placed with the data they operate on
-- **Reduced Coupling**: Classes become more independent and focused
-- **Improved Readability**: Code becomes easier to understand and navigate
-- **Enhanced Maintainability**: Changes to related functionality are localized
-- **Clearer Responsibilities**: Each class has a single, well-defined purpose
-- **Better API Design**: Public interfaces reflect actual dependencies
+- **Stronger Encapsulation**: Methods sit alongside the data they depend on
+- **Looser Coupling**: Classes become more self-contained and focused
+- **Improved Navigability**: Related logic is easier to locate when it lives next to its data
+- **Localized Changes**: Modifications to related functionality stay within a single class
+- **Well-Defined Responsibilities**: Each class takes ownership of a coherent set of operations
+- **Cleaner Public Interfaces**: APIs reflect genuine dependencies rather than historical accidents
 
 ## When NOT to Use
 

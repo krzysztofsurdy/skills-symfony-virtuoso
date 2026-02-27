@@ -1,23 +1,23 @@
 ## Overview
 
-Shotgun Surgery is a code smell that occurs when making a single logical change requires modifying code scattered across multiple, unrelated classes. Instead of having cohesive, focused classes, the codebase is fragmented such that related functionality is split across numerous locations. This typically results from overzealously applying the Divergent Change refactoring, creating a mirror problem where one responsibility is distributed too widely.
+Shotgun Surgery is the smell you encounter when a single logical change forces you to edit code in many different classes. A responsibility that should be concentrated in one place is instead scattered across the codebase, so even a small modification requires a coordinated update to multiple files. This often results from over-aggressive decomposition -- splitting classes too finely until a single concern spans many locations.
 
 ## Why It's a Problem
 
-Shotgun Surgery creates several maintainability issues:
+Shotgun Surgery creates compounding maintainability issues:
 
-- **High Change Friction**: Simple feature additions or bug fixes require touching many files, increasing the chance of introducing bugs
-- **Difficult Maintenance**: The connection between logically related code becomes obscured, making the codebase harder to understand
-- **Increased Risk**: More changes mean more opportunities for mistakes and inconsistencies
-- **Poor Scalability**: As the codebase grows, the problem compounds exponentially
+- **High Change Friction**: Even straightforward feature additions or bug fixes require touching many files, increasing the chance of missing one
+- **Obscured Relationships**: The logical connection between related pieces of code is hidden by their physical distribution across the codebase
+- **Error Amplification**: The more files you touch for a single change, the more opportunities for mistakes and inconsistencies
+- **Scaling Pain**: As the codebase grows, the number of locations to update for a single concern tends to grow with it
 
 ## Signs and Symptoms
 
-- A single feature addition requires changes to 5+ classes
-- Changes to a business rule are scattered across unrelated files
-- You frequently make similar changes in parallel across multiple classes
-- The rationale for class boundaries becomes unclear
-- Tests must be updated in numerous places for a single logical change
+- A single feature or bug fix requires edits in five or more classes
+- Business rule changes are spread across unrelated files
+- You regularly make the same kind of edit in parallel across multiple classes
+- Class boundaries feel arbitrary and do not align with conceptual responsibilities
+- Test updates for one logical change span many test files
 
 ## Before/After
 
@@ -125,28 +125,9 @@ Shotgun Surgery is acceptable in these scenarios:
 
 ## Related Smells
 
-- **Divergent Change**: The opposite problem; when one class has too many reasons to change
-- **Feature Envy**: Classes that rely too heavily on other classes' data suggest consolidation opportunities
-- **Duplicate Code**: Often appears alongside Shotgun Surgery when similar changes are made across classes
-- **Long Parameter List**: May indicate that a new class could better encapsulate related data
+- **Divergent Change**: The inverse problem -- one class accumulating too many reasons to change, while Shotgun Surgery spreads one reason across too many classes
+- **Feature Envy**: Classes that constantly reach into other classes for data are a hint that consolidation would help
+- **Duplicate Code**: Frequently accompanies Shotgun Surgery, since the same kind of change made in multiple places often produces near-identical code
+- **Long Parameter List**: May signal that a new class could encapsulate related data currently passed around separately
 
-## Refactoring.guru Guidance
-
-### Signs and Symptoms
-
-Making any modifications requires that you make many small changes to many different classes.
-
-### Reasons for the Problem
-
-A single responsibility has been split up among a large number of classes. This can happen after overzealous application of Divergent Change refactoring.
-
-### Treatment
-
-- **Move Method** and **Move Field**: Consolidate dispersed behaviors by moving them into a single class that logically owns the responsibility.
-- **Inline Class**: If moving code leaves original classes nearly empty, merge those classes into the target class to eliminate structural clutter.
-
-### Payoff
-
-- Better code organization
-- Less code duplication
-- Easier maintenance
+After consolidating scattered code with Move Method and Move Field, check whether the original classes have become nearly empty. If so, use Inline Class to merge the remnants and eliminate structural clutter.

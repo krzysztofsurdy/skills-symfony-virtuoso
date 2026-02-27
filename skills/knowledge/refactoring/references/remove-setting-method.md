@@ -2,18 +2,18 @@
 
 ## Overview
 
-The **Remove Setting Method** refactoring eliminates setter methods for object fields that should be initialized during construction and remain unchanged throughout the object's lifetime. This technique enforces immutability patterns and makes object contracts more explicit and reliable.
+Remove Setting Method deletes setter methods for fields whose values should be established at construction time and never changed afterward. By eliminating the setter, the class communicates that the field is fixed once the object is created, preventing accidental or unauthorized mutations later in the object's lifecycle.
 
 ## Motivation
 
-Setter methods create opportunities for unintended state mutations. When a field's value should only be established during object creation, keeping the setter method:
+A setter method that exists but should never be called after initialization creates a misleading API. Its presence signals that the field is mutable, encouraging code that modifies the value at arbitrary points. This leads to:
 
-- Allows accidental modifications that violate object design assumptions
-- Makes it unclear whether a field's value can change after initialization
-- Creates maintenance challenges when code elsewhere assumes immutability
-- Reduces code clarity by providing APIs that don't match actual usage patterns
+- Unintended state changes that violate the object's design assumptions
+- Ambiguity about whether a field is meant to be stable or fluid
+- Harder-to-trace bugs when distant code alters a supposedly fixed value
+- A gap between the API's promise and the object's actual contract
 
-Removing setter methods for immutable fields makes the programmer's intent explicit: these values are fixed at construction time.
+Removing the setter and initializing the field through the constructor makes immutability explicit and enforceable.
 
 ## Mechanics
 
@@ -105,12 +105,12 @@ $account = new Account('ACC-12345', 'John Doe');
 
 ## Benefits
 
-- **Enforced Immutability** - `readonly` properties prevent accidental modifications after construction
-- **Clearer Intent** - Required constructor parameters make dependencies explicit
-- **Reduced Complexity** - Less code to maintain and understand
-- **Safer APIs** - Object contracts are clearer and harder to violate
-- **Better Reasoning** - Immutable state is easier to reason about and debug
-- **Modern PHP** - Leverages PHP 8.3+ constructor property promotion and `readonly` modifier
+- **Guaranteed stability** - `readonly` properties make post-construction mutation impossible at the language level
+- **Explicit dependencies** - Required constructor parameters declare what the object needs upfront
+- **Smaller API** - Fewer methods to learn, test, and maintain
+- **Trustworthy contracts** - Callers know the object will not change out from under them
+- **Simplified reasoning** - Immutable state eliminates an entire class of temporal bugs
+- **Modern PHP alignment** - Takes advantage of constructor promotion and the `readonly` modifier
 
 ## When NOT to Use
 

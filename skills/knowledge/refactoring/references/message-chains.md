@@ -2,25 +2,25 @@
 
 ## Overview
 
-Message chains occur when client code accesses a value from an object by traversing a series of intermediate method calls, forming chains like `$a->getB()->getC()->getD()`. Each step in the chain represents a dependency on the internal structure of another object, creating tight coupling and fragile code.
+Message chains appear when client code reaches a value by walking through a series of intermediate objects: `$a->getB()->getC()->getD()`. Each link in the chain is an implicit dependency on the internal structure of the previous object. The client must understand not just the object it holds, but the entire graph of relationships behind it.
 
-This code smell often indicates that the client has intimate knowledge of the object graph structure, violating the principle of encapsulation. Any change to the relationship between objects in the chain requires updating all client code that depends on that path.
+This is a coupling problem. The client knows far more about the object structure than it should, and any change to the relationships between objects in the chain ripples outward to every caller that navigates the same path.
 
 ## Why It's a Problem
 
-1. **Tight Coupling**: Client code becomes dependent on the internal structure of multiple objects, not just the immediate object it's calling
-2. **Fragility**: Changes to intermediate relationships force updates in many places throughout the codebase
-3. **Limited Reusability**: Code using chains is harder to reuse in different contexts where the chain structure differs
-4. **Reduced Flexibility**: It's difficult to swap out implementations or restructure the object graph without breaking clients
-5. **Hidden Dependencies**: The true dependencies are obscured; they're not immediately obvious from examining the direct class
+1. **Structural Coupling**: The client depends on the internal layout of multiple objects, not just the one it directly references
+2. **Fragile Paths**: Restructuring any relationship along the chain forces updates in every client that traverses it
+3. **Context-Bound Code**: Chain-dependent code cannot be reused in contexts where the object graph is structured differently
+4. **Inflexible Design**: Swapping implementations or restructuring object relationships becomes difficult when clients encode the navigation path directly
+5. **Obscured Dependencies**: The real dependency set is hidden -- inspecting the direct class reveals only the first hop, not the full chain
 
 ## Signs and Symptoms
 
-- Long sequences of method calls like `$user->getAccount()->getBank()->getCode()`
-- Client code knows the detailed structure of multiple objects
-- Changes to object relationships require cascading updates across multiple files
-- Difficulty testing; mock objects need to mock the entire chain
-- Code reads like a navigation path rather than a business operation
+- Chains of method calls like `$user->getAccount()->getBank()->getCode()`
+- Client code that demonstrates detailed knowledge of multiple objects' internal structure
+- Object relationship changes cascading into updates across many files
+- Tests that must mock entire chains of objects to isolate a single behavior
+- Code that reads like a navigation instruction rather than a domain operation
 
 ## Before/After
 
@@ -167,31 +167,9 @@ The key difference: these are *designed* as chains, not *incidental* coupling.
 
 ## Related Smells
 
-- **Middle Man**: The opposite problem—excessive delegation hiding obscures where functionality actually lives
-- **Feature Envy**: A related smell where a method uses more features from another object than its own
-- **Inappropriate Intimacy**: General coupling issue where classes know too much about each other
-- **Data Clumps**: When objects frequently passed together suggest they should be grouped
+- **Middle Man**: The flip side of Message Chains -- hiding too much delegation can obscure where functionality actually lives. Fixing chains aggressively can create Middle Man.
+- **Feature Envy**: A method reaching deep into another object's structure is often both envious and chain-dependent
+- **Inappropriate Intimacy**: The broader coupling problem of which Message Chains are a specific manifestation
+- **Data Clumps**: Objects that travel together along chains may signal data that should be grouped into a single object
 
-## Refactoring.guru Guidance
-
-### Signs and Symptoms
-
-In code you see a series of calls resembling `$a->b()->c()->d()`.
-
-### Reasons for the Problem
-
-A message chain occurs when a client requests another object, that object requests yet another one, and so on. These chains mean the client is dependent on navigation along the class structure. Any changes in these relationships require modifying the client.
-
-### Treatment
-
-- **Hide Delegate**: Eliminate the chain by creating delegation methods on intermediate objects so the client only talks to its immediate neighbor.
-- **Extract Method** and **Move Method**: Look at what the end object is being used for. Consider extracting that functionality and moving it to the beginning of the chain.
-
-### Payoff
-
-- Reduces dependencies between classes of a chain.
-- Reduces the amount of bloated code.
-
-### When to Ignore
-
-Overly aggressive delegate hiding can cause the Middle Man smell, where it becomes unclear where the actual functionality resides. Balance is key.
+Be careful not to overcorrect: hiding every chain behind delegation methods can make it impossible to find where real work happens. The goal is to balance encapsulation with transparency.

@@ -2,28 +2,28 @@
 
 ## Overview
 
-The Abstract Factory is a creational pattern centered on producing groups of related objects through a shared interface, without tying client code to any particular concrete class. It lets you swap entire product families by changing the factory, keeping the rest of your application untouched.
+The Abstract Factory is a creational pattern that provides an interface for manufacturing entire families of related objects without specifying their concrete classes. Rather than scattering `new` calls throughout the codebase, it channels all instantiation through a factory abstraction, so replacing one product family with another requires changing only the factory instance -- not the code that consumes the products.
 
 ## Intent
 
-- Establish a contract for producing families of interdependent objects
-- Organize object creation behind a factory hierarchy so variants are managed centrally
-- Keep consuming code agnostic to the actual product types it works with
-- Guarantee that objects from the same family are always compatible with each other
+- Define a creation contract that produces cohesive sets of related objects in lockstep
+- Centralize variant management behind a factory hierarchy, keeping product details out of client code
+- Shield consuming code from knowing which concrete product classes it operates on
+- Enforce compatibility within a product family by construction, preventing accidental cross-family mixing
 
 ## Problem & Solution
 
 ### Problem
 
-Building a system that must support multiple product families introduces several pain points:
+Applications that must support several product families face a recurring set of difficulties:
 
-1. **Direct instantiation scatters knowledge**: Client code that calls `new ConcreteProductX()` becomes coupled to specific implementations
-2. **Mismatched combinations**: Without guardrails, different parts of the code might assemble incompatible products together
-3. **Rigid extension paths**: Introducing a new product family means hunting through the codebase for every creation site
+1. **Scattered instantiation logic**: When client code creates products directly with `new`, it becomes tightly bound to specific implementations and hard to redirect
+2. **Cross-family contamination**: Without a coordinating mechanism, nothing prevents one part of the system from mixing products that were never designed to work together
+3. **Costly family additions**: Each new product family forces a sweep through every call site that constructs objects, risking regressions and inconsistencies
 
 ### Solution
 
-Define an abstract factory interface with a method for each product type. Each product family gets its own concrete factory that knows how to build the right set of objects. Clients depend only on the abstract factory and the abstract product interfaces, so switching families is a one-line change at the composition root.
+Introduce an abstract factory interface declaring one creation method per product type. For every product family, implement a concrete factory that returns the correct set of objects. Client code programs against the factory and product abstractions exclusively, so swapping families reduces to injecting a different factory at the composition root.
 
 ## Structure
 
@@ -243,32 +243,32 @@ $migration = $factory->createMigration();
 
 ## Real-World Analogies
 
-**Furniture Collections**: Think of a furniture showroom organized by style -- Mid-Century Modern, Industrial, Scandinavian. When you pick a style, every piece (sofa, table, lamp) comes from that collection, guaranteeing everything looks right together.
+**Furniture Showroom by Style**: Picture a showroom organized into curated collections -- Mid-Century Modern, Industrial, Scandinavian. Choosing a collection determines every piece you receive (sofa, table, lamp), and the showroom guarantees aesthetic coherence across the set.
 
-**Cross-Platform UI Kits**: Desktop operating systems ship their own widget toolkits. A "create dialog" call on Windows produces Windows-styled controls, while the same call on macOS produces native macOS controls. The application code stays the same either way.
+**Operating System Widget Toolkits**: Each desktop OS bundles its own control library. The same "create dialog" call yields Windows-native widgets on Windows and macOS-native widgets on macOS, while the application logic remains identical on both platforms.
 
 ## Pros and Cons
 
 ### Advantages
-- **Decouples client from concrete types**: All creation goes through abstract interfaces, so nothing in your business logic knows about specific product classes
-- **Guarantees family consistency**: Since one factory builds all related products, you never get an accidental mix of incompatible parts
-- **Straightforward to extend**: Adding a whole new product family means writing one new factory class -- no changes to existing code
-- **Clean separation of creation and use**: Object construction logic lives in one place, not scattered across consumers
-- **Supports the Open/Closed Principle**: The system grows through new classes rather than editing existing ones
+- **Isolates client code from concrete classes**: All instantiation flows through abstract interfaces, so business logic never references specific product implementations
+- **Enforces family coherence**: A single factory produces every related product, eliminating accidental mismatches between incompatible parts
+- **Simplifies family extension**: Supporting a new product family means adding one factory class -- existing client code stays untouched
+- **Localizes construction logic**: Object creation is consolidated in factory implementations rather than spread across consumers
+- **Respects the Open/Closed Principle**: Growth happens by introducing new classes, not by editing existing ones
 
 ### Disadvantages
-- **More moving parts**: Each new family means a factory class plus one class per product type
-- **Unnecessary for simple scenarios**: If you only ever have one product family, this pattern is overhead
-- **Difficult to add new product types**: Introducing a new product to the family requires updating every factory implementation
-- **Not as flexible as Builder**: When individual products need varied configuration, Abstract Factory alone may not be sufficient
+- **Increases class count**: Every new family requires a factory class plus one concrete class per product type
+- **Overkill for single-family systems**: When only one product family exists, the abstraction layer adds complexity without payoff
+- **Painful to expand the product set**: Adding a new product type to the family means modifying every existing factory implementation
+- **Limited configuration flexibility**: When individual products need multi-step setup, Abstract Factory alone falls short -- Builder is the better companion
 
 ## Relations with Other Patterns
 
-- **Factory Method**: Abstract Factory typically relies on Factory Methods internally for each product creation call
-- **Singleton**: Concrete factories often exist as singletons since you typically need only one per family
-- **Prototype**: You can combine the two by having factories clone template objects instead of calling constructors
-- **Builder**: When object construction involves many steps and options, Builder is the better fit; Abstract Factory works best when creation is straightforward but families must be coordinated
-- **Strategy**: Both patterns let you swap implementations behind an interface, but they operate at different granularities -- Strategy swaps algorithms, Abstract Factory swaps object families
+- **Factory Method**: Abstract Factory commonly delegates each creation call to an internal Factory Method
+- **Singleton**: Concrete factories are frequently singletons, since a single instance per family is usually sufficient
+- **Prototype**: Factories can clone pre-configured template objects instead of invoking constructors, combining both patterns
+- **Builder**: Builder handles complex, multi-step construction; Abstract Factory handles coordinated creation of simple products across a family
+- **Strategy**: Both swap implementations behind an interface, but at different scales -- Strategy replaces algorithms, Abstract Factory replaces entire object families
 
 ## Examples in Other Languages
 

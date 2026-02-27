@@ -2,32 +2,32 @@
 
 ## Definition
 
-Objects of a supertype should be replaceable with objects of a subtype without altering the correctness of the program. If class `B` extends class `A`, then anywhere `A` is expected, `B` should work without surprises.
+Any instance of a supertype should be interchangeable with an instance of its subtype without breaking the program's correctness. If class `B` extends class `A`, then every place that accepts `A` must work flawlessly when given `B` instead.
 
-Barbara Liskov introduced this concept in 1987. In practical terms: if your code works with a base type, it must still work correctly when given any derived type — no exceptions thrown, no contracts violated, no unexpected side effects.
+Barbara Liskov articulated this concept in 1987. The practical takeaway: if your code operates against a base type, it must continue to behave correctly when any derived type is substituted in — no unexpected exceptions, no broken contracts, no hidden side effects.
 
 ## Why It Matters
 
-LSP is the guardrail for inheritance and polymorphism. When violated, code that relies on a base type breaks unpredictably when handed a subtype. This creates:
+LSP serves as the safety net for inheritance and polymorphism. When it is violated, code that depends on a base type fails unpredictably when confronted with a subtype. The consequences include:
 
-- **Runtime surprises** — methods throw exceptions or return unexpected values
-- **Fragile polymorphism** — generic code needs type checks to work around broken subtypes
-- **Misleading hierarchies** — inheritance suggests "is-a" but behavior says otherwise
-- **Cascading failures** — one bad subtype forces defensive code throughout the system
+- **Runtime surprises** — methods throw exceptions or produce unexpected results
+- **Brittle polymorphism** — generic code must resort to type checks to work around misbehaving subtypes
+- **Deceptive hierarchies** — the inheritance structure implies an "is-a" relationship, but the behavior tells a different story
+- **Cascading defensiveness** — one problematic subtype forces protective checks throughout the entire system
 
 ## Detecting Violations
 
-Watch for these patterns:
+Be on the lookout for these patterns:
 
-- **Subclass methods that throw "not supported" exceptions** — a clear sign the subtype can't fulfill the parent's contract
-- **Type-checking in consumer code** — `if ($animal instanceof Dog)` means something can't be treated generically
-- **Overridden methods that do nothing** — empty implementations break the expected behavior
-- **Strengthened preconditions** — subtype demands stricter input than the parent promises
-- **Weakened postconditions** — subtype returns less or different output than the parent guarantees
+- **Subclass methods that throw "not supported" exceptions** — an unmistakable sign that the subtype cannot honor the parent's contract
+- **Type-checking in consumer code** — `if ($animal instanceof Dog)` indicates that something cannot be handled generically
+- **Overridden methods that do nothing** — hollow implementations undermine the expected behavior
+- **Strengthened preconditions** — the subtype requires stricter input than the parent advertises
+- **Weakened postconditions** — the subtype delivers less or something different compared to what the parent guarantees
 
 ## The Classic Violation: Rectangle and Square
 
-The most famous LSP violation demonstrates that mathematical "is-a" doesn't equal behavioral "is-a":
+The most well-known LSP violation shows that a mathematical "is-a" relationship does not automatically translate to a behavioral one:
 
 ```php
 <?php
@@ -485,13 +485,13 @@ public:
 
 ## Common Pitfalls
 
-- **Thinking "is-a" in the real world means "is-a" in code** — a Square is mathematically a Rectangle, but its behavior is incompatible with mutable Rectangle code
-- **Empty method overrides** — overriding a method to do nothing is almost always a violation
-- **Catching and swallowing exceptions** — wrapping violations in try-catch doesn't fix them, it hides them
-- **Over-relying on inheritance** — prefer composition when subtypes can't fully honor the parent contract
+- **Assuming real-world "is-a" equals code "is-a"** — a Square is a Rectangle in geometry, but its mutable behavior is incompatible with a mutable Rectangle's contract
+- **Empty method overrides** — overriding a method to do nothing is nearly always a violation
+- **Catching and swallowing exceptions** — wrapping violations in try-catch does not fix them, it merely conceals them
+- **Excessive reliance on inheritance** — favor composition when a subtype cannot fully satisfy the parent's contract
 
 ## Related Principles
 
-- **Open/Closed (OCP)** — LSP makes polymorphic extension possible. Without LSP, substituting subtypes breaks OCP
-- **Interface Segregation (ISP)** — smaller interfaces make it easier to honor the full contract
-- **Design by Contract** — Eiffel's pre/postcondition system formalizes what LSP demands
+- **Open/Closed (OCP)** — LSP enables polymorphic extension; without LSP, swapping in subtypes undermines OCP
+- **Interface Segregation (ISP)** — narrower interfaces make it easier to honor the complete contract
+- **Design by Contract** — Eiffel's precondition/postcondition system formalizes what LSP requires

@@ -2,24 +2,26 @@
 
 ## Overview
 
-Extract Subclass is a refactoring technique that creates a new subclass when a parent class contains features used only in specific scenarios. It offloads special-case logic into a dedicated subclass while maintaining proper class hierarchy, reducing complexity in the parent class.
+Extract Subclass moves special-case fields and methods out of a general-purpose class and into a dedicated subclass. When a class carries features that only matter in certain scenarios, those features belong in a subclass that represents that specific variation.
 
 ## Motivation
 
-Classes often accumulate features that serve only specific use cases. Rather than cluttering a class with infrequently-used fields and methods, Extract Subclass allows you to:
+As classes grow, they often accumulate fields and methods that apply only to a subset of their instances. Leaving this special-case logic in the parent class:
 
-- Remove special-case logic from the parent class
-- Create dedicated subclasses for specific variations
-- Improve code clarity and maintainability
-- Enable multiple subclasses for different special cases
+- Forces all instances to carry fields they do not use
+- Obscures the distinction between general and specialized behavior
+- Makes the parent class harder to understand and test
+- Limits the ability to add further variations cleanly
+
+Extracting a subclass sharpens both the parent and the child, giving each a clear and focused purpose.
 
 ## Mechanics
 
-1. Create a new subclass from the target class
-2. Copy specialized fields and methods to the subclass
-3. Remove specialized code from the parent class
-4. Replace instances using the specialized features with the subclass
-5. Verify all tests pass
+1. Create a new subclass from the parent class
+2. Move the specialized fields and methods into the subclass
+3. Remove the specialized code from the parent
+4. Update creation sites to instantiate the subclass where the special behavior is needed
+5. Run the tests to confirm behavior is preserved
 
 ## Before/After Examples
 
@@ -123,25 +125,25 @@ $manager = new Manager('Bob', 75000, 'Engineering', 5000);
 
 ## Benefits
 
-- **Cleaner Parent Class**: Removes special-case fields and methods from the parent class
-- **Clear Intent**: Manager as a separate class makes the code's intent explicit
-- **Type Safety**: PHP 8.3 readonly properties provide immutability and clarity
-- **Scalability**: Easy to add multiple subclasses for different variations
-- **Single Responsibility**: Each class has one reason to change
+- **Lighter Parent Class**: The parent sheds fields and methods that only mattered to the special case
+- **Explicit Variation**: A dedicated subclass makes the distinction between general and specialized behavior unmistakable
+- **Type Safety**: PHP 8.3 readonly properties on the subclass enforce immutability and provide clarity
+- **Extensibility**: Additional variations can be introduced as further subclasses without bloating the parent
+- **Focused Responsibility**: Each class has a single, well-defined reason to change
 
 ## When NOT to Use
 
-- **Multiple Independent Variations**: If your class needs to handle multiple dimensions (e.g., size AND fur type), composition with Strategy pattern is better
-- **Better Solutions Exist**: When composition or inheritance through other patterns would be clearer
-- **Deep Hierarchies**: Don't create extract-subclass if it creates problematic inheritance chains
+- **Multiple orthogonal dimensions**: If the class varies along two or more independent axes (e.g., role AND employment type), composition or the Strategy pattern is a better fit than inheritance
+- **Shallow difference**: When the subclass would add only a trivial field and no meaningful behavior, the complexity of a new class may not be justified
+- **Deep inheritance chains**: Avoid creating subclasses that extend already-deep hierarchies
 
 ## Related Refactorings
 
-- **Pull Up Method**: Move common methods up to parent class
-- **Pull Down Method**: Move specialized methods to subclass
-- **Extract Superclass**: Create a superclass when multiple classes share common behavior
-- **Replace Type Code with Subclasses**: Use subclasses instead of type fields
-- **Replace Conditional with Polymorphism**: Use subclasses to handle different conditional branches
+- **Pull Up Method**: Move shared methods from the subclass back into the parent
+- **Push Down Method**: Move specialized methods from the parent into the subclass
+- **Extract Superclass**: The reverse direction -- creating a shared parent for classes that already exist
+- **Replace Type Code with Subclasses**: Use subclasses to replace a type field and its conditional logic
+- **Replace Conditional with Polymorphism**: Eliminate conditionals by distributing behavior across subclasses
 
 ## Examples in Other Languages
 

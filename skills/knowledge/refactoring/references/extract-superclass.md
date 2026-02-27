@@ -1,28 +1,25 @@
 ## Overview
 
-Extract Superclass is a refactoring technique that consolidates duplicate code and shared functionality from multiple classes into a single parent class. When two or more classes share common fields and methods, creating a superclass allows you to move this duplicated code to one location, improving maintainability and reducing code duplication.
+Extract Superclass pulls shared fields and methods out of two or more classes and into a newly created parent class. When independent classes carry duplicate code that performs similar tasks, introducing a common superclass eliminates the repetition and makes the relationship between the classes explicit.
 
 ## Motivation
 
-Code duplication often appears when classes perform similar tasks. Rather than allowing this duplication to persist and become harder to maintain, Extract Superclass provides a structured approach to consolidate shared functionality through inheritance. This is especially useful when you discover parallel development has created similar implementations across your codebase.
+Duplicate code across classes is a maintenance liability. When the shared logic needs to change, every copy must be updated in lockstep, and missed updates lead to inconsistencies. Extract Superclass addresses this by:
 
-Benefits of recognizing and refactoring duplicate code early:
-- Reduces maintenance burden by centralizing changes
-- Makes relationships between classes explicit
-- Improves code readability and understanding
-- Establishes a foundation for future shared functionality
+- Centralizing shared behavior in a single location
+- Making the structural relationship between the classes visible
+- Providing a stable base for future shared functionality
+- Reducing the total amount of code to read and maintain
 
 ## Mechanics
 
-The refactoring process follows these steps:
+Follow this order to avoid breaking intermediate states:
 
-1. **Create a superclass** - Establish a new abstract parent class
-2. **Move fields upward** - Use Pull Up Field to move common attributes to the superclass first
-3. **Move methods upward** - Use Pull Up Method to migrate shared methods
-4. **Move constructors** - Use Pull Up Constructor Body to consolidate initialization logic
-5. **Update client code** - Replace direct subclass references with the superclass where appropriate
-
-The order matters: move fields before methods since methods may depend on fields.
+1. **Create the superclass** -- define an abstract parent class
+2. **Pull up fields first** -- move shared attributes into the superclass (methods may depend on them)
+3. **Pull up methods** -- migrate identical methods to the parent
+4. **Pull up constructor logic** -- consolidate shared initialization
+5. **Update client code** -- where appropriate, reference the superclass type instead of individual subclasses
 
 ## Before and After
 
@@ -140,26 +137,26 @@ final class Contractor extends Person
 
 ## Benefits
 
-- **Eliminates Duplication** - Common code exists in a single location, reducing maintenance overhead
-- **Improves Maintainability** - Changes to shared behavior only need to be made once
-- **Clarifies Relationships** - The inheritance hierarchy makes class relationships explicit
-- **Supports Extension** - The abstract superclass provides a foundation for new subclasses
-- **Enables Polymorphism** - Client code can work with the superclass, allowing flexible implementations
+- **Single Source of Truth** -- shared logic lives in one place, not scattered across classes
+- **Cheaper Maintenance** -- changes to common behavior require a single edit
+- **Visible Relationships** -- the inheritance hierarchy documents how classes relate
+- **Foundation for Growth** -- new subclasses can extend the superclass without duplicating boilerplate
+- **Polymorphic Flexibility** -- client code can accept the superclass type, enabling substitution
 
 ## When NOT to Use
 
-- **Multiple Inheritance Conflicts** - If subclasses already inherit from different superclasses, multiple inheritance may not be the solution
-- **Unrelated Classes** - Force-fitting unrelated classes into a hierarchy creates artificial relationships
-- **Composition is Better** - Some shared functionality may be better handled through composition and dependency injection
-- **Single Class** - If only one class uses the functionality, extraction isn't necessary
-- **Conflicting Semantics** - If the shared code has different meanings in different contexts, a superclass may confuse intent
+- **Existing inheritance conflicts** -- if subclasses already extend a different parent, adding another is not possible in single-inheritance languages
+- **Superficial similarity** -- if the shared code looks the same but serves different purposes, a forced hierarchy will mislead readers
+- **Composition is a better fit** -- when the shared functionality is a capability rather than an identity, inject it via composition or traits
+- **Only one class** -- if the duplication has not yet appeared in a second class, the extraction is premature
+- **Divergent semantics** -- when the same method name means different things in different classes, a shared superclass obscures that difference
 
 ## Related Refactorings
 
-- **Extract Interface** - Create an interface instead when defining a contract rather than sharing implementation
-- **Extract Subclass** - The inverse operation; extract specialized behavior into subclasses
-- **Pull Up Field/Method** - Individual steps in the Extract Superclass process
-- **Move Method** - Move functionality between classes without creating a hierarchy
+- **Extract Interface** -- use when you need a shared contract without shared implementation
+- **Extract Subclass** -- the reverse direction: pulling specialized behavior down into a child class
+- **Pull Up Field/Method** -- the individual steps that make up this refactoring
+- **Move Method** -- shifts behavior between classes without introducing a hierarchy
 
 ## Examples in Other Languages
 

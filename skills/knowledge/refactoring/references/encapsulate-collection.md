@@ -1,30 +1,26 @@
 ## Overview
 
-Encapsulate Collection is a refactoring technique that replaces public access to collection fields with controlled getter and setter methods. Instead of exposing a raw collection that external code can directly modify, the collection is hidden behind an API that governs all interactions. This ensures the object maintains control over its state and can enforce invariants.
+Encapsulate Collection replaces direct public access to a collection field with a controlled API of add, remove, and query methods. The class becomes the gatekeeper for all modifications to the collection, preventing external code from bypassing validation or corrupting invariants.
 
 ## Motivation
 
-Collections are frequently mutable data structures. When a collection field is public or accessed directly through a simple getter returning the reference, external code can add, remove, or modify elements without the class knowing about these changes. This leads to several problems:
+Collections are inherently mutable. When exposed through a public field or a getter that returns the live reference, any caller can insert, delete, or replace elements without the owning class knowing. This creates several problems:
 
-- Loss of encapsulation and control over state
-- Inability to validate or enforce business rules
-- Difficulty debugging unexpected collection mutations
-- Code that's fragile and hard to maintain
-- Violation of the Single Responsibility Principle
+- The class loses control over its own state
+- Business rules and validation logic can be bypassed
+- Unexpected mutations are hard to debug
+- The code becomes fragile and resistant to change
+- Responsibilities leak from the owning class to its callers
 
-By encapsulating the collection, the class becomes a gatekeeper for all collection operations, enabling validation, logging, and consistent state management.
+Wrapping the collection behind dedicated methods gives the class the authority to validate inputs, enforce constraints, and react to changes.
 
 ## Mechanics
 
-1. **Create getter and adder/remover methods**: Instead of returning the collection directly, provide methods like `getItems()`, `addItem()`, and `removeItem()`.
-
-2. **Return unmodifiable copies**: The getter should return a copy or read-only view to prevent external mutation.
-
-3. **Remove direct access**: Delete the public field or make it private.
-
-4. **Update all clients**: Replace direct collection access with the new methods throughout the codebase.
-
-5. **Consider bulk operations**: Add methods for adding/removing multiple items if performance is a concern.
+1. **Provide targeted mutation methods**: Create `addX()` and `removeX()` methods instead of exposing the raw collection
+2. **Return defensive copies**: The getter should hand back a copy or read-only snapshot so callers cannot mutate the original
+3. **Restrict field visibility**: Make the collection field private
+4. **Migrate all callers**: Replace every direct collection manipulation in client code with calls to the new methods
+5. **Add bulk operations if needed**: For performance-sensitive paths, provide methods that accept multiple items at once
 
 ## Before/After PHP 8.3+ Code
 
@@ -143,26 +139,26 @@ foreach ($person->getHobbies() as $hobby) {
 
 ## Benefits
 
-- **Encapsulation**: The class maintains full control over its collections
-- **Validation**: Add business logic when items are added or removed
-- **Maintainability**: Changes to collection handling are isolated in one place
-- **Debugging**: Track modifications through controlled methods
-- **Immutability guarantees**: Returned copies prevent accidental external mutations
-- **Consistency**: Ensures invariants are maintained at all times
-- **Clear intent**: The API explicitly shows allowed collection operations
+- **Full State Control**: The owning class decides what goes into the collection and under what conditions
+- **Built-in Validation**: Business rules are enforced every time the collection changes
+- **Localized Changes**: All collection management logic lives in one place
+- **Observable Mutations**: Modifications flow through methods that can log, trigger events, or audit changes
+- **Safe Reads**: Returning copies prevents callers from accidentally altering internal state
+- **Preserved Invariants**: The class can guarantee consistency at all times
+- **Intentional API**: The set of allowed operations is explicit and discoverable
 
 ## When NOT to Use
 
-- **Performance-critical code**: Copying large collections on every access may be inefficient; consider lazy loading or more sophisticated collection patterns
-- **Simple data holders**: If the class is purely a data container with no validation logic, full encapsulation may be over-engineering
-- **Immutable value objects**: If using immutable types (readonly classes with named constructors), direct field access may be acceptable
-- **Internal-only classes**: Private classes with no external consumers may not need full encapsulation
-- **Working with Collection Framework**: If using specialized collection libraries, defer to their encapsulation patterns
+- **Hot paths with large collections**: Copying a large array on every read may hurt performance; consider lazy or immutable collection types instead
+- **Pure data holders**: If the class has no validation logic and serves only as a data container, full encapsulation may be unnecessary overhead
+- **Immutable value objects**: Readonly classes constructed via named constructors may not need mutation methods
+- **Internal-only classes**: Private implementation details with no external consumers may not warrant the ceremony
+- **Specialized collection libraries**: When using a library with its own encapsulation conventions, follow those instead
 
 ## Related Refactorings
 
-- **Extract Class**: Break down overly complex collection management into separate objects
-- **Replace Temp with Query**: Cache collection computations rather than storing mutable collections
-- **Move Method**: Relocate collection-specific logic from clients to the collection owner
-- **Introduce Parameter Object**: Group related collection-like parameters into a dedicated class
-- **Replace Array with Object**: Convert arrays to typed objects for better type safety and encapsulation
+- **Extract Class**: When collection management becomes complex enough to justify its own class
+- **Replace Temp with Query**: Avoid caching collection computations in temporary variables
+- **Move Method**: Relocate collection-related logic from callers into the collection owner
+- **Introduce Parameter Object**: Bundle related collection-like parameters into a dedicated type
+- **Replace Array with Object**: Promote untyped arrays to typed objects for stronger guarantees

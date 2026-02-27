@@ -1,17 +1,17 @@
 ## Overview
 
-Pull Up Constructor Body is a refactoring technique that eliminates duplicate initialization logic in subclass constructors by extracting common code into a superclass constructor. This addresses the code smell where subclasses contain constructors with largely identical code, improving maintainability and reducing duplication across an inheritance hierarchy.
+Pull Up Constructor Body extracts repeated initialization logic from subclass constructors into a shared superclass constructor. When several subclasses perform the same setup steps -- assigning the same fields, running the same validation -- that common work belongs in the parent, leaving each subclass responsible only for its own unique initialization.
 
 ## Motivation
 
-When multiple subclasses have constructors that perform similar initialization steps, this creates several problems:
+Duplicated constructor code across sibling classes creates familiar problems:
 
-- **Code duplication**: Changes to common initialization logic must be made in multiple places
-- **Consistency risks**: Updates in one subclass constructor might be missed in others
-- **Maintenance burden**: More code to maintain and test
-- **Confusion**: Developers may not realize the duplicated logic exists across classes
+- **Synchronized edits**: Changing the shared initialization forces updates in every subclass
+- **Consistency gaps**: A fix applied to one constructor can easily be missed in another
+- **Larger codebase**: Redundant lines inflate the size of the hierarchy without adding value
+- **Hidden commonality**: Developers may not realize that initialization logic is identical across classes
 
-By pulling up the common constructor body to the superclass, you create a single source of truth for initialization logic shared across the hierarchy.
+Centralizing the shared portion in the superclass establishes a single authoritative version of the common setup and lets each subclass focus exclusively on what makes it different.
 
 ## Mechanics
 
@@ -124,12 +124,11 @@ class Motorcycle extends Vehicle
 
 ## Benefits
 
-- **Eliminates duplication** - Single source of truth for shared initialization logic
-- **Improves consistency** - Ensures all subclasses initialize inherited properties identically
-- **Reduces maintenance burden** - Changes to common initialization happen in one place
-- **Enhances readability** - Intent is clearer with separated concerns
-- **Simplifies testing** - Easier to verify parent class behavior is consistent
-- **Strengthens hierarchy** - Makes the inheritance relationship more explicit
+- **One authoritative version**: Shared initialization lives in a single place
+- **Guaranteed consistency**: Every subclass initializes inherited properties through the same path
+- **Lighter subclasses**: Constructors shrink to only the subclass-specific setup
+- **Clearer hierarchy**: The parent-child relationship becomes explicit in the constructor chain
+- **Easier verification**: Testing the common setup requires exercising only the parent constructor
 
 ## When NOT to Use
 

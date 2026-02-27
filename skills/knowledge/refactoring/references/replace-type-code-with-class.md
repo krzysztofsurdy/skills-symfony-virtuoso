@@ -1,31 +1,31 @@
 ## Overview
 
-Replace Type Code with Class eliminates magic numbers and strings that represent distinct types or statuses by replacing them with enumeration types or dedicated classes. This refactoring improves type safety, code clarity, and enables compile-time checking instead of runtime validation.
+Replace Type Code with Class removes magic numbers and strings that represent distinct categories or statuses by converting them into enumeration types or dedicated classes. This refactoring strengthens type safety, improves code readability, and shifts validation from runtime conditionals to compile-time checks.
 
 ## Motivation
 
 ### When to Apply
 
-- **Magic numbers/strings**: Using numeric codes (1, 2, 3) or string values ('active', 'pending', 'inactive') throughout code
-- **Type validation**: Repeatedly checking if a value matches expected codes using conditionals
-- **Scattered constants**: Type codes defined in multiple places rather than a single source of truth
-- **No IDE support**: IDE can't help with autocompletion or refactoring of string-based types
-- **Domain complexity**: Different statuses or types need validation logic and behavior
+- **Raw numeric or string codes**: Using integer codes (1, 2, 3) or string literals ('active', 'pending', 'inactive') to represent types
+- **Repeated validation**: Checking whether a value matches the expected set of codes in multiple places
+- **Scattered definitions**: Type code constants defined in different locations instead of a single authoritative source
+- **Missing IDE assistance**: The IDE cannot offer autocompletion or safe renaming for plain strings or integers
+- **Domain richness**: Different statuses or categories carry validation rules and associated behavior
 
 ### Why It Matters
 
-Type codes as primitives provide no type safety. Replacing them with enums or classes provides compile-time checking, eliminates invalid state transitions, enables IDE assistance, and makes code intent clearer through meaningful type names.
+Primitive type codes offer no protection against invalid values. Replacing them with enums or dedicated types gives you compile-time guarantees, eliminates illegal state transitions, enables IDE tooling, and makes the code's purpose clear through meaningful type names.
 
 ## Mechanics: Step-by-Step
 
-1. **Identify type codes**: Find all magic numbers/strings representing distinct types or statuses
-2. **Create enumeration type**: PHP 8.1+ enums are ideal for simple type codes
-3. **Define all valid values**: Ensure all possible codes are represented
-4. **Replace primitive fields**: Change variables holding type codes to the new enum type
-5. **Update method signatures**: Change parameter/return types from int/string to enum
-6. **Remove validation logic**: Delete conditional checks that validate type codes
-7. **Add behavior**: Move type-related logic into enum methods or dedicated classes
-8. **Test thoroughly**: Verify all type transitions and validations work correctly
+1. **Catalog type codes**: Locate every magic number or string that represents a distinct category
+2. **Define an enum or class**: PHP 8.1+ enums are the natural choice for straightforward type codes
+3. **Enumerate all values**: Ensure every valid code has a corresponding enum case
+4. **Replace primitive fields**: Change variables that store type codes to the new enum type
+5. **Update signatures**: Switch method parameter and return types from int/string to the enum
+6. **Strip manual validation**: Remove conditional checks that verify type code validity
+7. **Attach behavior**: Migrate type-specific logic into methods on the enum or class
+8. **Run the test suite**: Confirm that all transitions and validations still function correctly
 
 ## Before: PHP 8.3+ Example
 
@@ -193,27 +193,27 @@ $permissions = $user->getRole()->permissions(); // IDE autocomplete available
 
 ## Benefits
 
-- **Type Safety**: Compiler/IDE prevents invalid type assignments at development time
-- **Self-Documenting**: Enum names replace magic numbers; intent is immediately clear
-- **IDE Assistance**: Autocomplete and refactoring support for type codes
-- **Eliminates Validation**: No more scattered if-checks validating primitive values
-- **Compile-Time Checking**: Invalid values caught before runtime
-- **Behavior Encapsulation**: Type-related logic moves into enum methods
-- **Reduced Bugs**: Impossible to accidentally use wrong code value
-- **Better Maintainability**: Changing allowed values affects only the enum definition
+- **Type safety**: The compiler and IDE prevent invalid type assignments at development time
+- **Self-documenting**: Enum case names replace opaque numbers; intent is immediately obvious
+- **IDE tooling**: Autocompletion, jump-to-definition, and rename support work out of the box
+- **No manual validation**: The type system itself enforces that only valid values are used
+- **Compile-time checking**: Invalid values are caught before the code ever runs
+- **Encapsulated behavior**: Type-related logic lives directly on the enum methods
+- **Fewer bugs**: It becomes impossible to accidentally assign an invalid code value
+- **Centralized changes**: Modifying the set of allowed values requires editing only the enum definition
 
 ## When NOT to Use
 
-- **Truly dynamic values**: Codes from external APIs that change unpredictably
-- **User-defined categories**: When users can create new types at runtime
-- **Large numeric ranges**: Thousands of possible values (consider database lookup instead)
-- **Legacy systems**: When refactoring old code requires extensive downstream changes
-- **Strict compatibility**: When third-party code requires string/int types
+- **Truly dynamic values**: Type codes originating from external APIs that change unpredictably
+- **User-defined categories**: When end users can create new types at runtime
+- **Huge numeric ranges**: Thousands of possible values are better served by a database lookup
+- **Legacy integration**: When refactoring would force extensive downstream changes in external systems
+- **Strict compatibility**: When third-party code mandates raw string or integer types
 
 ## Related Refactorings
 
-- **Replace Data Value with Object**: For more complex type code behavior
-- **Extract Class**: When type codes need associated data and methods
-- **Replace Conditional with Polymorphism**: To replace type-based conditionals with subclasses
-- **Introduce Parameter Object**: For grouping related type codes as parameters
-- **Self Encapsulate Field**: When adding validation to primitive type code fields
+- **Replace Data Value with Object**: For cases requiring richer behavior than a simple enum
+- **Extract Class**: When type codes need their own associated data and methods
+- **Replace Conditional with Polymorphism**: To replace type-based conditionals with polymorphic dispatch
+- **Introduce Parameter Object**: For bundling related type codes into a single parameter
+- **Self Encapsulate Field**: For adding validation to primitive type code fields before upgrading to an enum

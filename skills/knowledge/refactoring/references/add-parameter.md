@@ -2,29 +2,29 @@
 
 ## Overview
 
-Add Parameter addresses situations where a method lacks the information it needs to carry out its work. Rather than having the method reach into class state or global context, you provide the missing data through an explicit parameter. This leads to methods that are self-contained, easier to reason about, and simpler to test.
+Add Parameter solves the problem of a method that needs additional data to perform its job correctly. Instead of having the method dig into class internals or rely on global state, you surface the missing information as an explicit parameter. This produces methods with transparent inputs that are straightforward to understand and verify.
 
 ## Motivation
 
 Apply this technique when:
 
-- A method requires data it currently cannot access through its existing signature
-- The needed data is contextual or varies per call, making it unsuitable as a class field
-- You want to improve testability by making inputs explicit
-- You aim to decouple the method from internal object state
-- Callers have context-specific information that the method should receive directly
+- A method needs data that its current signature does not provide
+- The required information changes from call to call, making it a poor fit for a class property
+- You want tests to control method inputs directly without manipulating object state
+- You need to break an implicit dependency on internal fields
+- Different callers possess context-specific values that should flow into the method
 
 ## Mechanics
 
-1. **Introduce the new method** with the added parameter in its signature
-2. **Bridge from the old method** by having it call the new version with a sensible default
-3. **Migrate callers** that need the new capability to supply the parameter directly
-4. **Retire the original method** once all callers have been updated, or retain it as a convenience overload
+1. **Create the new method** with the additional parameter in its signature
+2. **Delegate from the old method** by calling the new version with a reasonable default value
+3. **Update callers progressively** so each one passes the parameter explicitly
+4. **Remove the original method** once every caller has been migrated, or keep it as a shorthand overload
 
 Points to keep in mind:
-- Proceed carefully with signature changes to avoid breaking existing call sites
-- Default parameter values help preserve backward compatibility during migration
-- If the parameter seems forced, it may indicate a deeper structural problem
+- Apply signature changes methodically to avoid breaking existing call sites
+- Default parameter values ease the transition by preserving backward compatibility
+- If the parameter feels unnatural, it may signal a more fundamental design issue
 
 ## Before/After - PHP 8.3+ Code
 
@@ -80,31 +80,31 @@ $service->send($user, 'Urgent', 'push');    // Uses 'push' channel
 
 ## Benefits
 
-- **Adaptability**: The method can serve a wider range of use cases without modification
-- **Testability**: Supplying different parameter values makes comprehensive testing straightforward
-- **Looser Coupling**: The method no longer depends on mutable object state for its inputs
-- **Reuse**: Identical logic can be driven with varying data from different callers
-- **Explicit Dependencies**: The method signature documents exactly what data is required
-- **Named Arguments**: PHP 8.0+ named parameters make call sites highly readable
+- **Flexibility**: The method handles a broader set of scenarios without internal changes
+- **Testability**: Passing different values as arguments enables thorough, isolated tests
+- **Reduced Coupling**: The method no longer pulls values from mutable internal state
+- **Reusability**: The same logic serves multiple callers with varying data
+- **Transparent Interface**: The signature communicates every piece of data the method depends on
+- **Named Arguments**: PHP 8.0+ named parameters make call sites self-documenting
 
 ## When NOT to Use
 
-- **Too Many Parameters**: Methods with more than 3-4 parameters suggest the design needs rethinking
-- **Recurring Additions**: Continuously adding parameters points toward a Parameter Object or DTO
-- **Closely Related Data**: When the new parameter belongs alongside existing ones, group them into a value object
-- **Stable Public APIs**: Changing published interfaces breaks consumers
-- **Symptom of Missing Abstraction**: Needing to pass data may indicate a class is missing a responsibility
+- **Parameter Overload**: Methods with more than 3-4 parameters signal a need for structural redesign
+- **Repeated Growth**: Continuously appending parameters suggests bundling them into a Parameter Object or DTO
+- **Related Values**: When the new parameter naturally groups with existing ones, wrap them in a value object
+- **Stable Public Contracts**: Altering published interfaces disrupts downstream consumers
+- **Hidden Abstraction Gap**: The need to pass data may reveal a missing class or responsibility
 
 Alternatives to consider:
-- Store the data as a class property if it belongs to the object
-- Bundle related parameters into a DTO or value object
-- Extract a dedicated class for the related functionality
-- Use constructor injection for service-level dependencies
+- Promote the data to a class property if it logically belongs to the object
+- Combine related parameters into a DTO or value object
+- Carve out a separate class for the associated functionality
+- Inject service-level dependencies through the constructor
 
 ## Related Refactorings
 
-- **Remove Parameter**: The reverse operation, applied when a parameter is no longer needed
-- **Introduce Parameter Object**: Consolidates multiple related parameters into one object
-- **Extract Method**: Frequently applied alongside to sharpen method responsibilities
-- **Replace Method with Method Object**: Suitable for complex methods accumulating many parameters
-- **Move Method**: Relocates logic to a class that already has access to the required data
+- **Remove Parameter**: The inverse operation, used when a parameter becomes unnecessary
+- **Introduce Parameter Object**: Groups multiple related parameters into a single object
+- **Extract Method**: Often applied in tandem to sharpen method focus
+- **Replace Method with Method Object**: Handles complex methods that accumulate many parameters
+- **Move Method**: Shifts logic to a class that already holds the needed data

@@ -1,31 +1,31 @@
 ## Overview
 
-Introduce Local Extension is a refactoring technique that safely extends third-party or legacy classes with additional functionality. Instead of modifying the original class (which may be outside your control), you create a local wrapper class that either inherits from or wraps the original class, adding necessary methods while maintaining compatibility and avoiding tight coupling.
+Introduce Local Extension creates a subclass or wrapper around a third-party or legacy class to add methods the original class does not provide. Rather than modifying foreign code or spreading workaround logic throughout your application, you build a local extension that augments the class's capabilities while keeping the original untouched.
 
 ## Motivation
 
 ### When to Apply
 
-- **Third-party library limitations**: You need additional methods not provided by external classes
-- **Legacy class enhancement**: Adding functionality to unmaintainable code without modifying it
-- **API incompleteness**: Library classes don't provide all methods your domain needs
-- **Avoiding monkey-patching**: PHP doesn't support open classes, so composition/inheritance solves this
-- **Feature requirements diverge**: Original library doesn't support your specific use cases
-- **Version compatibility**: Adding functionality without upgrading potentially breaking dependencies
+- **Library gaps**: An external class is missing methods your domain requires
+- **Legacy augmentation**: You need new behavior on a class whose source you should not touch
+- **Incomplete APIs**: The library does not cover all the operations your use case demands
+- **Safe extension**: PHP does not support open classes, so inheritance or composition fills the gap
+- **Diverging needs**: Your application requires domain-specific operations the library author would not accept upstream
+- **Upgrade safety**: Adding functionality locally avoids depending on a newer (potentially breaking) version of the library
 
 ### Why It Matters
 
-Instead of modifying foreign classes or distributing patches, Introduce Local Extension provides a clean separation of concerns. It allows you to extend functionality for your specific domain while keeping third-party code untouched, reducing maintenance burden and avoiding conflicts with library updates.
+A local extension keeps your additions organized in a single class rather than scattered as foreign methods or inline workarounds. It provides the full method-call experience on the extended class, maintains compatibility with the original, and isolates your changes from library updates.
 
 ## Mechanics: Step-by-Step
 
-1. **Identify the limitation**: Determine which methods the foreign class lacks
-2. **Create extension class**: Build a new class that either inherits from or wraps the original
-3. **Implement inheritance or composition**: Choose based on your needs and constraints
-4. **Add local methods**: Implement the additional functionality in your extension
-5. **Update client code**: Replace references to the original class with your extension
-6. **Test thoroughly**: Ensure new methods work correctly and don't break existing behavior
-7. **Document the extension**: Clearly mark this as a local extension of foreign code
+1. **Pinpoint the missing functionality**: Determine which methods the foreign class lacks
+2. **Choose the approach**: Subclass (inheritance) if the class is open for extension; wrapper (composition) if it is final or sealed
+3. **Build the extension class**: Create a class that inherits from or wraps the original
+4. **Add the missing methods**: Implement the desired functionality in the extension
+5. **Migrate callers**: Replace direct use of the original class with the extension where the new methods are needed
+6. **Test everything**: Verify that new methods work and existing behavior is unaffected
+7. **Document clearly**: Mark the class as a local extension of foreign code
 
 ## Before: PHP 8.3+ Example
 
@@ -296,29 +296,29 @@ class DateProcessor
 
 ## Benefits
 
-- **Maintains original code integrity**: Third-party or legacy code remains unmodified
-- **Avoids conflicts**: Local extensions don't conflict with library updates
-- **Clean separation**: Domain-specific logic is isolated from foreign code
-- **Flexibility**: Add features specific to your application without forking libraries
-- **Testability**: Local extensions are easier to mock and test in isolation
-- **Reusability**: The extension can be reused across your codebase
-- **Documentation**: Makes custom functionality explicit and discoverable
-- **No monkey-patching**: Provides a proper object-oriented solution
+- **Preserves the original**: Third-party or legacy code stays untouched
+- **Conflict-free upgrades**: Library updates do not collide with your additions
+- **Organized extensions**: All custom behavior lives in a single, dedicated class
+- **Application-specific features**: Add exactly the methods your domain needs without polluting a general-purpose class
+- **Testable in isolation**: The extension class can be unit tested independently
+- **Reusable across the codebase**: Any module can use the extension without duplicating workarounds
+- **Discoverable**: A named extension class is easier to find than scattered helper functions
+- **Clean OOP approach**: Avoids monkey-patching or runtime class modification
 
 ## When NOT to Use
 
-- **Extending your own classes**: Use inheritance directly if you control the code
-- **Simple utility functions**: Consider static helper classes instead
-- **Frequent method additions**: If constantly adding methods, reconsider the design
-- **Liskov Substitution violated**: Don't extend if behavior fundamentally differs
-- **Composition requires too much delegation**: When most methods need wrapping, inheritance may be simpler
-- **Library provides extension points**: Use official plugin/extension mechanisms if available
-- **Performance is critical**: Composition adds minimal overhead, but inheritance is theoretically faster
+- **You own the class**: Modify it directly instead of creating a wrapper
+- **A single helper method suffices**: A foreign method may be simpler than a full extension class
+- **Constant additions**: If you keep adding methods, reconsider whether you should own a fork or contribute upstream
+- **Liskov violation risk**: Do not extend a class in a way that changes its fundamental behavior
+- **Excessive delegation overhead**: If nearly every method must be delegated, inheritance may be a better fit
+- **Official extension points exist**: Use the library's plugin or extension API when available
+- **Performance-critical paths**: Composition adds a thin layer of indirection (usually negligible)
 
 ## Related Refactorings
 
-- **Extract Class**: Isolate new functionality into a dedicated class instead of extending
-- **Replace Conditional with Polymorphism**: Use inheritance when behavior varies significantly
-- **Adapter Pattern**: Similar intent but focuses on interface compatibility rather than feature addition
-- **Decorator Pattern**: More flexible than inheritance for adding responsibilities
-- **Introduce Foreign Method**: Adds a single method to a foreign class (simpler alternative)
+- **Extract Class**: Organizes the new functionality into a dedicated class
+- **Replace Conditional with Polymorphism**: Useful when behavior varies significantly between the base and extension
+- **Adapter Pattern**: Focused on interface compatibility rather than feature addition
+- **Decorator Pattern**: Adds responsibilities dynamically, offering more flexibility than subclassing
+- **Introduce Foreign Method**: A lighter alternative when only one or two methods are needed

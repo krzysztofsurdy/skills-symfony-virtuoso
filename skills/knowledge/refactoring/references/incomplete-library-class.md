@@ -2,24 +2,24 @@
 
 ## Overview
 
-The Incomplete Library Class smell occurs when an external library lacks features your code needs, but you cannot modify the read-only library to add them. This forces developers to create workarounds or duplicate functionality instead of extending the library seamlessly. The solution depends on the scope of missing features: minor gaps warrant Foreign Methods, while substantial deficiencies require Local Extensions.
+The Incomplete Library Class smell appears when a third-party library does not provide the functionality your application requires, and you cannot modify its source to fill the gap. Developers end up scattering workarounds and duplicated logic throughout the codebase instead of extending the library cleanly. The appropriate remedy depends on scale: a handful of missing methods call for Foreign Methods, while broader gaps justify building a Local Extension (wrapper or decorator).
 
 ## Why It's a Problem
 
-Libraries evolve independently from your application needs. When a library author refuses to implement required features or considers them out-of-scope, you're left with two bad options:
-- Duplicate code throughout your application as workarounds
-- Create brittle hacks that become maintenance nightmares
-- Reduce code reusability and testability
+Libraries follow their own development roadmap, which may never align with your application's needs. When the functionality you require falls outside the library's scope or timeline, you face unpleasant trade-offs:
+- Workaround logic gets copy-pasted wherever the library is used
+- Fragile hacks accumulate and become increasingly expensive to maintain
+- Code reusability and testability suffer as custom logic is scattered rather than centralized
 
-This creates tight coupling to incomplete abstractions and increases long-term maintenance costs.
+Over time this binds your application tightly to an incomplete abstraction, driving up long-term maintenance costs.
 
 ## Signs and Symptoms
 
-- Calling the same library method followed by redundant logic in multiple places
-- Creating utility classes that wrap library classes with missing methods
-- Code comments explaining library limitations or workarounds
-- Tests that mock or extend library classes to simulate missing functionality
-- Reluctance to use library classes because they're "incomplete"
+- The same supplemental logic appearing after library calls in multiple places
+- Utility classes that exist solely to patch missing library methods
+- Comments explaining library shortcomings or justifying workarounds
+- Tests that mock or extend library classes to simulate absent features
+- Developers avoiding certain library classes because they feel "incomplete"
 
 ## Before/After Examples
 
@@ -184,38 +184,17 @@ enum SortOrder
 
 ## Exceptions
 
-It's acceptable to tolerate incomplete library classes when:
-- The missing feature is truly out-of-scope for the library's purpose
-- Adding extensions would require understanding library internals deeply
-- You only use the library for its core functionality and don't rely on extensions
-- Contributing back to the library or switching to a better alternative isn't feasible
+It is reasonable to tolerate an incomplete library class when:
+- The missing feature genuinely falls outside the library's intended scope
+- Building extensions would require deep knowledge of library internals
+- You use only the library's core functionality and rarely encounter the gap
+- Contributing upstream or switching libraries is impractical
+
+Keep in mind that extending a library introduces a maintenance surface: when the library updates, your extensions may need corresponding adjustments. Weigh this ongoing cost before committing to a wrapper or decorator.
 
 ## Related Smells
 
-- **Feature Envy**: When your code needs too much data from a class
-- **Inappropriate Intimacy**: When extensions require deep library knowledge
-- **Data Clumps**: Often combined with workarounds for missing grouping methods
-- **Duplicated Code**: The natural result of multiple workarounds
-
-## Refactoring.guru Guidance
-
-### Signs and Symptoms
-
-Sooner or later, libraries stop meeting user needs. The only solution to the problem -- changing the library -- is often impossible since the library is read-only.
-
-### Reasons for the Problem
-
-The author of the library has not provided the features you need, or has refused to implement them.
-
-### Treatment
-
-- **Introduce Foreign Method**: For a few missing methods, add them as utility methods in your own codebase that take the library object as a parameter.
-- **Introduce Local Extension**: For substantial missing features, create a wrapper class (decorator) or subclass that adds the needed functionality.
-
-### Payoff
-
-- Reduces code duplication by extending an existing library rather than building a custom replacement from scratch.
-
-### When to Ignore
-
-Extending a library can generate additional work if the library's changes require corresponding updates in your extension code. Consider the long-term cost before committing.
+- **Feature Envy**: Your code constantly reaching into another class for data it needs
+- **Inappropriate Intimacy**: Extensions that require deep understanding of library internals
+- **Data Clumps**: Workarounds that repeat the same parameter groups the library fails to encapsulate
+- **Duplicated Code**: The natural consequence of scattering the same workaround in multiple places

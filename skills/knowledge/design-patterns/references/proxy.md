@@ -1,20 +1,20 @@
 ## Overview
 
-The Proxy Pattern is a structural design pattern that creates an intermediary object (proxy) to control access to another object (subject). The proxy acts as a surrogate or placeholder, intercepting all calls to the real subject and performing additional functionality such as lazy initialization, access control, logging, or caching.
+The Proxy Pattern is a structural design pattern that interposes a stand-in object between clients and the real target. This intermediary shares the same interface as the target and can layer on additional behavior -- such as lazy loading, permission checks, result caching, or request logging -- without the client ever knowing it is not talking to the real thing.
 
 ## Intent
 
 The Proxy Pattern aims to:
-- Provide a surrogate or placeholder for another object to control access to it
-- Defer the initialization of expensive objects until they're actually needed
-- Implement lazy initialization, access control, logging, caching, or other cross-cutting concerns
-- Separate concerns from the original subject implementation
+- Supply a stand-in for another object in order to manage access to it
+- Postpone the creation of heavyweight objects until the moment they are actually needed
+- Layer on cross-cutting concerns like authorization, caching, and auditing transparently
+- Keep these auxiliary responsibilities out of the real subject's code
 
 ## Problem/Solution
 
-**Problem:** You need to delay initialization of expensive objects, control access to sensitive resources, log method calls, cache results, or perform other operations transparently. Adding this logic directly to the subject class violates the Single Responsibility Principle and becomes difficult to maintain.
+**Problem:** You want to defer expensive initialization, gate access to sensitive resources, record method invocations, or cache return values -- all without cluttering the target class. Embedding this logic directly in the subject breaks the Single Responsibility Principle and becomes hard to evolve.
 
-**Solution:** Introduce a proxy object that implements the same interface as the real subject. The proxy receives requests from clients, performs additional operations (lazy loading, access checks, logging, caching), and then delegates to the real subject. Clients work with the proxy transparently.
+**Solution:** Create a proxy class that implements the same interface as the real subject. The proxy intercepts client requests, applies its extra logic (lazy instantiation, permission verification, logging, caching), and forwards the call to the actual subject. From the client's perspective, nothing changes.
 
 ## Structure
 
@@ -39,13 +39,13 @@ The Proxy Pattern aims to:
 
 ## When to Use
 
-- **Lazy Initialization:** Defer expensive object creation until needed
-- **Access Control:** Restrict access to objects based on permissions or conditions
-- **Logging & Auditing:** Log all method calls and property accesses to the real object
-- **Caching:** Cache method results to avoid redundant expensive operations
-- **Remote Objects:** Represent objects on remote servers (RPC, HTTP calls)
-- **Copy-on-Write:** Create a lightweight proxy and only copy the real object when modified
-- **Smart References:** Add reference counting or cleanup logic
+- **Lazy Initialization:** Hold off on creating resource-heavy objects until the first access
+- **Access Control:** Enforce permission checks before allowing operations on the real object
+- **Logging & Auditing:** Record every interaction with the real object for tracing or compliance
+- **Caching:** Store method results to prevent redundant expensive calls
+- **Remote Objects:** Represent services running on other machines behind a local interface
+- **Copy-on-Write:** Use a lightweight wrapper that only duplicates the underlying data when a mutation occurs
+- **Smart References:** Attach reference counting or automatic cleanup logic to object access
 
 ## Implementation (PHP 8.3+)
 
@@ -200,38 +200,38 @@ try {
 
 ## Real-World Analogies
 
-- **Hotel Key Card (Access Control Proxy):** A key card controls access to hotel rooms without requiring a manager to open every door
-- **Proxy Voting (Access Control):** Someone votes on your behalf if you can't be present
-- **Bank Check (Protection Proxy):** A check is a proxy for money that protects the account holder
-- **Remote Control (Remote Service Proxy):** Controls a TV without direct access to its internals
-- **Library Catalog (Virtual Proxy):** Shows book information without loading the actual book
+- **Hotel Key Card (Access Control Proxy):** The card gates entry to rooms without requiring a manager to escort every guest
+- **Proxy Voting (Delegation):** A designated representative casts votes on your behalf when you cannot attend
+- **Bank Check (Protection Proxy):** A check stands in for actual currency, protecting the account holder from carrying cash
+- **Remote Control (Remote Proxy):** Lets you operate a television from across the room without touching its circuitry
+- **Library Catalog (Virtual Proxy):** Displays book metadata without physically loading the book itself
 
 ## Pros and Cons
 
 ### Advantages
 
-- **Single Responsibility:** Separates access control logic from the real subject
-- **Lazy Initialization:** Create expensive objects only when needed
-- **Transparent to Clients:** Proxy implements the same interface as the subject
-- **Additional Features:** Add logging, caching, access control without modifying the subject
-- **Open/Closed Principle:** Can extend functionality without changing existing code
+- **Separation of Concerns:** Keeps access-control logic outside the real subject
+- **Lazy Initialization:** Heavyweight objects are allocated only when first used
+- **Client Transparency:** Callers interact through the same interface and need no code changes
+- **Extensibility:** Logging, caching, and security can be added without modifying the subject
+- **Open/Closed Principle:** New proxy behaviors can be introduced without touching existing classes
 
 ### Disadvantages
 
-- **Code Complexity:** Introduces additional objects and complexity
-- **Performance Overhead:** Extra layer of indirection for every method call
-- **Potential Delays:** Lazy initialization can cause unexpected delays on first access
-- **Testing Difficulty:** Proxies can make unit testing more complex
+- **Structural Overhead:** Every proxied class requires a corresponding wrapper object
+- **Indirection Cost:** Each method call passes through an extra layer
+- **Latency Surprises:** Deferred initialization can cause unexpected pauses on first access
+- **Test Complexity:** The proxy layer adds another component to mock or stub in tests
 
 ## Relations with Other Patterns
 
-- **Adapter:** Similar structure but different intent. Adapter changes an object's interface, while Proxy maintains the same interface
-- **Decorator:** Both use composition and delegation. Decorator adds features dynamically; Proxy controls access
-- **Factory:** Can be used together. Factory creates proxies, proxies create real subjects
-- **Strategy:** Can work together. Proxy controls access; Strategy encapsulates algorithms
-- **Virtual Proxy vs Lazy Initialization:** Virtual Proxy is a specific use case of Proxy for lazy initialization
-- **Protection Proxy vs Access Control:** Protection Proxy controls access; useful with Authentication/Authorization patterns
-- **Remote Proxy:** Specialized proxy for distributed systems, coordinates with RPC frameworks
+- **Adapter:** Both wrap another object, but Adapter changes the interface while Proxy preserves it
+- **Decorator:** Both use composition and delegation; Decorator enriches behavior, Proxy controls access
+- **Factory:** Factories can produce proxies, and proxies can lazily instantiate real subjects
+- **Strategy:** Can complement each other -- the proxy manages access while a strategy encapsulates the algorithm
+- **Virtual Proxy vs Lazy Initialization:** A virtual proxy is one specific application of the Proxy pattern focused on deferred creation
+- **Protection Proxy vs Access Control:** A protection proxy restricts operations based on caller identity or permissions
+- **Remote Proxy:** A specialized variant for distributed systems, typically sitting in front of network services
 
 ## Examples in Other Languages
 

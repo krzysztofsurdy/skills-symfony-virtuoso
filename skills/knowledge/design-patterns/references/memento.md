@@ -1,22 +1,22 @@
 ## Overview
 
-The Memento design pattern is a behavioral pattern that captures and externalizes an object's internal state at a particular moment without violating encapsulation. It allows you to restore the object to its previous state later. The pattern is essential for implementing undo/redo functionality, transaction rollback, and checkpoint management in applications.
+The Memento pattern is a behavioral design pattern that takes a snapshot of an object's internal state at a specific moment and stores it externally, all without breaking encapsulation boundaries. When needed, the object can be rolled back to any previously captured snapshot, making the pattern the backbone of undo/redo systems, transaction rollback mechanisms, and checkpoint-based recovery.
 
 ## Intent
 
-The Memento pattern addresses the need to save and restore object state while maintaining encapsulation:
+The Memento pattern addresses the need to preserve and restore object state while keeping internal details private:
 
-- Capture an object's state without exposing its internal structure
-- Restore objects to previous states
-- Implement undo/redo functionality
-- Create checkpoints for complex operations
-- Maintain state history for audit trails
+- Capture an object's complete state in an opaque token that outsiders cannot inspect or tamper with
+- Restore the object to any previously saved state on demand
+- Power undo, redo, and multi-level rollback features
+- Create named checkpoints before risky or complex operations
+- Build audit trails by recording sequential state changes
 
 ## Problem and Solution
 
-**Problem:** You need to save and restore an object's state, but accessing its private fields violates encapsulation. Creating backup copies by exposing all attributes is dangerous and coupling implementations.
+**Problem:** An application needs to save an object's state and later rewind to it, but exposing internal fields via public getters to make copies undermines encapsulation. Callers become coupled to the object's implementation details, and any structural change breaks every backup site.
 
-**Solution:** Create a Memento object that stores the internal state. The originating object creates mementos when state needs saving. A Caretaker manages the collection of mementos. The originating object can restore itself from a memento without the caretaker knowing details about the state structure.
+**Solution:** Let the object itself produce a memento -- a sealed snapshot of its own internals. A separate caretaker stores and retrieves mementos without ever knowing what is inside them. When a rollback is needed, the originator accepts a memento and restores itself from it, keeping all state management behind its own API.
 
 ## Structure
 
@@ -189,38 +189,36 @@ if ($history->canRedo()) {
 
 ## Real-World Analogies
 
-- **Save/Load in Video Games:** Saving game progress creates a memento; loading restores the exact state including position, inventory, and quests.
-- **Ctrl+Z in Text Editors:** Each keystroke creates a memento; undo/redo navigates through the history.
-- **Database Transaction Rollback:** Savepoints act as mementos; rollback restores the state before a transaction.
-- **Photography:** Taking a photo captures a moment in time; you can look back at past photographs without modifying the present.
-- **Version Control Systems:** Commits are mementos of project state; you can checkout previous versions.
+- **Bookmark in a Book**: Placing a bookmark captures your exact position. You can read ahead, then return to the bookmarked page without remembering the page number yourself -- the bookmark holds that state for you.
+- **Database Savepoints**: Before running a batch of risky SQL statements, you create a savepoint. If anything goes wrong, you roll back to that savepoint and the database reverts to its earlier state without losing unrelated work.
+- **Time Machine Backups**: macOS Time Machine takes periodic snapshots of your entire disk. You can browse to any past snapshot and restore individual files or the whole system, all without knowing the internal file-system layout.
 
 ## Pros and Cons
 
 **Pros:**
-- Maintains Encapsulation: State is captured without exposing internal structure
-- Simplifies Originator: Doesn't manage its own history
-- Clear Responsibility: Each class has a single, well-defined role
-- Enables Undo/Redo: Natural implementation of history-based features
-- Immutable Mementos: Prevents accidental state modification
-- Flexible History: Caretaker can implement various history strategies
+- State is saved and restored without exposing or coupling to internal structure
+- The originator is freed from managing its own history stack
+- Each participant has a well-defined, narrow responsibility
+- Undo and redo fall out naturally from a sequence of mementos
+- Readonly mementos prevent accidental or malicious state tampering
+- The caretaker can implement various retention policies (fixed window, time-based, etc.)
 
 **Cons:**
-- Memory Overhead: Storing many mementos consumes significant memory
-- Performance Impact: Creating mementos can be expensive for large objects
-- Complex Management: Caretaker logic can become complicated
-- Serialization Issues: Deep copying large objects is resource-intensive
-- Limited Granularity: Captures entire state; can't selectively save properties
-- Cleanup Challenges: Managing memory when history grows unbounded
+- Storing many complete snapshots can consume substantial memory
+- Creating deep copies of large or complex objects has a real performance cost
+- History management logic in the caretaker can grow intricate
+- Serializing rich object graphs into mementos is non-trivial
+- The pattern captures all-or-nothing state; selective field-level snapshots require extra work
+- Unbounded history growth demands explicit eviction or pruning strategies
 
 ## Relations with Other Patterns
 
-- **Command:** Often works with Memento; commands create mementos before execution
-- **Iterator:** Caretaker can use Iterator to traverse memento history
-- **Prototype:** Similar intent (copying state); Memento maintains encapsulation better
-- **Singleton:** Caretaker is often a singleton managing global undo/redo
-- **Strategy:** Can combine to implement different history management strategies
-- **Observer:** Notify observers when state changes and mementos are created
+- **Command:** Commands frequently create mementos before execution so they can undo their effects
+- **Iterator:** The caretaker can use an iterator to walk through stored mementos
+- **Prototype:** Both involve copying object state, but Memento preserves encapsulation while Prototype focuses on cloning
+- **Singleton:** A global caretaker is sometimes implemented as a singleton
+- **Strategy:** Different memento retention strategies (e.g., keep last N, compress old snapshots) can be swapped via Strategy
+- **Observer:** Observers can be notified whenever a new memento is created or a rollback occurs
 
 ## Additional Considerations
 

@@ -2,25 +2,25 @@
 
 ## Overview
 
-A Temporary Field is a class attribute that only receives a value under certain circumstances, remaining empty or null most of the time. This creates confusion about the object's intended purpose and state consistency, making the code harder to understand and maintain.
+A Temporary Field is an instance variable that only holds a meaningful value during specific execution paths, sitting empty or null the rest of the time. This makes the object's state unpredictable -- readers expect every field on a class to be relevant to the object's identity, not to serve as scratch space for a single algorithm.
 
 ## Why It's a Problem
 
-Temporary fields typically appear when developers avoid lengthy parameter lists by storing intermediate algorithm data as class fields. This approach trades parameter clarity for state confusion:
+Temporary fields usually appear when a developer avoids a long parameter list by stashing intermediate computation data into class-level fields. The result is a trade-off that sacrifices clarity for convenience:
 
-- **Obscured Intent**: The class's purpose becomes unclear when fields don't always contain meaningful data
-- **Confusing State**: Developers expect fields to hold persistent data, not temporary algorithm values
-- **Hidden Dependencies**: The relationship between the temporary field and specific code paths remains implicit
-- **Maintenance Burden**: Future modifications risk breaking the undocumented contract of when fields should contain values
+- **Unclear Purpose**: The class becomes harder to understand when some fields are only meaningful under certain conditions
+- **Misleading State**: Developers naturally assume all fields represent persistent, meaningful data -- temporary algorithm storage violates that expectation
+- **Implicit Coupling**: The dependency between the temporary field and the specific code path that populates it remains undocumented and fragile
+- **Fragile Maintenance**: Future changes risk breaking the unwritten rules about when fields are valid, especially when algorithms requiring numerous inputs evolve independently
 
 ## Signs and Symptoms
 
-- Fields populated only within specific methods or execution paths
-- Instance variables that frequently remain null or empty
-- Conditional checks throughout code verifying field initialization
-- Comments explaining when a field will actually contain data
-- Object state inconsistency based on which methods were invoked
-- Difficulty understanding what an object represents at any given time
+- Fields that are only populated inside specific methods or conditional branches
+- Instance variables that are null or empty during most of the object's lifetime
+- Null-checking scattered throughout the code to guard against uninitialized fields
+- Comments explaining the conditions under which a field will actually contain data
+- Object behavior that varies depending on which methods have been called previously
+- Difficulty describing what the object represents at any arbitrary point in time
 
 ## Before/After Examples
 
@@ -157,22 +157,7 @@ In these cases, clearly document the temporary nature and usage scope.
 
 ## Related Smells
 
-- **Long Parameter List**: Often the root cause—temporary fields replace parameter passing
-- **Message Chain**: Hidden temporary state can mask complex object collaborations
-- **Data Clumps**: Temporary fields often group together and could become a dedicated class
-- **Primitive Obsession**: Temporary state using primitives instead of meaningful objects
-
-## Refactoring.guru Guidance
-
-### Signs and Symptoms
-Temporary fields get their values (and thus are needed by objects) only under certain circumstances. Outside of these circumstances, they are empty. This causes confusion because developers expect object data to be consistently populated.
-
-### Reasons for the Problem
-Temporary fields typically arise when algorithms require numerous inputs. Rather than creating extensive method parameters, programmers add fields to the class for this data. The fields serve the algorithm but remain unused otherwise, making code difficult to comprehend.
-
-### Treatment
-- **Extract Class**: Move temporary fields and their associated code into a separate class, effectively creating a method object
-- **Introduce Null Object**: Integrate a null object to replace conditional code that checks whether temporary field values exist
-
-### Payoff
-- Better code clarity and organization
+- **Long Parameter List**: Frequently the root cause -- temporary fields are introduced specifically to avoid passing many parameters
+- **Message Chain**: Hidden temporary state can obscure complex object collaborations happening behind the scenes
+- **Data Clumps**: Temporary fields that appear together are strong candidates for extraction into a dedicated class
+- **Primitive Obsession**: Temporary state stored as raw primitives rather than meaningful objects

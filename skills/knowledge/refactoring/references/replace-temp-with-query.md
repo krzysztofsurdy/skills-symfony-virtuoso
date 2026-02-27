@@ -1,34 +1,34 @@
 ## Overview
 
-Replace Temp with Query is a refactoring technique that replaces temporary variables holding intermediate calculation results with method calls. This extracts the calculation logic into a separate method, making the code more readable, reusable, and easier to maintain.
+Replace Temp with Query swaps temporary variables that hold intermediate computation results for method calls that perform those computations on demand. The calculation logic moves into its own method, and every place that previously read the variable now calls that method instead.
 
-Instead of storing a computed value in a temporary variable, you create a method that performs the calculation and call that method whenever you need the value.
+Rather than storing a computed value in a local variable, you define a method that produces the result and invoke it wherever the value is needed.
 
 ## Motivation
 
-Temporary variables create several problems:
+Temporary variables introduce several issues:
 
-- **Limited Scope**: Variables are visible only within the current method, making logic hard to reuse
-- **Cognitive Load**: Each temporary variable adds complexity to understanding the method
-- **Duplication**: The same calculation might be repeated elsewhere in the codebase
-- **Testing Difficulty**: Logic trapped in local variables cannot be unit tested independently
-- **Code Smell**: Methods that are too long often indicate the need to extract logic into separate methods
+- **Trapped scope**: Variables are visible only within the declaring method, preventing reuse elsewhere
+- **Cognitive weight**: Each additional temp adds one more thing a reader must track while understanding the method
+- **Repeated logic**: The same calculation may be duplicated in other methods with no shared implementation
+- **Untestable logic**: Calculations buried in local variables cannot be unit tested independently
+- **Long methods**: Methods stuffed with temporaries are a common indicator that logic should be extracted
 
-By replacing temporaries with method calls, you gain:
+Replacing temps with query methods yields:
 
-- **Better Separation of Concerns**: Each method has a single responsibility
-- **Easier Testing**: Extracted methods can be tested in isolation
-- **Code Reuse**: The extracted method can be called from multiple locations
-- **Improved Readability**: The code becomes self-documenting through method names
+- **Clear separation of concerns**: Each method encapsulates a single computation
+- **Independent testability**: Extracted methods can be verified in isolation
+- **Reuse**: Other methods within the class can call the same query
+- **Self-documenting code**: Method names describe what is being calculated
 
 ## Mechanics
 
-1. **Identify the temporary variable** holding a calculated value
-2. **Create a new method** that returns this calculated value
-3. **Move the calculation logic** into the new method
-4. **Replace all references** to the temporary variable with calls to the new method
-5. **Remove the temporary variable declaration**
-6. **Consider making the method private** if it's only used within the class
+1. **Find the temporary variable** that stores a calculated result
+2. **Create a method** that returns the same calculated result
+3. **Transfer the calculation** into the new method body
+4. **Replace all reads** of the temporary variable with calls to the new method
+5. **Delete the variable declaration**
+6. **Set visibility** to private if the method is only needed within the class
 
 ## Before/After PHP 8.3+ Code Examples
 
@@ -195,30 +195,30 @@ class Invoice
 
 ## Benefits
 
-- **Improved Readability**: Method names act as documentation, making intent clearer
-- **Enhanced Maintainability**: Changes to the calculation logic only need to be made in one place
-- **Better Testability**: Extracted methods can be unit tested independently
-- **Code Reuse**: Other methods in the class can call the same query methods
-- **Reduced Method Length**: Shorter methods are easier to understand and less prone to bugs
-- **Single Responsibility**: Each method focuses on a specific concern
-- **Easier Refactoring**: Enables further refactoring opportunities like Extract Class or Move Method
+- **Readable intent**: Method names act as inline documentation, making each computation's purpose clear
+- **Centralized changes**: Adjusting calculation logic requires editing only one method
+- **Isolated testing**: Extracted query methods can be unit tested on their own
+- **Cross-method reuse**: Other methods in the class can invoke the same queries
+- **Shorter methods**: Moving calculations out makes the host method more concise
+- **Focused responsibility**: Each method handles exactly one concern
+- **Unlocks further refactoring**: Opens doors for Extract Class or Move Method down the line
 
 ## When NOT to Use
 
-- **Performance Critical Code**: Multiple method calls might have measurable overhead compared to temporary variables (consider caching/memoization instead)
-- **Simple One-Time Calculations**: For very simple, single-use expressions, temporary variables might be more efficient
-- **Loop-Heavy Code**: In tight loops, the overhead of method calls might impact performance
-- **Complex Conditionals**: Sometimes a temporary variable makes complex conditional logic clearer than multiple method calls
+- **Performance-sensitive code**: Repeated method calls may be measurably slower than a cached local variable (consider memoization as a compromise)
+- **Trivial single-use expressions**: For very simple, one-off calculations, a temp may be more straightforward
+- **Tight loops**: Method call overhead in hot loops can accumulate
+- **Complex conditionals**: Sometimes a well-named temporary variable makes a multi-clause conditional easier to follow than nested method calls
 
-In such cases, consider caching/memoization or keeping the temporary variable but extracting the method anyway for clarity.
+In these scenarios, you might keep the temp but still extract the method for clarity, or add memoization to avoid redundant computation.
 
 ## Related Refactorings
 
-- **Extract Method**: The complementary technique used to create the query methods
-- **Introduce Parameter Object**: When multiple temporaries exist, consider grouping them into an object
-- **Introduce Variable**: Use temporary variables to simplify complex expressions before extracting methods
-- **Cache Query Result**: If performance is critical, cache the result of expensive query methods
-- **Remove Middle Man**: Avoid over-extracting query methods that simply delegate to other methods
+- **Extract Method**: The complementary technique that creates the query method itself
+- **Introduce Parameter Object**: When many temporaries exist, bundling them into a value object may be more appropriate
+- **Introduce Variable**: Use a descriptive temp to simplify a complex expression before deciding whether to extract a method
+- **Cache Query Result**: Memoize the result of expensive query methods to preserve performance
+- **Remove Middle Man**: Avoid over-extracting queries that simply delegate to another method
 
 ## Examples in Other Languages
 

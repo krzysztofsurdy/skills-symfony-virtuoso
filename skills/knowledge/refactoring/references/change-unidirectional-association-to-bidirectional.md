@@ -1,30 +1,30 @@
 ## Overview
 
-Change Unidirectional Association to Bidirectional is a refactoring technique applied when two classes need to access each other's features, but their association is currently one-directional. This refactoring adds the missing reverse association to enable bidirectional communication between the classes.
+This refactoring introduces a reverse link between two classes that currently have only a one-way association. When both sides of a relationship need to navigate to the other, adding the missing direction eliminates awkward workarounds and makes the domain model more expressive.
 
 ## Motivation
 
 ### When to Apply
 
-- **Both classes need access**: Clients require functionality from both directions of the association
-- **Complex reverse calculations**: Computing reverse associations through complex logic becomes cumbersome
-- **Improved code clarity**: Explicit bidirectional relationships make dependencies transparent
-- **Eliminating workarounds**: Code contains awkward patterns to simulate reverse relationships
-- **Simplified domain logic**: Domain requirements naturally involve two-way communication
+- **Both sides need navigation**: Client code regularly needs to traverse the relationship in both directions
+- **Costly reverse lookups**: Computing the reverse relationship through searches or global scans is inefficient
+- **Clearer domain modeling**: The real-world relationship is naturally bidirectional
+- **Workaround elimination**: The codebase contains clumsy patterns to simulate the missing direction
+- **Simplified client code**: Consumers of both classes would benefit from direct access
 
 ### Why It Matters
 
-As applications evolve, initial one-way relationships often become insufficient. Adding bidirectional associations eliminates awkward workarounds and makes the code intention clearer. However, this comes with the tradeoff of increased coupling between classes.
+Software requirements evolve, and a relationship that started as one-way often needs to support navigation in both directions. Without the reverse link, developers resort to global searches, parameter threading, or other fragile approaches. Adding the bidirectional association directly expresses the relationship at the cost of tighter coupling between the two classes.
 
 ## Mechanics: Step-by-Step
 
-1. **Add reverse field**: Create a field in the non-dominant class to hold reference to the dominant class
-2. **Identify dominant class**: Determine which class should control association changes
-3. **Create utility methods**: Add methods in the non-dominant class to establish the reverse association
-4. **Update dominant methods**: Modify dominant class methods to invoke utility methods from non-dominant class
-5. **Migrate control**: Move association control logic from non-dominant to dominant class
-6. **Remove direct field assignments**: Ensure associations are only modified through control methods
-7. **Test thoroughly**: Verify bidirectional consistency is maintained
+1. **Add a reverse field**: Create a field in the non-owning class to hold a reference back to the owning class
+2. **Decide on ownership**: Determine which class is responsible for managing the association
+3. **Build helper methods**: Add methods on the non-owning side to set and clear the back-reference
+4. **Wire up the owning side**: Modify the owning class's add/remove methods to keep the back-reference in sync
+5. **Centralize updates**: Ensure the association is only modified through the controlling methods
+6. **Remove workarounds**: Delete any global lookups or parameter threading that simulated the reverse link
+7. **Verify consistency**: Test that both directions stay synchronized under all operations
 
 ## Before: PHP 8.3+ Example
 
@@ -168,26 +168,26 @@ class Employee
 
 ## Benefits
 
-- **Cleaner Code**: Eliminates workarounds and reverse lookup logic
-- **Better Performance**: Direct access is faster than searching or iterating
-- **Improved Clarity**: Bidirectional associations explicitly model the domain
-- **Easier Navigation**: Both classes can navigate to each other naturally
-- **Reduced Fragility**: Changes to one direction automatically affect the other
-- **Self-Documenting**: Code intent is clearer with explicit relationships
+- **Eliminates Workarounds**: No more global scans or parameter threading to find related objects
+- **Faster Navigation**: Direct references are faster than searching or iterating collections
+- **Explicit Modeling**: The code reflects the true shape of the domain relationship
+- **Natural Traversal**: Both classes can reach the other without external help
+- **Consistent Updates**: Synchronized add/remove methods keep both sides in agreement
+- **Readable Code**: Relationships are self-evident from the class structure
 
 ## When NOT to Use
 
-- **Single-direction suffices**: If only one direction truly needs access, keep it unidirectional
-- **Rare reverse access**: If reverse access occurs only occasionally, consider computed properties instead
-- **High coupling unacceptable**: In layered architectures, bidirectional associations may violate layer boundaries
-- **Simple collections**: For basic one-to-many where reverse isn't genuinely needed
-- **Performance-critical**: Maintaining bidirectionality adds overhead (usually negligible)
-- **Unidirectional is cleaner**: Some designs are deliberately unidirectional for clarity
+- **One direction is sufficient**: If only one side genuinely needs the reference, keep the association unidirectional
+- **Infrequent reverse access**: Occasional reverse lookups may not justify the added coupling
+- **Architectural boundaries**: Bidirectional links can violate layering constraints in modular architectures
+- **Simple containment**: Basic one-to-many relationships where the child never needs to find its parent
+- **Negligible but real overhead**: Maintaining synchronization has a cost, however small
+- **Design clarity**: Some designs intentionally restrict navigation to enforce clean data flow
 
 ## Related Refactorings
 
-- **Change Bidirectional Association to Unidirectional**: The inverse refactoring to remove unnecessary coupling
-- **Extract Class**: When association logic becomes too complex, extract to a separate relationship class
-- **Encapsulate Collection**: Often used alongside to manage bidirectional collection updates safely
-- **Hide Delegate**: To reduce visibility of associations and simplify client code
-- **Move Field**: When association management logic needs relocation
+- **Change Bidirectional Association to Unidirectional**: The inverse transformation, removing unnecessary coupling
+- **Extract Class**: Useful when association management logic grows complex enough to warrant its own class
+- **Encapsulate Collection**: Often applied alongside to safely manage bidirectional collection updates
+- **Hide Delegate**: Reduces the surface area of exposed associations
+- **Move Field**: Relocates association data when it belongs in a different class

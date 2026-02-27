@@ -1,23 +1,23 @@
 ## Overview
 
-Replace Parameter with Method Call is a refactoring technique that simplifies method signatures by eliminating parameters whose values can be computed or retrieved internally. Instead of passing calculated values as arguments, the method retrieves them directly through query calls.
+Replace Parameter with Method Call trims method signatures by removing parameters whose values can be obtained internally. Instead of requiring the caller to compute and pass a value, the method fetches it on its own through a query call.
 
 ## Motivation
 
-Long parameter lists are difficult to understand and maintain. This refactoring addresses this complexity by:
+Lengthy parameter lists make methods harder to read and call correctly. This refactoring tackles that complexity by:
 
-- Eliminating parameters created speculatively for hypothetical future needs
-- Reducing cognitive load when tracking intermediate values through multiple method calls
-- Making method signatures more concise and readable
-- Reducing coupling between methods
+- Removing parameters that were added speculatively for hypothetical future use
+- Cutting down the mental effort of tracking intermediate values across multiple call sites
+- Producing shorter, more expressive method signatures
+- Lowering the coupling between the calling code and the method's internals
 
 ## Mechanics
 
-1. **Verify independence**: Ensure the value-retrieval code doesn't depend on parameters of the method being refactored
-2. **Extract if needed**: If retrieval logic is complex, extract it into a dedicated method first
-3. **Replace references**: Replace all references to the parameter with calls to the new method
-4. **Remove parameter**: Delete the now-unused parameter from the method signature
-5. **Update callers**: Remove the argument from all call sites
+1. **Check independence**: Confirm that the value-retrieval logic does not depend on parameters of the method being refactored
+2. **Extract if complex**: If the retrieval logic is non-trivial, move it into its own dedicated method first
+3. **Substitute references**: Replace every use of the parameter inside the method with a call to the retrieval method
+4. **Drop the parameter**: Remove the now-unused parameter from the method signature
+5. **Fix call sites**: Delete the corresponding argument from every caller
 
 ## Before/After (PHP 8.3+)
 
@@ -78,26 +78,26 @@ $price = $order->getPrice();
 
 ## Benefits
 
-- **Simpler method signatures**: Shorter parameter lists are easier to understand and remember
-- **Reduced coupling**: Methods become less dependent on caller context
-- **Better encapsulation**: Objects retrieve their own data rather than receiving it
-- **Improved readability**: Call sites become cleaner and more expressive
-- **Easier maintenance**: Changes to value computation affect only the object
+- **Leaner signatures**: Fewer parameters mean methods are easier to understand and invoke
+- **Lower coupling**: The method no longer relies on the caller to supply internally obtainable data
+- **Stronger encapsulation**: The object retrieves its own information rather than depending on external computation
+- **Cleaner call sites**: Calling code becomes more concise and focused
+- **Localized changes**: Modifications to how a value is computed affect only the object that owns it
 
 ## When NOT to Use
 
-- **Parameter-dependent values**: If the retrieved value depends on method parameters, this refactoring is inappropriate
-- **Different contexts need different values**: When the same method must return different results based on caller-provided context
-- **Performance critical**: Repeated method calls might be slower than parameter passing
-- **Cross-object retrieval**: When the value belongs to another object's domain
-- **Future flexibility needed**: If you anticipate needing to inject different values in testing or future versions
+- **Caller-dependent values**: If the value varies based on caller context and cannot be derived internally, the parameter is necessary
+- **Multiple contexts need different inputs**: When the same method must produce different results depending on what the caller provides
+- **Hot code paths**: Repeated internal queries may be slower than passing a precomputed value
+- **Cross-object data**: When the value belongs to a different object's domain and should not be fetched here
+- **Intentional flexibility**: If you expect to inject alternative values for testing or future variations
 
 ## Related Refactorings
 
-- **Extract Method**: Use when retrieval logic is complex and should become a dedicated method
-- **Add Parameter**: The opposite refactoring when you need to increase flexibility
-- **Simplify Method Calls**: Parent category addressing long parameter lists
-- **Remove Parameter**: Similar technique for eliminating unused parameters
+- **Extract Method**: Apply when the retrieval logic is complex enough to warrant its own method
+- **Add Parameter**: The inverse refactoring, used when you need to widen a method's flexibility
+- **Simplify Method Calls**: The broader family of refactorings aimed at reducing parameter list complexity
+- **Remove Parameter**: A closely related technique for eliminating parameters that are no longer referenced
 
 ## Examples in Other Languages
 

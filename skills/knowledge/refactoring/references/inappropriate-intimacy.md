@@ -1,22 +1,22 @@
 ## Overview
 
-Inappropriate Intimacy occurs when one class uses the internal fields and methods of another class, violating encapsulation principles. Classes become tightly coupled through direct access to private implementation details rather than communicating through public interfaces. This makes code harder to maintain, test, and reuse.
+Inappropriate Intimacy describes classes that are entangled with each other's internal implementation details. Rather than communicating through well-defined public interfaces, one class reaches directly into another's private fields and methods. This tight coupling makes both classes fragile -- changes to one can silently break the other, and neither can be understood, tested, or reused in isolation.
 
 ## Why It's a Problem
 
-- **Tight Coupling**: Classes depend on implementation details that may change
-- **Maintenance Burden**: Modifying one class risks breaking others that depend on its internals
-- **Reduced Reusability**: Coupled classes cannot be used independently in other contexts
-- **Testing Difficulty**: Tightly coupled code requires more complex test setup and mocking
-- **Violation of Encapsulation**: Breaks the fundamental object-oriented principle of hiding implementation
+- **Implementation Dependence**: Classes rely on internal details that are free to change without notice
+- **Cascading Breakage**: Modifying one class's internals risks breaking every class that depends on those details
+- **No Independent Reuse**: Tightly intertwined classes cannot be extracted and used in different contexts
+- **Complex Test Setup**: Testing requires elaborate mocking to satisfy intimate cross-class dependencies
+- **Encapsulation Erosion**: The fundamental OOP principle of hiding implementation behind a stable interface is undermined
 
 ## Signs and Symptoms
 
-- Classes directly accessing private properties of other classes
-- One class calling multiple private methods of another class
-- Bidirectional dependencies between classes
-- Classes sharing internal state without a clear public interface
-- Need for detailed knowledge of another class's internal structure to use it
+- One class directly accessing another class's private or internal properties
+- A class calling multiple non-public methods of another class
+- Bidirectional dependencies where each class references the other
+- Internal state shared between classes without a formal public contract
+- Using a class requires deep knowledge of another class's implementation structure
 
 ## Before/After Examples
 
@@ -186,30 +186,10 @@ Appropriate Intimacy is acceptable in these cases:
 
 ## Related Smells
 
-- **Feature Envy**: One method uses more features of another class than its own
-- **Message Chains**: Objects call methods on returned objects, creating dependency chains
-- **Middle Man**: A class exists only to delegate to another class
-- **Data Clumps**: Groups of variables that should be encapsulated together
-- **Temporal Coupling**: Methods must be called in a specific order, hidden in implementation details
+- **Feature Envy**: A method that uses more of another class's data than its own -- a frequent companion to Inappropriate Intimacy
+- **Message Chains**: Traversing returned objects to reach deeply nested data, creating implicit structural dependencies
+- **Middle Man**: A class that exists solely to delegate, sometimes introduced as an overcorrection for intimacy
+- **Data Clumps**: Groups of variables that travel together and should be encapsulated, reducing the need for cross-class field access
+- **Temporal Coupling**: Methods that must be called in a specific order, with that requirement hidden inside implementation details
 
-## Refactoring.guru Guidance
-
-### Signs and Symptoms
-
-One class uses the internal fields and methods of another class.
-
-### Reasons for the Problem
-
-Classes become overly dependent on each other's implementation details. Good classes should know as little about each other as possible. Such tightly coupled classes are harder to maintain, test, and reuse.
-
-### Treatment
-
-- **Move Method** and **Move Field**: Move parts of one class to the class where they are actually used, if the originating class truly does not need them.
-- **Extract Class** and **Hide Delegate**: Create proper boundaries and delegation patterns to formalize the relationship.
-- **Change Bidirectional Association to Unidirectional**: Reduce mutual interdependency by establishing a clear directional flow.
-- **Replace Delegation with Inheritance**: If appropriate for a subclass-superclass relationship.
-
-### Payoff
-
-- Improved code organization and separation of concerns.
-- Simplified maintenance and improved code reuse.
+The guiding principle is that well-designed classes should know as little as possible about each other's internals. When intimacy is detected, the first step is deciding which class should own the shared data or behavior, then using Move Method, Move Field, or Extract Class to establish proper boundaries. For bidirectional dependencies, determine which direction is essential and convert the other to unidirectional.

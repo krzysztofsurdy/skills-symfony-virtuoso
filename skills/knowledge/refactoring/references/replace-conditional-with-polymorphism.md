@@ -1,16 +1,16 @@
 ## Overview
 
-Replace Conditional with Polymorphism is a refactoring technique that transforms conditional logic (switch statements, if-else chains) into polymorphic method implementations across a class hierarchy. Instead of checking object types or properties to determine behavior, you create subclasses that override methods with their specific implementations.
+Replace Conditional with Polymorphism transforms branching logic -- switch statements, if-else ladders -- into a class hierarchy where each variant implements its own version of the method. Instead of inspecting a type code or flag to decide which path to follow, you let the object itself carry the right behavior, dispatched automatically through method overriding.
 
 ## Motivation
 
-Conditional logic scattered throughout your code creates several problems:
+Conditional branches that select behavior based on object type or category introduce several structural weaknesses:
 
-- **Maintainability issues**: Adding a new variant requires finding and modifying all conditional branches
-- **Violation of Open/Closed Principle**: The code is open for modification but not closed for extension
-- **Code duplication**: Similar conditional patterns appear in multiple methods
-- **Poor encapsulation**: Violates the "Tell-Don't-Ask" principle by requiring external type checking
-- **Difficult testing**: Conditional branches become harder to unit test in isolation
+- **Shotgun surgery**: Adding a new variant means hunting down and modifying every conditional that checks the type
+- **Closed for extension**: The code must be edited, not extended, to accommodate new cases
+- **Scattered knowledge**: The same branching logic is often duplicated across multiple methods
+- **External interrogation**: Callers must ask "what kind are you?" rather than simply requesting an action
+- **Hard-to-isolate tests**: Each branch shares the same method, making focused unit testing awkward
 
 ## Mechanics
 
@@ -111,12 +111,12 @@ foreach ($birds as $bird) {
 
 ## Benefits
 
-- **Extensibility**: Adding new bird types requires only a new subclass, no modification to existing code
-- **Type Safety**: PHP's type system catches errors at compile time rather than runtime
-- **Testability**: Each subclass can be tested independently with focused unit tests
-- **Readability**: Code intent is clear; behavior is explicit rather than implicit
-- **Encapsulation**: Each subclass encapsulates its own behavior logic
-- **Follows SOLID principles**: Open/Closed Principle, Single Responsibility Principle, Liskov Substitution Principle
+- **Open for extension**: New variants require only a new subclass; existing code stays untouched
+- **Compile-time guarantees**: The type system ensures every subclass provides the required method
+- **Focused testing**: Each subclass can be verified independently with targeted unit tests
+- **Self-documenting structure**: The hierarchy makes the set of variants visible at a glance
+- **Encapsulated variation**: Each subclass owns its own logic, preventing cross-contamination
+- **Aligned with SOLID**: Naturally satisfies the Open/Closed, Single Responsibility, and Liskov Substitution principles
 
 ## When NOT to Use
 

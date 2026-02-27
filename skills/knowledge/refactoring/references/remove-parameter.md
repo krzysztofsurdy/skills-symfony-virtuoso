@@ -1,17 +1,15 @@
 ## Overview
 
-Remove Parameter is a refactoring technique that eliminates unused parameters from method signatures. When a parameter isn't used in the body of a method, it becomes dead weight that clutters the interface and confuses developers reading the code.
-
-This refactoring ensures a method contains only the parameters it truly requires, making the codebase more maintainable and easier to understand.
+Remove Parameter strips an unused parameter from a method signature. When a parameter is never referenced inside the method body, it adds noise to the interface and forces callers to supply a value that serves no purpose. Dropping it produces a cleaner contract that accurately reflects what the method actually needs.
 
 ## Motivation
 
-Unused parameters create several problems:
+Unused parameters cause several problems:
 
-- **Confusion**: Developers must figure out why a parameter exists if it's not used, wasting cognitive effort.
-- **Code Clarity**: The method signature should accurately reflect what the method actually needs.
-- **API Simplicity**: Simpler method signatures are easier to understand, call, and maintain.
-- **Avoiding Speculation**: Parameters are often added "just in case," but anticipated changes often remain anticipated. Don't add parameters preemptively.
+- **Wasted attention**: Developers spend effort figuring out why the parameter exists when it contributes nothing
+- **Misleading signatures**: The method promises to use data it ignores, eroding trust in the API
+- **Heavier call sites**: Callers must construct and pass an argument that is immediately discarded
+- **Speculative design**: Parameters are often added "just in case" for changes that never arrive
 
 ## Mechanics
 
@@ -95,12 +93,11 @@ $generator->generate(
 
 ## Benefits
 
-- **Simpler API**: Methods are easier to understand and use.
-- **Reduced Confusion**: No more wondering why a parameter exists.
-- **Better Maintainability**: Clearer intent of what the method actually needs.
-- **Easier Testing**: Fewer arguments to mock or provide in tests.
-- **Performance**: Eliminates unnecessary argument passing.
-- **Type Safety**: Makes the contract between caller and method clearer.
+- **Honest interface**: The signature lists exactly the data the method consumes
+- **Lighter call sites**: Callers no longer fabricate throwaway arguments
+- **Reduced confusion**: Future readers are not left wondering what the parameter was for
+- **Simpler testing**: Fewer arguments to set up in test doubles and fixtures
+- **Tighter contracts**: The relationship between caller and method is unambiguous
 
 ## When NOT to Use
 

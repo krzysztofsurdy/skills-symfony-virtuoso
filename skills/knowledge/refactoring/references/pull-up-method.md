@@ -1,10 +1,10 @@
 ## Overview
 
-Pull Up Method is a refactoring technique that consolidates identical or nearly identical methods found in multiple subclasses into their shared superclass. This eliminates code duplication and ensures changes need to be made in only one location rather than across multiple subclass implementations.
+Pull Up Method consolidates identical or nearly identical methods from multiple subclasses into their shared superclass. When sibling classes carry the same implementation of a method, hoisting it into the parent eliminates the redundancy and guarantees that every subclass uses a single, consistent version.
 
 ## Motivation
 
-When you have identical or nearly identical methods scattered across subclasses, you create maintenance burdens. Each change must be replicated across every subclass, increasing the risk of inconsistent implementations and bugs. By pulling these methods up to the superclass, you create a single source of truth that benefits all subclasses.
+Duplicate methods spread across subclasses are a maintenance hazard. Each change must be replicated in every copy, and any omission introduces inconsistencies that surface as bugs. Pulling the method into the superclass creates one authoritative implementation that all children inherit, shrinking the codebase and making future modifications straightforward.
 
 ## Mechanics
 
@@ -71,11 +71,11 @@ class Designer extends Employee {}
 
 ## Benefits
 
-- **Eliminates code duplication**: Single implementation reduces maintenance burden
-- **Improves consistency**: All subclasses automatically use the same logic
-- **Reduces bug risk**: Changes happen in one location, preventing inconsistent updates
-- **Simplifies the class hierarchy**: Makes the codebase easier to understand
-- **Facilitates future refactoring**: Makes it easier to apply patterns like Template Method
+- **No more copies**: A single implementation serves the entire hierarchy
+- **Automatic consistency**: All subclasses inherit the same logic without manual synchronization
+- **Lower bug risk**: Edits happen in one place, preventing one-off oversights
+- **Leaner hierarchy**: Subclasses shrink, making the class tree easier to scan
+- **Foundation for patterns**: A pulled-up method can become the skeleton of a Template Method
 
 ## When NOT to Use
 

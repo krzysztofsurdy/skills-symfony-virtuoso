@@ -2,27 +2,25 @@
 
 ## Overview
 
-Replace Inheritance with Delegation is a refactoring technique that transforms an inheritance relationship into a composition-based approach. When a subclass doesn't properly extend a superclass or only uses a subset of its methods, delegation provides a cleaner alternative that better represents the actual relationship.
-
-The technique involves creating a field in the subclass to hold an instance of the former superclass, delegating method calls to that instance, and removing the inheritance declaration.
+Replace Inheritance with Delegation swaps an "extends" relationship for a composition-based approach where the former subclass holds a reference to the former superclass and forwards only the calls it genuinely needs. When a class inherits from another solely to reuse implementation -- not because it represents a genuine specialization -- delegation models the actual dependency more accurately.
 
 ## Motivation
 
 ### When to Consider This Refactoring
 
-**Liskov Substitution Principle Violation**: Inheritance exists primarily to share code implementation rather than because the subclass authentically extends the superclass's concept. The derived class cannot properly substitute for its parent.
+**Liskov Substitution Principle Violation**: The inheritance exists solely to reuse implementation details, not because the derived class is a legitimate specialization of its parent. Instances of the subclass cannot faithfully stand in for the superclass.
 
-**Partial Method Inheritance**: The subclass only needs a small subset of superclass methods. This exposes unnecessary methods in the class interface, creating confusion for clients about which methods are truly part of the class's contract.
+**Partial Method Inheritance**: Only a handful of methods from the parent are relevant to the child. The remaining inherited methods leak into the public surface, confusing callers about which operations are part of the class's true contract.
 
-**Design Clarity**: Delegation better represents the actual relationship when the subclass is a "wrapper" or "adapter" that enhances another class without truly being a specialized version of it.
+**Design Clarity**: When the subclass functions as a wrapper or adapter around another class rather than being a genuine subtype, composition expresses that relationship far more honestly.
 
 ## Mechanics
 
-1. **Add a delegate field** in the subclass to hold an instance of the former superclass
-2. **Create delegating methods** for each inherited method needed by clients
-3. **Update internal logic** to work with the delegate instance instead of inherited properties
-4. **Remove the inheritance declaration** from the class signature
-5. **Initialize the delegate** in the constructor
+1. **Introduce a delegate field** in the subclass to store a reference to the former superclass
+2. **Write forwarding methods** for every inherited method that clients still need
+3. **Rewire internal logic** so that it operates through the delegate rather than through inherited state
+4. **Drop the inheritance declaration** from the class definition
+5. **Set up the delegate** inside the constructor
 
 ## Before/After Examples
 
@@ -127,25 +125,25 @@ final class InstrumentedStack
 
 ## Benefits
 
-- **Cleaner Interface**: Only exposes the methods the class actually needs, eliminating confusion
-- **Flexibility**: Can easily swap different delegate implementations without changing the wrapper's contract
-- **Strategy Pattern**: Naturally enables the Strategy design pattern for runtime behavior changes
-- **Composition Over Inheritance**: Follows the principle that composition is more flexible than inheritance
-- **Reduced Coupling**: The wrapper class is decoupled from the delegate's complete interface
+- **Controlled surface area**: The class exposes only the methods it explicitly forwards, hiding irrelevant parent operations
+- **Interchangeable delegates**: Different implementations can be injected without changing the wrapper's contract
+- **Natural strategy fit**: Delegation naturally supports runtime algorithm swapping via the Strategy pattern
+- **Honest modeling**: The code reflects a "uses" relationship rather than a misleading "is-a" relationship
+- **Reduced coupling**: The wrapper is not bound to the full interface of the delegate's class hierarchy
 
 ## When NOT to Use
 
-- **True Specialization**: When the subclass is genuinely a specialized version of the superclass (e.g., `Dog extends Animal`)
-- **Polymorphic Collections**: When you need the subclass to be substitutable in collections expecting the superclass type
-- **Interface Contracts**: When clients expect the subclass to honor the superclass contract through inheritance
-- **Simple Code Reuse**: For small, simple inheritance hierarchies without design violations
+- **Authentic Specialization**: The subclass truly is a more specific variant of the superclass (e.g., `Dog extends Animal`)
+- **Polymorphic Collections**: Code depends on treating instances of the subclass as the superclass type
+- **Interface Contracts**: Consumers expect the subclass to satisfy the superclass contract via inheritance
+- **Minimal Hierarchies**: Small, straightforward inheritance trees that have no design violations
 
 ## Related Refactorings
 
-- **Extract Superclass**: The inverse operation; create a superclass from common code
-- **Strategy Pattern**: A design pattern often naturally emerges when using delegation
-- **Adapter Pattern**: Similar structure used when adapting one interface to another
-- **Decorator Pattern**: Another composition-based alternative for extending behavior
+- **Extract Superclass**: The reverse operation -- factor shared code upward into a new parent class
+- **Strategy Pattern**: A pattern that frequently emerges naturally once delegation is in place
+- **Adapter Pattern**: A structurally similar composition technique for bridging mismatched interfaces
+- **Decorator Pattern**: Another composition-based approach for layering additional behavior
 
 ## Examples in Other Languages
 

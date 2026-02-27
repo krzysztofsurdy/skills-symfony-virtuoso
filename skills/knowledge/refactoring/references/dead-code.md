@@ -1,25 +1,25 @@
 ## Overview
 
-Dead code refers to any code that is unreachable or never executed in normal circumstances—unused variables, parameters, methods, or entire classes that have become obsolete due to changing requirements or refactoring. Dead code represents technical debt that accumulates when developers add functionality but fail to remove the old implementation.
+Dead code is any code that exists in the codebase but is never executed -- unused variables, unreferenced methods, unreachable branches, abandoned classes, or parameters that no caller passes meaningfully. It typically accumulates when requirements change or refactoring is left half-finished: new logic is added, but the old implementation it replaces is never cleaned up.
 
 ## Why It's a Problem
 
-Dead code introduces several maintenance challenges:
+Dead code creates a drag on development in several ways:
 
-- **Cognitive Overload**: Developers waste time understanding which code is actually active versus which paths are dead ends
-- **Maintenance Burden**: More code to navigate, comprehend, and potentially fix
-- **False Complexity**: Creates illusion of complexity where simpler implementations exist
-- **Bug Risk**: Increases the surface area for potential bugs and makes debugging harder
-- **Poor Code Quality**: Signals incomplete refactoring and lack of attention to code hygiene
+- **Wasted Attention**: Developers spend time reading, understanding, and working around code that does nothing
+- **Navigation Friction**: More code to sift through when searching for active logic
+- **Illusory Complexity**: Dead paths make the system appear more complex than it actually is
+- **Debugging Noise**: A larger codebase means a larger surface area to investigate when problems arise
+- **Quality Signal**: Leftover dead code suggests incomplete refactoring and insufficient code hygiene
 
 ## Signs and Symptoms
 
-- Unused variables, parameters, or class fields
-- Methods that are never called anywhere in the codebase
-- Branches in conditional statements that can never be reached
-- Entire classes or traits with no references
-- Parameters to functions that methods don't use
-- Dead branches from old feature flags or temporary debugging
+- Variables, parameters, or class fields that are assigned but never read
+- Methods with zero callers anywhere in the codebase
+- Conditional branches that can never be reached given the possible input values
+- Entire classes or traits with no references from production code
+- Function parameters that are accepted but never used inside the method body
+- Remnants of old feature flags or temporary debugging scaffolding
 
 ## Before/After
 
@@ -170,30 +170,10 @@ When dead code may be acceptable:
 
 ## Related Smells
 
-- **Duplicate Code**: Often dead code emerges when one copy of duplicated code is partially maintained
-- **Feature Envy**: Methods that should be elsewhere may appear as dead code in wrong classes
-- **Speculative Generality**: Over-engineering with unused parameters and branches
-- **Lazy Class**: Entire classes that do too little may have no callers
-- **Comments**: Dead code often accumulates alongside commented-out code
+- **Duplicate Code**: Dead code often emerges when one copy of duplicated logic gets maintained while the other is abandoned
+- **Feature Envy**: Methods that belong in a different class sometimes become dead in their current location after logic is reorganized
+- **Speculative Generality**: Over-engineered parameters, branches, and abstractions built for anticipated needs that never materialized
+- **Lazy Class**: Entire classes with no callers are the class-level equivalent of dead methods
+- **Comments**: Commented-out code blocks frequently accompany dead code and carry the same risks
 
-## Refactoring.guru Guidance
-
-### Signs and Symptoms
-
-A variable, parameter, field, method, or class is no longer used (usually because it is obsolete).
-
-### Reasons for the Problem
-
-- When requirements change or corrections are made, nobody had time to clean up the old code.
-- Dead code can also appear in complex conditionals when certain branches become unreachable due to errors or changed circumstances.
-
-### Treatment
-
-- The quickest way to find dead code is to use a good IDE. Delete unused code and unneeded files.
-- **Inline Class** or **Collapse Hierarchy**: Use when dealing with unnecessary classes or subclasses.
-- **Remove Parameter**: Eliminate unneeded method parameters.
-
-### Payoff
-
-- Reduced code size.
-- Simpler, easier maintenance and support.
+The fastest way to detect dead code is through IDE tooling (unused symbol highlighting, "Find Usages" returning zero results). For dead classes or subclasses, Inline Class and Collapse Hierarchy help consolidate. For unused parameters, Remove Parameter cleans up the signature. The goal is straightforward: less code means less to maintain, and deleting unused code is one of the safest refactorings you can perform.

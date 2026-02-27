@@ -2,29 +2,27 @@
 
 ## Overview
 
-Data clumps occur when the same group of variables appear together in multiple locations throughout your codebase. These are typically related data elements that are passed around as individual parameters, stored in separate fields, or repeated in method signatures. Recognizing and consolidating these clumps improves code organization and maintainability.
-
-The key indicator: if you can remove one variable from a group and the remaining variables no longer make sense together, they form a data clump and should be consolidated into a single cohesive object.
+Data clumps are groups of variables that repeatedly appear together throughout the codebase -- as method parameters, class fields, or local variable sets. They represent a domain concept that has not yet been given its own name or type. A reliable test: remove one variable from the group and ask whether the remaining ones still make sense together. If they do not, the group is a clump and should be consolidated into a dedicated object.
 
 ## Why It's a Problem
 
-When related data is scattered across your code as individual variables instead of being grouped together:
+When related data travels as separate variables instead of a unified object:
 
-- **Reduced Cohesion**: Related data isn't treated as a unified concept, making code harder to understand
-- **Maintenance Burden**: Changes to the data structure require updates in multiple locations
-- **Parameter Bloat**: Method signatures become cluttered with numerous parameters
-- **Missed Abstractions**: The conceptual grouping remains implicit rather than explicit
-- **Code Duplication**: The same parameter patterns are repeated throughout the codebase
+- **Weak Cohesion**: The conceptual relationship between the variables remains invisible to readers and tools
+- **Scattered Updates**: Changes to the data structure must be propagated to every location where the clump appears
+- **Bloated Signatures**: Method parameter lists grow unwieldy as each variable in the clump occupies its own slot
+- **Hidden Abstraction**: A meaningful domain concept exists only implicitly, missing the chance to carry behavior alongside data
+- **Repeated Patterns**: The same combination of parameters appears across unrelated methods, creating structural duplication
 
 ## Signs and Symptoms
 
-- Multiple methods accepting the same set of parameters
-- Classes with fields that are always used together
-- Copy-pasted parameter lists across different functions
-- Long parameter lists that could be simplified
-- Database connection details (host, port, username, password) passed individually
-- Coordinate pairs (x, y) or similar related values passed separately
-- Complex objects built from scratch in multiple locations with identical data
+- Multiple methods sharing the same parameter combination
+- Class fields that are only meaningful when used together
+- Identical parameter lists duplicated across different functions
+- Long method signatures that would shrink dramatically if parameters were grouped
+- Infrastructure details (host, port, username, password) passed as individual arguments
+- Related value pairs (latitude/longitude, x/y, start/end) passed separately
+- The same set of data assembled from scratch in multiple locations
 
 ## Before/After Examples
 
@@ -179,25 +177,9 @@ Avoid over-engineering by creating classes for every small group of parameters.
 
 ## Related Smells
 
-- **Long Parameter List**: Often resolved by the same refactorings as data clumps
-- **Primitive Obsession**: Using primitives instead of small value objects (data clumps are a symptom)
-- **Feature Envy**: Classes using another object's data heavily (may indicate a data clump in the wrong location)
-- **Divergent Change**: When multiple reasons to change the same class, data clumps might be mixed concerns
+- **Long Parameter List**: Shares the same core remedies -- Introduce Parameter Object and Preserve Whole Object address both smells
+- **Primitive Obsession**: Data clumps are often composed entirely of primitives that should be wrapped in value objects
+- **Feature Envy**: When a class works heavily with another class's clumped data, the data (and its behavior) may belong in a different location
+- **Divergent Change**: Clumps from mixed concerns embedded in one class signal that responsibilities should be separated
 
-## Refactoring.guru Guidance
-
-### Signs and Symptoms
-Different parts of the code contain identical groups of variables (such as parameters for connecting to a database). These clumps should be turned into their own classes.
-
-### Reasons for the Problem
-Repeated data groups frequently arise from inadequate program design or duplicative coding practices. A useful test: remove one data value and check whether the remaining values retain coherence. If not, combining them into a dedicated object is advisable.
-
-### Treatment
-- **Extract Class** when data clumps constitute class fields
-- **Introduce Parameter Object** for recurring method parameters
-- **Preserve Whole Object** to pass complete objects rather than individual fields
-- Evaluate relocating code that operates on these fields to the new data class
-
-### Payoff
-- Improves understanding and organization of code. Operations on particular data are now gathered in a single place, instead of haphazardly throughout the code
-- Reduces code size
+Once a data clump is extracted into its own class, look for operations in client code that act on those fields -- they likely belong inside the new class too. Consolidating both the data and its associated logic in one place improves organization and shrinks the overall codebase.

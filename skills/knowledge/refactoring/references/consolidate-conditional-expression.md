@@ -1,35 +1,31 @@
 ## Overview
 
-Consolidate Conditional Expression is a refactoring technique that combines multiple conditional statements that lead to the same action or result into a single, unified conditional expression. This eliminates code duplication and makes the logic more transparent and easier to understand at a glance.
+Consolidate Conditional Expression merges multiple conditional checks that all produce the same outcome into a single, unified expression. This removes repetition and makes the shared intent behind those checks immediately visible.
 
 ## Motivation
 
-Multiple conditional statements checking different conditions but performing the same action suggest that the underlying logic can be simplified. This pattern emerges when:
+When several `if` statements guard the same return value or action, the code is telling you that these conditions are conceptually related -- they all represent the same decision. Leaving them separate:
 
-- Several `if` statements have the same action but different conditions
-- Multiple conditions are combined with `||` (OR) operators vertically
-- The code becomes harder to understand because the intent is obscured by repetition
-- Maintenance becomes error-prone as changes must be applied to multiple similar conditions
+- Obscures the fact that they share a single purpose
+- Increases the risk of inconsistent updates when the action changes
+- Adds visual noise that makes the method harder to scan
+- Complicates testing by multiplying branches that lead to identical outcomes
 
-Consolidating these expressions:
-- Reduces cognitive load by presenting the intent clearly
-- Decreases the chance of inconsistencies when modifying the logic
-- Makes the code more maintainable and testable
-- Improves readability by grouping related conditions
+Bringing the conditions together into one expression (or one well-named method) consolidates both the logic and the intent.
 
 ## Mechanics
 
 ### Step 1: Identify Candidates
-Look for multiple conditional statements with identical bodies (actions/results). The conditions may differ, but they must execute the same code.
+Find multiple conditional statements whose bodies perform the same action or return the same value.
 
 ### Step 2: Extract Conditions
-Combine the conditions using logical operators (`&&`, `||`, `and`, `or`). Ensure the combined expression is logically equivalent to the original separate conditions.
+Combine the individual conditions using logical operators (`&&`, `||`). Verify the combined expression is logically equivalent to the originals.
 
 ### Step 3: Replace with Single Statement
-Replace all original conditional statements with a single consolidated conditional that combines the conditions appropriately.
+Swap out the separate conditionals for one consolidated check. If the combined expression is complex, extract it into a named method.
 
 ### Step 4: Test
-Verify that all test cases pass and the behavior remains identical to the original implementation.
+Run the full test suite to confirm behavior is unchanged.
 
 ## Before/After Examples
 
@@ -166,28 +162,28 @@ class StatusHandler
 
 ## Benefits
 
-1. **Improved Readability**: The intent becomes immediately obvious - multiple conditions lead to one outcome
-2. **Reduced Duplication**: Eliminates redundant code blocks
-3. **Easier Maintenance**: Changes to the logic only need to be made in one place
-4. **Better Testability**: Simpler expressions are easier to unit test
-5. **Performance**: Potentially faster as the logic can be optimized more effectively
-6. **Clearer Intent**: Makes it explicit which conditions are alternatives rather than sequential steps
+1. **Clearer Intent**: A single expression communicates that multiple conditions share one purpose
+2. **Less Duplication**: The repeated action or return value appears only once
+3. **Focused Maintenance**: Changing the outcome requires editing a single location
+4. **Simpler Testing**: Fewer branches means fewer test paths to cover
+5. **Potential for Naming**: Extracting the combined condition into a method gives it a meaningful name
+6. **Obvious Alternatives**: It becomes clear that the conditions are interchangeable paths to the same result
 
 ## When NOT to Use
 
-- **Sequential Dependencies**: When conditions must be evaluated in a specific order (one condition affects the next)
-- **Side Effects**: When conditions have side effects (e.g., logging, state changes) that must occur in a specific order
-- **Complex Logic**: When consolidation makes the expression too complex or difficult to understand
-- **Performance Critical**: When short-circuit evaluation order matters for performance
-- **Debugging**: When separating conditions aids in debugging and testing individual branches
+- **Order-dependent evaluation**: When conditions must run in sequence because earlier checks affect later ones
+- **Side effects**: When individual conditions trigger logging, state changes, or other effects that need to happen independently
+- **Resulting expression is unreadable**: If combining conditions makes the expression harder to understand than separate checks
+- **Performance-sensitive short-circuiting**: When evaluation order matters for performance reasons
+- **Debugging needs**: When separate conditions help pinpoint which specific path was taken during troubleshooting
 
 ## Related Refactorings
 
-- **Extract Method**: Extract consolidated condition into a named method for better readability
-- **Consolidate Duplicate Conditional Fragments**: Similar concept but applied to code blocks after conditions
-- **Replace Nested Conditionals with Guard Clauses**: Simplify deeply nested conditions
-- **Decompose Conditional**: Break complex conditions into easier-to-understand parts
-- **Replace Conditional with Polymorphism**: For complex conditional logic based on type
+- **Extract Method**: Pull the consolidated condition into a named method for readability
+- **Consolidate Duplicate Conditional Fragments**: A sibling technique for deduplicating code inside conditional branches
+- **Replace Nested Conditionals with Guard Clauses**: Flatten deeply nested conditions
+- **Decompose Conditional**: Break an overly complex condition into smaller, named pieces
+- **Replace Conditional with Polymorphism**: Use objects instead of conditionals for type-based logic
 
 ## Examples in Other Languages
 

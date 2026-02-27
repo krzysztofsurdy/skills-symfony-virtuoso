@@ -1,25 +1,25 @@
 ## Overview
 
-Duplicate code occurs when two or more code fragments are identical or nearly identical. This is one of the most common code smells and indicates that logic should be consolidated into a single, reusable component. Duplicate code violates the DRY (Don't Repeat Yourself) principle and creates maintenance burden.
+Duplicate code appears when two or more code fragments perform the same work using identical or near-identical logic. It is among the most frequently encountered code smells and serves as a clear signal that shared logic should be extracted into a single, reusable location. Every copy of the same logic is a liability -- it multiplies the effort required for any change and undermines the DRY (Don't Repeat Yourself) principle.
 
 ## Why It's a Problem
 
-When identical code exists in multiple locations, every bug fix, improvement, or change must be replicated across all instances. This dramatically increases:
+When the same logic lives in multiple places, every fix, enhancement, or behavioral change must be applied to each copy individually:
 
-- **Maintenance costs**: Changes require updates in multiple places
-- **Bug propagation**: Fixing a bug in one location may leave copies unfixed
-- **Inconsistency**: Duplicates naturally diverge over time, creating subtle bugs
-- **Testing burden**: More code paths to test and maintain
-- **Cognitive load**: Developers must understand redundant implementations
+- **Multiplied Maintenance**: A single conceptual change requires edits in several locations
+- **Inconsistent Fixes**: Patching a bug in one copy while missing others creates hard-to-diagnose inconsistencies
+- **Natural Drift**: Duplicates inevitably diverge over time as different developers modify different copies
+- **Heavier Test Surface**: More code paths to cover, with no additional functional benefit
+- **Wasted Reader Effort**: Developers spend time determining whether near-identical fragments truly behave the same way
 
 ## Signs and Symptoms
 
-- Identical or nearly identical code blocks in different methods or classes
-- Copy-pasted code segments with minor variable name changes
-- Methods with similar control structures but different implementations
-- Constructor or getter/setter duplication across multiple classes
-- Repeated validation, logging, or error handling patterns
-- Similar SQL queries or API call patterns scattered throughout the code
+- Identical or near-identical code blocks appearing in different methods or classes
+- Copy-pasted segments where only variable names differ
+- Methods that share the same control flow structure but implement it separately
+- Repeated constructor or accessor patterns across multiple classes
+- The same validation, logging, or error-handling logic sprinkled throughout the codebase
+- Similar database queries or API call sequences in unrelated files
 
 ## Before/After Examples
 
@@ -162,53 +162,31 @@ final class SubscriptionValidator
 
 ## Recommended Refactorings
 
-**Extract Method**: When duplicate code exists within the same class or related classes, extract the shared logic into a separate method and call it from multiple locations.
+**Extract Method**: When duplication occurs within the same class or closely related classes, pull the shared logic into its own method and call it from each original location.
 
-**Extract Class**: When duplication spans unrelated classes, create a new class to encapsulate the shared behavior and inject it as a dependency.
+**Extract Class**: When duplication spans unrelated classes, create a dedicated class to own the shared behavior and inject it as a dependency where needed.
 
-**Pull Up Field/Method**: In inheritance hierarchies, move duplicate code to parent classes so subclasses can reuse it.
+**Pull Up Field/Method**: Within inheritance hierarchies, relocate duplicate code to the parent class so all subclasses can inherit it. For constructor duplication, apply **Pull Up Constructor Body**.
 
-**Form Template Method**: For similar algorithms with variations, create a template method in a parent class with override points for differences.
+**Form Template Method**: When algorithms are structurally similar but differ in specific steps, define a template method in the parent with override points for the variable parts.
 
-**Consolidate Conditional Expression**: When duplicate logic appears in multiple conditional branches, extract it to reduce complexity.
+**Consolidate Conditional Expression**: When the same logic appears across multiple conditional branches, merge the conditions and extract the shared body.
+
+The right technique depends on where the duplication lives: same class, sibling subclasses, or unrelated classes each call for a different approach. Multiple programmers working in parallel, copy-paste under deadline pressure, and code that looks different but performs the same job are the most common root causes.
 
 ## Exceptions
 
 Duplication is acceptable in these cases:
 
-- **Performance-critical code**: Sometimes inline code outperforms method calls. Benchmark before extracting.
-- **Different domains**: Code that looks identical but serves different business purposes may belong separate.
-- **Simple value checks**: Guard clauses with identical null or type checks may be clearer inline.
-- **Constants**: Repeated literal values are acceptable when they represent different semantic meaning.
-- **Test fixtures**: Test code often duplicates setup logic intentionally for clarity and isolation.
+- **Performance-critical paths**: Inline code can outperform method calls in tight loops. Benchmark before extracting.
+- **Distinct business domains**: Code that looks identical but serves different conceptual purposes may belong separate to evolve independently.
+- **Simple guard clauses**: Identical null or type checks may be clearer repeated inline than hidden behind an extraction.
+- **Semantic constants**: The same literal value used in different contexts with different meanings does not warrant consolidation.
+- **Test fixtures**: Test code often intentionally duplicates setup logic for clarity and isolation.
 
 ## Related Smells
 
-- **Long Method**: Often creates duplicate code by copying similar logic instead of extracting it
-- **Long Parameter List**: May indicate missing abstraction that could consolidate duplicated parameters
-- **Divergent Change**: When one class changes for multiple reasons, it may contain diverse duplicate patterns
-- **Primitive Obsession**: Type-specific duplication that could be consolidated with proper objects
-
-## Refactoring.guru Guidance
-
-### Signs and Symptoms
-
-Two code fragments look almost identical.
-
-### Reasons for the Problem
-
-- Multiple programmers working on different parts of the same program simultaneously without awareness of each other's work.
-- Certain parts of code look different but actually perform the same job (harder to detect).
-- Copy-paste programming under deadline pressure.
-
-### Treatment
-
-- **Same class**: Apply **Extract Method** to consolidate identical code into a single reusable method.
-- **Sibling subclasses**: Use **Extract Method** combined with **Pull Up Field**, or apply **Pull Up Constructor Body** for constructor duplication. If the algorithms are similar but not identical, use **Form Template Method**.
-- **Different classes**: Use **Extract Superclass** for a shared parent class, or **Extract Class** if inheritance is not appropriate.
-- **Conditional expressions**: Merge duplicate conditions with **Consolidate Conditional Expression** and extract the combined logic.
-
-### Payoff
-
-- Merging duplicate code simplifies the structure and makes it shorter.
-- Simplification plus reduced size equals code that is easier to maintain and cheaper to support.
+- **Long Method**: Long methods breed duplication because developers copy similar logic rather than extracting it
+- **Long Parameter List**: May point to a missing abstraction that could consolidate duplicated parameter groups
+- **Divergent Change**: A class changing for multiple reasons may harbor diverse pockets of duplicated logic
+- **Primitive Obsession**: Type-specific duplication that proper value objects could eliminate

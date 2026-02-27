@@ -1,34 +1,33 @@
 ## Overview
 
-The Command design pattern is a behavioral pattern that converts requests or operations into standalone objects that can be parameterized, queued, logged, or undone. It decouples the object that issues an operation from the objects that actually perform it.
+The Command pattern is a behavioral design pattern that encapsulates operations as standalone objects, making them storable, transferable, queueable, loggable, and reversible. By reifying a request into an object, it draws a clean line between the code that initiates an action and the code that performs it.
 
 ## Intent
 
-- Encapsulate a request as an object
-- Parameterize clients with different requests, queue requests, and support undoable operations
-- Support logging changes and transaction rollback
-- Queue operations for delayed or batch execution
-- Decouple command senders from command executors
+- Turn an operation into a first-class object that can be passed, stored, or serialized like any other value
+- Let callers issue, defer, or enqueue operations without knowing who ultimately executes them
+- Support undo and redo by keeping a trail of executed command objects
+- Provide a natural foundation for operation logging, auditing, and transactional rollback
+- Decouple the responsibility of requesting work from the responsibility of carrying it out
 
 ## Problem/Solution
 
 ### Problem
-In many applications, you need to:
-- Queue operations for later execution
-- Schedule operations to run at specific times
-- Undo and redo user actions
-- Log all operations performed
-- Support remote execution of commands
-- Pass requests between different parts of the application
+Many applications share a common set of needs:
+- Deferring or scheduling operations for later execution
+- Providing undo and redo capabilities for user actions
+- Maintaining a complete audit log of every operation performed
+- Transmitting requests across process or network boundaries
+- Routing operations between loosely coupled subsystems
 
-Traditional approach of tightly coupling clients directly to business logic makes these requirements difficult to implement and maintain.
+Wiring clients directly to the business logic that fulfills these requests makes all of these requirements difficult to retrofit and painful to maintain.
 
 ### Solution
-Create a Command abstraction that wraps requests as objects. Each command encapsulates:
-- The operation to perform
-- The receiver of the operation
-- The parameters needed
-- The ability to execute and potentially undo
+Define a Command interface that represents a request as an object. Each concrete command bundles together:
+- The specific operation to carry out
+- The receiver object that performs the work
+- All parameters the operation requires
+- The logic to execute the operation and, optionally, to reverse it
 
 ## Structure
 
@@ -65,13 +64,13 @@ Create a Command abstraction that wraps requests as objects. Each command encaps
 
 ## When to Use
 
-✓ You need to parameterize objects with operations
-✓ Queue, schedule, or execute operations at different times
-✓ Support undo/redo functionality
-✓ Log and audit all operations performed
-✓ Support transactional operations (all-or-nothing)
-✓ Build macro commands from simpler commands
-✓ Decouple command senders from executors
+- You need to parameterize objects with operations
+- Queue, schedule, or execute operations at different times
+- Support undo/redo functionality
+- Log and audit all operations performed
+- Support transactional operations (all-or-nothing)
+- Build macro commands from simpler commands
+- Decouple command senders from executors
 
 ## Implementation (PHP 8.3+)
 
@@ -232,39 +231,37 @@ echo $document->getContent(); // "Hello World"
 
 ## Real-World Analogies
 
-**Restaurant Orders**: A customer (client) places an order (command) with a waiter (invoker), who gives it to the kitchen (receiver) to prepare the dish. The order can be queued, modified before execution, or documented for history.
+**Diner Order Ticket**: A customer scribbles their order on a slip and passes it to the counter. The slip waits in a queue until a cook picks it up and prepares the meal. The ticket is the command -- it records what to make, who asked, and can be tracked or cancelled before cooking starts.
 
-**Remote Control**: Buttons on a remote encapsulate commands (power on, volume up, channel change) that are sent to a TV or receiver without the remote needing to know TV internals.
+**Air Traffic Control Clearances**: A controller issues takeoff and landing clearances as discrete instructions. Each instruction is logged, can be revoked, and is carried out by the pilot independently of the controller's subsequent decisions.
 
-**Undo in Text Editors**: Each keystroke or formatting change is a command that can be undone/redone by maintaining a command history stack.
-
-**Transaction Logs**: Database transactions log all commands before execution, enabling rollback and audit trails.
+**Spreadsheet Macro Recording**: Recording a macro captures each user action as an individual command object. Playback re-executes the sequence in order, and the user can edit, reorder, or delete individual steps afterward.
 
 ## Pros and Cons
 
 ### Pros
-✓ Decouples sender from receiver—invoker doesn't know command details
-✓ Enables undo/redo functionality with history tracking
-✓ Supports queuing, scheduling, and macro operations
-✓ Easy to add new commands without modifying existing code
-✓ Simplifies logging and auditing of operations
-✓ Commands can be passed around and executed later
+- Draws a sharp boundary between the requester and the executor, so neither depends on the other
+- Makes undo and redo natural by preserving a history stack of executed command objects
+- Lends itself to batching, scheduling, and deferred execution without additional infrastructure
+- New command types slot in without modifying existing invoker or receiver code
+- Produces a built-in audit trail of every operation the system has performed
+- Commands are portable values -- they can be serialized, persisted, or transmitted across process boundaries
 
 ### Cons
-✗ Can create many command classes, increasing code complexity
-✗ Extra layer of indirection adds memory overhead
-✗ May be overkill for simple operation calls
-✗ Undo/redo requires maintaining complete state or history
+- Generates a high number of small classes, one per operation, which can fragment a codebase
+- The extra indirection layer between invoker and receiver adds abstraction overhead and memory use
+- Excessive for simple method calls that need neither queuing nor reversal
+- Reliable undo requires disciplined state tracking or snapshot management that complicates implementation
 
 ## Relations with Other Patterns
 
-- **Prototype**: Commands can be cloned to create copies for batch execution
-- **Chain of Responsibility**: Commands can be chained in a handler sequence
-- **Observer**: Invoker can notify observers when commands execute
-- **Memento**: Captures command state for undo/redo without deep object copying
-- **Macro Command**: Composite pattern combines multiple commands into one
-- **Template Method**: Defines execution skeleton; Command defines variations
-- **Strategy**: Both encapsulate behavior, but Strategy is for algorithm families; Command wraps requests
+- **Prototype**: Commands can be cloned to produce copies for batch processing or deferred execution
+- **Chain of Responsibility**: Commands can travel through a handler chain where each link decides whether to act or delegate
+- **Observer**: The invoker can notify subscribers when a command completes, enabling reactive workflows
+- **Memento**: Captures the receiver's state before execution, letting commands undo changes without deep-copying entire object graphs
+- **Composite**: Several commands can be assembled into a macro command that executes them as a single unit
+- **Template Method**: Provides a fixed execution skeleton while individual command subclasses override specific steps
+- **Strategy**: Both objectify behavior, but Strategy swaps interchangeable algorithms while Command encapsulates discrete requests
 
 ## Examples in Other Languages
 

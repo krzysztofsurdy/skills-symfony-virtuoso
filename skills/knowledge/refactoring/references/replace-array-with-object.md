@@ -1,21 +1,18 @@
 ## Overview
 
-Replace Array with Object is a refactoring technique that converts arrays with a fixed structure and indexed access into proper objects or value objects. This improves code readability, type safety, and maintainability by replacing magic indices with named properties and providing semantic meaning to data structures.
-
-Arrays are designed for homogeneous collections of items accessed by numeric indices. When you use an array to hold a fixed set of values with specific meaning at each position, you're fighting against the structure's intent. Objects with named properties make the code self-documenting and enable IDE support, type checking, and better encapsulation.
+Replace Array with Object converts arrays that hold a fixed set of semantically distinct values into dedicated objects with named properties. Arrays are built for homogeneous collections; when each index carries a specific meaning, an object with typed properties communicates that structure far more clearly and enables tooling support, validation, and encapsulation.
 
 ## Motivation
 
-Magic numbers and unclear array indices create several problems:
+Using positional array indices to represent structured data creates a number of hazards:
 
-- **Type Safety**: Arrays don't enforce structure; any index can contain any value
-- **Readability**: `$person[0]` is unclear; `$person->name` is self-documenting
-- **Maintainability**: Adding or reordering fields breaks all array access code
-- **IDE Support**: No autocomplete or refactoring support for array indices
-- **Validation**: No built-in way to validate object construction
-- **Evolution**: Objects can have methods and business logic; arrays cannot
+- **No type enforcement**: Any index can hold any value, defeating static analysis
+- **Opaque access**: `$person[0]` reveals nothing about what it contains; `$person->name` is self-explanatory
+- **Fragile ordering**: Inserting or reordering elements breaks every access site
+- **Missing IDE support**: Editors cannot autocomplete or rename array keys the way they can with properties
+- **No behavioral home**: Arrays cannot host methods, so related logic scatters elsewhere
 
-Replacing arrays with objects makes intent explicit and code more resilient to change.
+An object with named, typed properties makes the structure explicit and provides a natural home for associated behavior.
 
 ## Mechanics
 
@@ -135,14 +132,13 @@ $dist = $point->distance($moved);
 
 ## Benefits
 
-- **Type Safety**: Type hints prevent passing wrong values to wrong properties
-- **Self-Documenting**: Code reads naturally without needing comments
-- **IDE Support**: Full autocomplete, rename refactoring, and static analysis
-- **Encapsulation**: Objects can validate construction and provide methods
-- **Evolution**: Add methods without breaking existing code; add properties with defaults
-- **Testing**: Easier to create test doubles and mock objects
-- **Performance**: Modern PHP optimizes object property access efficiently
-- **Maintainability**: Clear intent makes code easier to understand and modify
+- **Compile-time safety**: Type hints catch misassignments before the code runs
+- **Readable by default**: Named properties make every access self-documenting
+- **Full tooling support**: Autocomplete, rename refactoring, and static analysis all work out of the box
+- **Built-in validation**: Constructors can enforce invariants at creation time
+- **Room to grow**: Methods can be added without restructuring callers
+- **Easier test setup**: Objects with clear constructors are simpler to build in test fixtures
+- **Resilient to change**: Adding a property with a default does not break existing call sites
 
 ## When NOT to Use
 

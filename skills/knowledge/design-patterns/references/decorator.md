@@ -1,22 +1,22 @@
 ## Overview
 
-The Decorator design pattern is a structural pattern that enables you to dynamically add new functionality to objects without modifying their original structure. Instead of using inheritance to extend behavior, it uses composition to wrap objects with additional responsibilities. This pattern provides a more flexible and maintainable way to extend functionality compared to subclassing.
+The Decorator pattern is a structural design pattern that augments objects at runtime by enclosing them in lightweight wrappers that conform to the same interface. Instead of relying on deep inheritance hierarchies to account for every feature combination, it builds behavior through nested composition, with each wrapper contributing a single, well-defined enhancement.
 
 ## Intent
 
-The Decorator pattern solves the problem of adding responsibilities to individual objects dynamically. It allows you to:
+The Decorator pattern meets the need to enhance individual objects dynamically. It enables you to:
 
-- Add new functionality to objects at runtime without changing their implementation
-- Avoid creating large families of subclasses for every possible combination of features
-- Keep objects' core functionality separate from optional enhancements
-- Apply multiple decorators in any combination to achieve desired behavior
-- Follow the Open/Closed Principle by remaining open for extension but closed for modification
+- Attach new behavior to objects without modifying their existing source code
+- Avoid the combinatorial explosion of subclasses that results from freely mixable features
+- Keep core logic and optional extensions in separate classes so each evolves on its own timeline
+- Compose multiple decorators in any sequence to assemble precisely the behavior a caller requires
+- Uphold the Open/Closed Principle -- existing classes stay closed for modification while remaining open for extension via wrapping
 
 ## Problem and Solution
 
-**Problem:** You have a base object that provides core functionality, but you need to add optional features or behaviors to specific instances. Using inheritance creates an explosion of subclasses for every possible combination of features (e.g., `PlainCoffee`, `CoffeeWithMilk`, `CoffeeWithMilkAndSugar`, `CoffeeWithCinnamonAndMilk`, etc.). This approach becomes unmaintainable.
+**Problem:** A core object performs its primary job correctly, but different callers need different mixes of supplementary features on top of it. Subclassing every permutation -- `PlainCoffee`, `CoffeeWithMilk`, `CoffeeWithMilkAndSugar`, `CoffeeWithCinnamonAndMilk` -- spawns an unmanageable number of classes that multiplies with every new option.
 
-**Solution:** Create decorator classes that wrap the original object and implement the same interface. Each decorator adds a specific responsibility and delegates other operations to the wrapped object. Multiple decorators can be stacked to combine features dynamically at runtime.
+**Solution:** Create decorator classes that implement the same interface as the object they enclose. Each decorator adds one focused enhancement and delegates all other calls to the wrapped object. At runtime, decorators stack around the core like concentric shells, and any combination of features emerges naturally from the nesting order -- no new subclasses required.
 
 ## Structure
 
@@ -33,12 +33,12 @@ The key characteristic is that decorators implement the same interface as the co
 
 Use the Decorator pattern when:
 
-- You need to add responsibilities to individual objects dynamically without affecting others
-- Inheritance would create too many subclasses (combinatorial explosion)
-- You want to extend functionality without permanently modifying the original class
-- Building extensible frameworks where features can be mixed and matched
-- You need to temporarily add or remove features from objects
-- Avoiding tight coupling between core functionality and optional enhancements
+- Individual objects need additional behavior at runtime while others of the same type remain unchanged
+- Subclassing would produce a combinatorial explosion of variants
+- You want to enhance functionality without permanently altering the original class
+- You are building a framework where users should be able to mix and match optional features
+- Features need to be attached or removed dynamically during the object's lifetime
+- Core logic and optional extras should be maintained and tested independently
 
 ## Implementation (PHP 8.3+)
 
@@ -126,38 +126,36 @@ echo $processor->process('<script>alert("xss")</script>') . PHP_EOL;
 
 ## Real-World Analogies
 
-- **Coffee Shop Orders:** A base coffee can be decorated with milk, sugar, cinnamon, or cream in any combination, creating different variations without modifying the base coffee.
-- **Gift Wrapping:** You can wrap a gift with different types of paper, ribbons, and decorations without changing the gift itself.
-- **GUI Frameworks:** UI components can be decorated with scrollbars, borders, shadows, or animation effects independently.
-- **Stream I/O:** Input/output streams can be decorated with compression, encryption, or buffering layers.
-- **Pizza Customization:** A base pizza can be decorated with various toppings, each adding to the price and properties without altering the fundamental pizza structure.
+- **Layered Clothing**: A base shirt gains warmth from a vest, wind resistance from a jacket, and waterproofing from a raincoat. Each layer adds a distinct property without replacing the ones underneath.
+- **Photo Editing Filters**: An image editor stacks filters -- contrast, saturation, vignette -- one atop another. Each filter transforms the output of the previous one, and the user can reorder or strip any filter independently.
+- **I/O Stream Wrappers**: A raw byte stream can be enclosed in a buffering layer, then a compression layer, then an encryption layer. Each wrapper manages one concern and forwards data to the next.
 
 ## Pros and Cons
 
 **Pros:**
-- Single Responsibility: Separates core functionality from optional features
-- Open/Closed Principle: Extend functionality without modifying existing code
-- Flexible Composition: Mix and match decorators in any combination at runtime
-- Cleaner Code: Avoids subclass explosion with multiple combinations
-- Dynamic Behavior: Add or remove features without creating new classes
-- Easier Maintenance: Changes to decorators don't affect the component
+- Every decorator carries a single enhancement, preserving clear separation of responsibilities
+- Behavior grows through composition rather than through modifications to existing classes
+- Decorators can be mixed in any arrangement and quantity at runtime
+- Eliminates the exponential proliferation of subclass variants
+- Enhancements can be attached or stripped during the object's lifetime
+- Changes to one decorator are isolated from the core component and from other decorators
 
 **Cons:**
-- Complexity: Multiple decorator layers can make code harder to understand
-- Performance Overhead: Each decorator adds a layer of indirection
-- Order Matters: Decorator order affects behavior (e.g., uppercase then bold differs from bold then uppercase)
-- Debugging Difficulty: Stack traces become deeper with multiple decorators
-- Boilerplate Code: Requires implementing full interface for simple decorators
-- Memory Usage: Each decorator instance consumes memory
+- A deeply nested wrapper stack can obscure execution flow and complicate debugging
+- Each decorator layer introduces a delegation hop with a minor performance penalty
+- The stacking order influences the final result, which can produce subtle, order-dependent bugs
+- Stack traces lengthen with each wrapper, making error diagnosis more laborious
+- Every decorator must implement the full component interface even when it only alters one method
+- Each wrapper instance consumes its own memory allocation
 
 ## Relations with Other Patterns
 
-- **Adapter:** Similar structure (wrapping), but Adapter converts interfaces while Decorator adds responsibilities to the same interface
-- **Proxy:** Both wrap objects, but Proxy controls access while Decorator adds functionality
-- **Strategy:** Both allow behavior changes; Strategy typically replaces behavior entirely while Decorator adds to it
-- **Factory Method:** Often used together to create appropriate decorator combinations
-- **Composite:** Often works with Decorator; components can be decorated leaves or composite nodes
-- **Facade:** Decorator enhances single objects while Facade simplifies entire subsystems
+- **Adapter:** Both wrap objects, but Adapter translates one interface into another while Decorator enriches behavior behind the same interface
+- **Proxy:** Proxy governs access to the wrapped object; Decorator extends its capabilities
+- **Strategy:** Strategy replaces an entire algorithm at once; Decorator incrementally layers enhancements onto existing behavior
+- **Factory Method:** Frequently used to assemble the correct combination of decorators for a given context
+- **Composite:** Both support recursive composition, but Composite models containment hierarchies while Decorator stacks additional behavior
+- **Facade:** Facade unifies a subsystem behind a simpler interface; Decorator augments a single object's functionality
 
 ## Additional Considerations
 

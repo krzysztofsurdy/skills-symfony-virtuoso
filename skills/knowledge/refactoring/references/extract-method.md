@@ -1,31 +1,30 @@
 ## Overview
 
-Extract Method is a fundamental refactoring technique that breaks down a large or complex method into smaller, focused methods. This improves code readability, reusability, and testability by decomposing complex logic into manageable pieces with single responsibilities.
+Extract Method is one of the most commonly applied refactorings. It takes a block of code buried inside a larger method and moves it into its own method with a descriptive name. The result is shorter methods, clearer intent, and logic that can be reused and tested independently.
 
 ## Motivation
 
 ### When to Apply
 
-- **Methods are too long**: Methods exceeding 15-20 lines become harder to understand and test
-- **Code duplication**: Same logic appears in multiple places
-- **Unclear intent**: A code block's purpose isn't immediately obvious
-- **Mixed concerns**: A method handles multiple responsibilities
-- **Difficult to test**: Large methods are challenging to unit test comprehensively
-- **Complex conditional logic**: Long if/else chains obscure intent
+- **Long methods**: Methods beyond 15-20 lines become harder to follow and test
+- **Repeated logic**: The same code block appears in multiple places
+- **Opaque intent**: A section of code requires careful reading to understand its purpose
+- **Tangled responsibilities**: A single method handles validation, calculation, formatting, and persistence
+- **Difficult testing**: Comprehensive unit testing is impractical because the method does too much
+- **Complex branching**: Long if/else or switch structures hide the high-level flow
 
 ### Why It Matters
 
-Extract Method promotes code clarity, reduces cognitive load, enables reuse, and facilitates testing. It's one of the most frequently used refactorings because it directly improves code maintainability.
+Smaller methods with meaningful names turn code into a narrative. Readers can understand the flow at a glance and dive into details only when needed. Each extracted method becomes an independent unit that can be tested, reused, and modified in isolation.
 
 ## Mechanics: Step-by-Step
 
-1. **Identify the fragment**: Select a cohesive block of code to extract
-2. **Verify independence**: Check if extracted code depends only on local variables
-3. **Handle variables**: Plan how to pass needed values as parameters
-4. **Determine return value**: Identify what the extracted method should return
-5. **Create the method**: Write the new method with appropriate signature
-6. **Replace original code**: Call the new method from the original location
-7. **Test thoroughly**: Verify behavior remains identical
+1. **Select the fragment**: Identify a cohesive block of code that performs a distinct task
+2. **Check dependencies**: Note which local variables the fragment reads or writes
+3. **Design the signature**: Decide which values to pass as parameters and what to return
+4. **Create the method**: Write the new method with a name that describes what it accomplishes
+5. **Replace the original code**: Substitute the block with a call to the new method
+6. **Run the tests**: Confirm the behavior is identical
 
 ## Before: PHP 8.3+ Example
 
@@ -155,29 +154,29 @@ class OrderProcessor
 
 ## Benefits
 
-- **Improved Readability**: Code intent becomes self-documenting through meaningful method names
-- **Enhanced Testability**: Smaller methods are easier to unit test with focused assertions
-- **Code Reusability**: Extracted methods can be called from multiple locations
-- **Reduced Complexity**: Cognitive load decreases significantly for maintainers
-- **Easier Debugging**: Isolating issues becomes simpler with focused methods
-- **Better Composition**: Enables straightforward method composition and chaining
-- **Facilitates Polymorphism**: Extracted methods are easier to override in subclasses
+- **Readable Flow**: The calling method reads like a summary; details live in named sub-methods
+- **Targeted Testing**: Each extracted method can be tested with focused inputs and assertions
+- **Reuse**: Extracted logic can be called from other methods or classes
+- **Reduced Cognitive Load**: Developers process smaller chunks of logic at a time
+- **Faster Debugging**: When something breaks, the stack trace points to a narrow, specific method
+- **Composability**: Small methods combine naturally into larger workflows
+- **Polymorphism Support**: Extracted methods are easy to override in subclasses
 
 ## When NOT to Use
 
-- **Already simple code**: Don't extract single-line statements into methods
-- **Private utility methods**: One-off calculations may clutter class design
-- **Performance-critical paths**: Excessive method calls might impact performance (rare in practice)
-- **Very brief methods exist**: Too many tiny methods reduce code comprehension
-- **Complex parameter passing**: When extracted method needs many parameters, consider alternative refactorings (Introduce Parameter Object, Extract Class)
+- **One-liner code**: Wrapping a single obvious statement in a method adds noise
+- **One-off utilities**: A calculation used exactly once and already clear may not need its own method
+- **Parameter explosion**: If the extracted method requires many parameters, consider Introduce Parameter Object or Extract Class instead
+- **Too many tiny methods**: Overextraction can scatter logic so widely that following the flow becomes harder than reading inline code
+- **Performance-critical inner loops**: Method call overhead is rarely a concern, but measure before ruling it out
 
 ## Related Refactorings
 
-- **Extract Class**: When extracted logic belongs in a separate class
-- **Replace Method with Method Object**: For methods with many local variables
-- **Introduce Parameter Object**: To simplify complex parameter lists
-- **Replace Temp with Query**: Eliminates local variables before extraction
-- **Remove Duplication**: Often precedes Extract Method to consolidate duplicated code
+- **Extract Class**: When extracted logic deserves its own class rather than just a method
+- **Replace Method with Method Object**: For methods with so many local variables that extraction is impractical
+- **Introduce Parameter Object**: Simplifies the parameter list of an extracted method
+- **Replace Temp with Query**: Removes temporary variables that complicate extraction
+- **Remove Duplication**: Often precedes Extract Method to consolidate repeated code first
 
 ## Examples in Other Languages
 

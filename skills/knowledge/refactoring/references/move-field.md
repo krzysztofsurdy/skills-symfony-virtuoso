@@ -1,31 +1,31 @@
 ## Overview
 
-Move Field is a refactoring technique that relocates a field from one class to another where it is more appropriately used or accessed. This refactoring improves encapsulation, reduces coupling, and ensures data lives in the class with the greatest responsibility for managing it. It's particularly useful when a field is accessed more frequently by another class than its current container.
+Move Field relocates a field from one class to another that has a stronger claim to it. When a field is read or written more often by a different class than the one that currently holds it, moving the field aligns data ownership with actual usage. This tightens encapsulation, reduces coupling, and makes each class more cohesive.
 
 ## Motivation
 
 ### When to Apply
 
-- **Feature envy**: A class accesses another class's field frequently
-- **Poor encapsulation**: A field belongs logically to another class
-- **Reduced cohesion**: A field is tangential to the class's primary responsibility
-- **Tight coupling**: Moving a field reduces interdependency between classes
-- **Duplicated field access**: Multiple classes access a field through indirect paths
-- **Preparation for Extract Class**: Moving fields often precedes extracting a new class
+- **Feature envy**: Another class accesses the field more than the owning class does
+- **Misplaced data**: The field logically belongs to a different concept in the domain
+- **Weak cohesion**: The field has little to do with the owning class's primary responsibility
+- **Tight coupling**: Moving the field would eliminate a dependency between two classes
+- **Duplicated access paths**: Multiple classes reach the field through indirect chains
+- **Preparing for Extract Class**: Moving fields often precedes extracting a group of related data into a new class
 
 ### Why It Matters
 
-Move Field strengthens the principle of encapsulation by ensuring fields reside in the classes responsible for managing them. This reduces coupling between classes, improves code organization, and makes future maintenance and refactoring easier.
+Placing data in the class that manages it most directly reduces the need for cross-class communication, makes each class easier to understand in isolation, and simplifies future refactoring.
 
 ## Mechanics: Step-by-Step
 
-1. **Identify the field**: Locate the field that should be moved and analyze its usage patterns
-2. **Analyze dependencies**: Check where the field is read and written; verify it's safe to move
-3. **Create the field in the target class**: Add the field declaration in the destination class
-4. **Update accessors**: Create getter/setter methods in the target class if needed
-5. **Redirect the source**: Modify the source class to access the field through the target class reference
-6. **Remove the original field**: Delete the field from its original location after ensuring all references are updated
-7. **Test thoroughly**: Verify that all functionality remains identical and no references were missed
+1. **Analyze usage**: Determine where the field is read and written across the codebase
+2. **Check safety**: Verify that moving the field will not create circular dependencies or break invariants
+3. **Create the field in the target**: Add the field declaration to the destination class
+4. **Add accessors if needed**: Provide getter and setter methods in the target class
+5. **Redirect the source**: Update the source class to access the field through the target
+6. **Delete the original**: Remove the field from its original location once all references are updated
+7. **Run the tests**: Confirm that all behavior is preserved
 
 ## Before: PHP 8.3+ Example
 
@@ -194,27 +194,27 @@ class Order
 
 ## Benefits
 
-- **Improved Encapsulation**: Fields reside in classes with proper ownership and responsibility
-- **Reduced Coupling**: Classes have fewer dependencies on fields they don't directly manage
-- **Enhanced Cohesion**: Classes become more focused with stronger relationships between fields and methods
-- **Better Clarity**: Code intent improves when data lives where it's used most
-- **Simplified Maintenance**: Easier to understand data flow and modify related logic
-- **Facilitates Extraction**: Prepares code for Extract Class and other structural refactorings
-- **Enables Testing**: Classes become more independent and easier to test in isolation
+- **Stronger Encapsulation**: Data resides in the class responsible for managing it
+- **Lower Coupling**: Classes interact less because each manages its own state
+- **Higher Cohesion**: Fields and the methods that use them live together
+- **Clearer Ownership**: Code intent improves when data lives where it is used most
+- **Easier Maintenance**: Understanding data flow becomes simpler
+- **Enables Further Refactoring**: Often a precursor to Extract Class and other structural improvements
+- **Independent Testing**: Classes with their own data are easier to test without complex setup
 
 ## When NOT to Use
 
-- **Fields still heavily accessed by source class**: If the source class is the primary user, moving creates unnecessary indirection
-- **Field required for source class identity**: Core fields defining the class shouldn't be moved
-- **Bidirectional dependencies**: Moving fields creates circular dependencies between classes
-- **Performance-sensitive code paths**: Moving fields may add indirection costs (rare in practice)
-- **Frequent access pattern changes**: Uncertain data locality makes refactoring risky
-- **Legacy code with obscure dependencies**: Unknown field usages make safe moves impossible without comprehensive testing
+- **Source class is the primary consumer**: If the current class uses the field most, moving it creates unnecessary indirection
+- **Core identity field**: Fields that define what the class represents should stay
+- **Circular dependencies**: Moving the field would create a bidirectional dependency
+- **Hot path performance**: Added indirection can matter in tight loops (rare in practice)
+- **Unstable access patterns**: If usage is shifting, wait until the pattern stabilizes before moving
+- **Obscure dependencies**: In legacy code with hidden callers, a comprehensive test suite is needed before moving
 
 ## Related Refactorings
 
-- **Extract Class**: Often follows Move Field when moving multiple related fields to form a new class
-- **Move Method**: Companion refactoring to ensure methods move with their primary data
-- **Replace Data Value with Object**: Convert moved fields to objects for better encapsulation
-- **Remove Middle Man**: If Move Field creates excessive indirection, remove delegating methods
-- **Replace Type Code with Subclasses**: For fields representing discriminators that should move with their types
+- **Extract Class**: Often follows Move Field when multiple related fields migrate to a new class
+- **Move Method**: The companion refactoring -- move methods alongside the fields they operate on
+- **Replace Data Value with Object**: Promotes a moved primitive field into a richer object
+- **Remove Middle Man**: Undo excessive indirection if Move Field creates too many delegation layers
+- **Replace Type Code with Subclasses**: For type-discriminator fields that should move with their associated behavior

@@ -1,6 +1,6 @@
 ## Overview
 
-Remove Assignments to Parameters is a refactoring technique that eliminates reassignments made to method parameters. When a parameter is reassigned within a method, it becomes difficult to understand the original intent of that parameter and track its value changes. By introducing a local variable and using it for reassignments instead, the code becomes clearer and the parameter's original purpose remains explicit.
+Remove Assignments to Parameters stops the practice of overwriting method parameters inside the method body. When a parameter is reassigned, readers lose track of the value it originally carried, and the method's intent becomes muddled. Introducing a local variable to hold the evolving value preserves the parameter's original meaning while keeping the computation correct.
 
 ## Motivation
 
@@ -14,7 +14,7 @@ Remove Assignments to Parameters is a refactoring technique that eliminates reas
 
 ### Why It Matters
 
-Parameter reassignment obscures the original intent of the parameter and makes code harder to understand. Someone reading the method signature understands what the parameter represents, but then the method changes its meaning midway through execution. Using local variables for temporary state preserves the parameter's semantic meaning and makes the code more maintainable.
+A parameter name communicates what the caller sent in. The moment the method overwrites that value, the name becomes misleading -- it no longer represents the caller's input. A local variable with a distinct name separates the "what came in" from the "what we computed," making the method easier to read, debug, and extend.
 
 ## Mechanics: Step-by-Step
 
@@ -117,13 +117,12 @@ class PriceCalculator
 
 ## Benefits
 
-- **Clearer Intent**: Parameters maintain their semantic meaning from the method signature
-- **Easier Debugging**: Original parameter values are preserved and accessible for reference
-- **Better Readability**: Developers immediately understand what the original parameter was meant to represent
-- **Reduced Cognitive Load**: No mental context switching between original and modified parameter values
-- **Improved Testability**: Parameter purpose is explicit, making test cases easier to write
-- **Eliminates Confusion**: New developers don't wonder if the parameter changed intentionally or accidentally
-- **Better Method Documentation**: Parameter names accurately reflect their purpose throughout execution
+- **Preserved Semantics**: Parameters keep their original meaning from first line to last
+- **Straightforward Debugging**: The input value is always available for inspection
+- **Improved Readability**: Developers see at a glance what arrived versus what was computed
+- **Lower Cognitive Load**: No need to mentally track when a parameter's meaning shifted
+- **Cleaner Testing**: Test assertions can reference both input and result without ambiguity
+- **Accident Prevention**: New contributors will not unknowingly depend on a mutated parameter
 
 ## When NOT to Use
 

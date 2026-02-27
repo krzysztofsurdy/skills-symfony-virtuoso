@@ -2,29 +2,29 @@
 
 ## Definition
 
-No client should be forced to depend on methods it does not use. Instead of one large interface, create smaller, focused interfaces so that implementing classes only need to know about the methods that are relevant to them.
+Clients should never be compelled to depend on methods they do not use. Rather than defining one broad interface, design smaller, targeted interfaces so that implementing classes only need to deal with the methods relevant to their role.
 
-Robert C. Martin formulated ISP after consulting for Xerox, where a single `Job` interface had grown to serve printers, staplers, and fax machines — forcing every implementation to stub out irrelevant methods.
+Robert C. Martin developed ISP after consulting work at Xerox, where a monolithic `Job` interface had expanded to serve printers, staplers, and fax machines alike — forcing every implementation to stub out methods it could not meaningfully support.
 
 ## Why It Matters
 
-Fat interfaces create unnecessary coupling. When a class depends on an interface with 20 methods but only uses 3, it is still coupled to the other 17. Any change to those unused methods forces recompilation and potential breakage. ISP creates focused contracts that:
+Oversized interfaces introduce unnecessary coupling. When a class depends on an interface with 20 methods but actually calls only 3, it is still tethered to the remaining 17. Any modification to those unused methods triggers recompilation and risks breakage. ISP promotes focused contracts that:
 
-- **Reduce coupling** — clients depend only on what they actually need
-- **Improve clarity** — small interfaces communicate intent clearly
-- **Simplify testing** — mocking a 3-method interface is easier than a 20-method one
-- **Enable composition** — classes implement exactly the interfaces they need, nothing more
-- **Prevent LSP violations** — smaller interfaces make it easier to honor the full contract
+- **Minimize coupling** — clients depend exclusively on what they truly need
+- **Enhance clarity** — compact interfaces convey purpose more effectively
+- **Streamline testing** — mocking a 3-method interface is far simpler than faking a 20-method one
+- **Support composition** — classes adopt only the interfaces that match their capabilities
+- **Reduce LSP violations** — narrow interfaces make it more practical to fulfill every method in the contract
 
 ## Detecting Violations
 
-Look for:
+Warning signs to watch for:
 
-- **Interfaces with many methods** — 10+ methods is a strong signal
+- **Interfaces with many methods** — 10 or more methods is a strong indicator of bloat
 - **Implementing classes with empty or throwing methods** — `throw new \RuntimeException('Not implemented')`
-- **"I only need half of this"** — when consumers ignore most of an interface
-- **Adapters that wrap and delegate only partially** — adapting a fat interface to a thinner need
-- **Interface names with "And"** — `ReadableAndWritableAndDeletable` should be three interfaces
+- **"I only need half of this"** — when consumers routinely ignore most of an interface
+- **Adapters that partially delegate** — wrapping a large interface just to expose a subset of its methods
+- **Interface names containing "And"** — `ReadableAndWritableAndDeletable` should be three separate interfaces
 
 ## Before/After — PHP 8.3+
 
@@ -482,23 +482,23 @@ public:
 
 ## How Small Should Interfaces Be?
 
-There's no magic number, but consider:
+There is no universal number, but here are useful guidelines:
 
-- **1 method** — common for functional interfaces (Strategy, Command patterns)
-- **2-5 methods** — typical for a focused capability
-- **6+ methods** — worth examining if it can be split
-- **Role-based grouping** — methods that are always used together belong in one interface
+- **1 method** — typical for functional interfaces (Strategy, Command patterns)
+- **2-5 methods** — standard for a well-scoped capability
+- **6+ methods** — worth evaluating whether it can be decomposed
+- **Role-based grouping** — methods that are invariably invoked together belong in the same interface
 
-The test: if any implementation would need to stub or throw on a method, the interface is too broad.
+The litmus test: if any implementation would need to stub or throw on a method, the interface is too broad.
 
 ## Common Pitfalls
 
-- **Too many micro-interfaces** — splitting every method into its own interface creates complexity. Group methods that are always used together.
-- **Interface explosion** — 50 single-method interfaces is worse than 5 well-designed ones. Find the natural boundaries.
-- **Marker interfaces without behavior** — empty interfaces used just for type-checking add no value in most languages.
+- **Excessive micro-interfaces** — decomposing every method into its own interface introduces unnecessary complexity. Group methods that are always consumed together.
+- **Interface explosion** — 50 single-method interfaces is worse than 5 thoughtfully designed ones. Identify the natural boundaries.
+- **Marker interfaces without behavior** — empty interfaces used solely for type discrimination add little value in most languages.
 
 ## Related Principles
 
-- **Single Responsibility (SRP)** — ISP is SRP applied at the interface level
-- **Liskov Substitution (LSP)** — segregated interfaces make LSP easier to satisfy
-- **Dependency Inversion (DIP)** — smaller interfaces make better abstractions to depend on
+- **Single Responsibility (SRP)** — ISP applies the same single-focus philosophy at the interface level
+- **Liskov Substitution (LSP)** — segregated interfaces make it simpler to fulfill every obligation in the contract
+- **Dependency Inversion (DIP)** — compact interfaces serve as better abstractions to depend on

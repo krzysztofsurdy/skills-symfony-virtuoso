@@ -1,28 +1,28 @@
 ## Overview
 
-The "Replace Nested Conditional with Guard Clauses" refactoring technique transforms deeply nested if-else structures into a flat, sequential flow using guard clauses. Guard clauses are early returns or exits that handle special cases and exceptions before the main logic executes. This pattern eliminates the "rightward drift" problem where each nested level adds indentation, making code increasingly difficult to follow.
+The "Replace Nested Conditional with Guard Clauses" refactoring flattens deeply nested if-else trees into a linear sequence of guard clauses. A guard clause is an early return or throw that handles a special case before the main logic runs. This approach eliminates the "pyramid of doom" where each additional nesting level pushes code further to the right, making it progressively harder to read.
 
 ## Motivation
 
-Deeply nested conditionals create several problems:
+Deeply nested conditionals introduce several concrete problems:
 
-- **Reduced Clarity**: The intended logic flow becomes obscured by multiple indentation levels
-- **Ad-hoc Appearance**: Deeply nested conditions suggest hasty, unplanned development rather than deliberate design
-- **Cognitive Overload**: Each nesting level requires mental context switching, reducing maintainability
-- **Testing Complexity**: Multiple branching paths make comprehensive testing more difficult
-- **Higher Bug Risk**: Complex conditional logic is more prone to mistakes and edge cases
+- **Obscured intent**: The core logic gets buried under layers of indentation, forcing readers to mentally track multiple branches at once
+- **Appearance of ad-hoc development**: Heavy nesting often signals that conditions were added reactively rather than designed deliberately
+- **Mental burden**: Every nesting level demands that the reader maintain additional context, reducing comprehension speed
+- **Harder testing**: Deeply branching code paths multiply the number of scenarios that need coverage
+- **Greater defect risk**: Intricate conditional structures are fertile ground for off-by-one errors and overlooked edge cases
 
-Guard clauses address these issues by placing all exception handling at the method's beginning, allowing the "happy path" to flow naturally without unnecessary indentation.
+Guard clauses solve these issues by handling all boundary conditions at the top of the method, leaving the primary ("happy") path to flow unindented and uninterrupted.
 
 ## Mechanics
 
-The refactoring process follows these steps:
+The refactoring proceeds through these steps:
 
-1. **Identify Guard Conditions**: Look for conditions that trigger early returns, throws, or exits
-2. **Reorder Conditions**: Move guard clauses to the beginning of the method
-3. **Replace Nesting**: Convert nested if-else structures to sequential if-statements
-4. **Eliminate Nesting**: Remove else blocks by using guard clause returns
-5. **Consolidate Logic**: Combine guard conditions where appropriate using logical operators
+1. **Spot guard conditions**: Identify branches that result in early returns, throws, or other exits
+2. **Hoist to the top**: Move these guard clauses to the beginning of the method
+3. **Flatten the structure**: Convert nested if-else trees into a sequence of independent if-statements
+4. **Drop the else blocks**: Let guard clause returns eliminate the need for else branches
+5. **Merge where possible**: Combine related guard conditions using logical operators when it improves clarity
 
 ## Before/After: PHP 8.3+ Code
 
@@ -114,28 +114,28 @@ public function processOrder(Order $order, Customer $customer): void
 
 ## Benefits
 
-- **Improved Readability**: Code flows naturally from top to bottom without excessive indentation
-- **Clearer Intent**: Guard clauses make exception handling explicit and visible
-- **Easier Testing**: Each condition and code path is independently testable
-- **Better Maintenance**: Future developers can quickly understand the method's logic
-- **Reduced Cognitive Load**: Eliminates mental context switching from nested structures
-- **Fewer Variables**: Reduces unnecessary variable assignments used only for conditional logic
+- **Linear readability**: Code progresses top-to-bottom with minimal indentation
+- **Visible preconditions**: Guard clauses make boundary handling explicit right at the start
+- **Isolated test paths**: Each guard and the main path can be tested independently
+- **Lower maintenance cost**: Future developers can grasp the method's logic quickly
+- **Less mental overhead**: No need to mentally track which else branch corresponds to which if
+- **Fewer temporary variables**: Eliminates intermediary result variables used only for conditional routing
 
 ## When NOT to Use
 
-This refactoring may not be appropriate when:
+This refactoring may not fit when:
 
-- **Complex Interdependent Conditions**: If conditions heavily depend on each other's results, polymorphism might be better
-- **Business Logic Objects**: For substantial domain-specific logic, consider **Replace Conditional with Polymorphism**
-- **Single Critical Path**: If there's only one success path and one failure path, simple if-else may be clearer
-- **Performance-Critical Code**: Early exits via exceptions have overhead; use cautiously in tight loops
+- **Tightly coupled conditions**: If conditions depend on each other's results, polymorphism may be more appropriate
+- **Rich domain logic**: For substantial business rules, consider **Replace Conditional with Polymorphism** instead
+- **Binary success/failure**: When there is exactly one success path and one failure path, a simple if-else is already clear
+- **Performance-sensitive loops**: Early exits via exceptions carry overhead; use sparingly in tight iterations
 
 ## Related Refactorings
 
-- **Decompose Conditional**: Extract complex conditions into named methods for clarity
-- **Replace Conditional with Polymorphism**: Use inheritance or interfaces for complex decision trees
-- **Extract Method**: Extract guard clause logic into separate methods for better readability
-- **Consolidate Duplicate Conditional Fragments**: Combine similar guard clauses that share outcomes
+- **Decompose Conditional**: Extract complex boolean expressions into named methods to improve clarity
+- **Replace Conditional with Polymorphism**: Use inheritance or interfaces when decision trees represent type-based behavior
+- **Extract Method**: Move guard clause logic into dedicated helper methods for improved readability
+- **Consolidate Duplicate Conditional Fragments**: Merge guard clauses that lead to the same outcome
 
 ## Examples in Other Languages
 

@@ -1,27 +1,27 @@
 ## Overview
 
-The Private Class Data pattern is a behavioral design pattern that controls write access to class data by encapsulating it within a separate, private data holder object. This pattern restricts data modification to initialization time, ensuring immutability and preventing accidental state changes after object construction.
+The Private Class Data pattern is a structural design pattern that safeguards object state by wrapping class attributes inside a dedicated, immutable data holder. Once the object is constructed, its data cannot be changed, which prevents unintended modifications and enforces consistency throughout the object's lifetime.
 
 ## Intent
 
-- Separate object data from object behavior
-- Control write access to class attributes
-- Provide immutable data after construction
-- Reduce complexity by isolating data management concerns
-- Protect internal state consistency
+- Isolate an object's data from its behavior into a distinct holder
+- Restrict mutation of class fields after construction
+- Guarantee post-initialization immutability
+- Lower complexity by confining data management to a single place
+- Preserve internal state integrity
 
 ## Problem/Solution
 
 **Problem:**
-When building complex objects, you need to ensure that critical data cannot be modified after initialization. Without proper safeguards, class attributes remain mutable, risking inconsistent state and making the object's contract unclear. Direct access to mutable fields also increases coupling and reduces control over data integrity.
+Complex objects often expose mutable fields, which makes it possible for any part of the codebase to alter critical data after the object has been created. This leads to unpredictable state, unclear contracts, and tight coupling between the object and anything that touches its internals.
 
 **Solution:**
-Create a separate private data holder class that encapsulates all data attributes. Pass this data holder to the main class at construction time, making it immutable. The main class can access data through the private holder, but external entities cannot modify it. This provides:
+Introduce a dedicated data holder class that stores all relevant attributes. The main class receives this holder at construction time and exposes only read access. Because the holder is immutable, no external code can tamper with the data once the object exists. This approach delivers:
 
-- Clear separation between data and behavior
-- Guaranteed immutability after construction
-- Controlled data access patterns
-- Reduced complexity in the main class
+- A clean boundary between what an object knows and what it does
+- Strong immutability guarantees from the moment of creation
+- Predictable, read-only data access
+- A simpler main class that focuses on behavior
 
 ## Structure
 
@@ -53,12 +53,12 @@ Create a separate private data holder class that encapsulates all data attribute
 
 ## When to Use
 
-- **Immutable Objects**: When you need objects that are effectively immutable after construction
-- **Complex Data**: When managing multiple related data attributes that should change together or not at all
-- **Value Objects**: For objects that represent values rather than entities with changing behavior
-- **Thread Safety**: When building thread-safe objects where data consistency is critical
-- **Framework Integration**: When integrating with systems that rely on immutable configuration objects
-- **Data Integrity**: When certain data combinations must remain consistent throughout the object's lifetime
+- **Immutable Objects**: When objects must not change after they are built
+- **Complex Data**: When several related attributes should be frozen as a unit
+- **Value Objects**: For objects representing data values rather than mutable entities
+- **Thread Safety**: When concurrent access demands that shared data never changes
+- **Framework Integration**: When configuration objects consumed by frameworks must remain stable
+- **Data Integrity**: When specific field combinations must stay consistent for the object's entire life
 
 ## Implementation (PHP 8.3+ Strict Types)
 
@@ -188,43 +188,43 @@ echo "Annual Benefit Value: $" . number_format($employee->getAnnualBenefitValue(
 
 ## Real-World Analogies
 
-**Passport/ID Document**: Once issued, a passport contains immutable data (name, number, expiration). While you carry it and reference it, you cannot change the data within it. Modifications require obtaining a new document.
+**Passport/ID Document**: After a passport is issued, the data printed in it -- name, number, expiry -- cannot be edited. You carry it and present it, but modifying it requires issuing an entirely new document.
 
-**Birth Certificate**: Contains fixed information that cannot be altered after issuance. Organizations reference it but cannot modify its contents.
+**Birth Certificate**: The facts recorded at birth are permanent. Institutions reference the certificate but have no ability to alter its contents.
 
-**Configuration File**: Once loaded into memory, configuration data is typically immutable. Components read from it but cannot change it, ensuring consistency across the application.
+**Configuration File**: Once application settings are loaded into memory, they typically become read-only. Every component reads from the same snapshot, ensuring uniform behavior across the system.
 
 ## Pros and Cons
 
 ### Advantages
-- **Immutability**: Guarantees data consistency after construction
-- **Thread Safety**: Immutable objects are inherently thread-safe
-- **Predictability**: Objects cannot change state unexpectedly
-- **Clear Contracts**: Intent to provide read-only data is explicit
-- **Reduced Bugs**: Eliminates class of bugs related to unexpected mutations
-- **Easy Testing**: Immutable objects are simpler to test and reason about
+- **Immutability**: Ensures data remains unchanged after the object is created
+- **Thread Safety**: Immutable data eliminates race conditions by design
+- **Predictability**: No part of the system can mutate the object's state unexpectedly
+- **Clear Contracts**: The read-only nature of data is immediately obvious
+- **Fewer Bugs**: Removes an entire category of defects caused by accidental mutation
+- **Testability**: Immutable objects are straightforward to construct and verify
 
 ### Disadvantages
-- **Initialization Cost**: All data must be provided at construction time
-- **Flexibility Loss**: Cannot adjust data after creation without creating new instance
-- **Memory Overhead**: May require creating new objects for updates
-- **Learning Curve**: Team must understand immutability patterns
-- **Boilerplate Code**: Additional DataHolder class adds verbosity
-- **Refactoring Complexity**: Changing data structure requires class redesign
+- **Up-front Initialization**: Every field must be supplied at construction time
+- **No In-place Updates**: Changing a single value requires building a new instance
+- **Memory Cost**: Frequent updates may produce many short-lived objects
+- **Adoption Effort**: Teams unfamiliar with immutability patterns need onboarding
+- **Extra Classes**: The separate data holder adds structural verbosity
+- **Refactoring Overhead**: Altering the data shape means touching both the holder and the main class
 
 ## Relations with Other Patterns
 
-**Value Object**: Private Class Data is often combined with Value Objects to create fully immutable data carriers.
+**Value Object**: Private Class Data pairs naturally with Value Objects to produce fully immutable data carriers.
 
-**Immutable Object**: This pattern is a concrete implementation of the Immutable Object pattern using composition.
+**Immutable Object**: This pattern is one concrete way to achieve the broader Immutable Object principle through composition.
 
-**Builder Pattern**: Often paired with Builder to safely construct complex DataHolder objects with validation.
+**Builder Pattern**: Builders are often used alongside this pattern to validate and assemble complex data holders step by step.
 
-**Adapter Pattern**: DataHolder can serve as an adapter between external data formats and internal object requirements.
+**Adapter Pattern**: A data holder can serve as a bridge between external data formats and the internal representation the main class expects.
 
-**Repository Pattern**: DataHolder objects are frequently returned by repositories as immutable data transfer objects.
+**Repository Pattern**: Repositories frequently return data holder instances as immutable transfer objects to calling code.
 
-**Snapshot Pattern**: Similar in approach but focuses on capturing object state at a point in time.
+**Snapshot Pattern**: Conceptually related, though the Snapshot pattern focuses on capturing an object's state at a particular moment rather than enforcing permanent immutability.
 
 ## Examples in Other Languages
 

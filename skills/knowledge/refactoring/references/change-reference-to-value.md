@@ -1,38 +1,38 @@
 ## Overview
 
-Change Reference to Value converts an identity-based, mutable reference object into an immutable value object whose equality is determined by its content. Apply this when objects are logically defined by their data rather than by which specific instance you hold.
+Change Reference to Value transforms a mutable, identity-based reference object into an immutable value object whose equality depends on its contents. Use this when objects are fundamentally defined by the data they carry rather than by which particular instance you are holding.
 
 ## Motivation
 
-Objects in object-oriented systems fall into two broad categories:
+Object-oriented systems distinguish between two kinds of objects:
 
-- **Reference objects**: Identity is what matters. Two objects with the same data are still distinct entities.
-- **Value objects**: Content is what matters. Two objects holding the same data are interchangeable.
+- **Reference objects**: Identity is paramount. Two objects containing identical data remain distinct entities.
+- **Value objects**: Data is paramount. Two objects holding the same data are fully interchangeable.
 
 Consider this refactoring when:
 
-1. The object is small and naturally immutable
-2. Comparisons throughout the codebase are based on content, not identity
-3. Many separate instances carry identical data
-4. Identity-based semantics cause confusion or lead to subtle bugs
-5. You need predictable, content-based equality checks
+1. The object is compact and has no meaningful mutable state
+2. Code throughout the system compares objects by their data rather than their identity
+3. Multiple independent instances carry duplicate data
+4. Identity-based semantics introduce confusion or hard-to-trace bugs
+5. You require reliable, content-driven equality checks
 
 ## Mechanics
 
 ### Before Refactoring
 
-1. Locate a reference object that would be better treated as a value
-2. Confirm it has a small number of fields and no meaningful mutable state
-3. Audit every place the object is created and compared
+1. Identify a reference object that should behave as a value
+2. Verify it has few fields and no state that legitimately changes
+3. Review every place the object is instantiated and compared
 
 ### Steps to Refactor
 
-1. Make the class immutable by removing setters and marking properties as final/readonly
-2. Implement content-based equality (e.g., an `equals()` method or PHP 8.1+ readonly semantics)
-3. Add hashing support if the object will be stored in hash-based collections
-4. Replace any identity comparisons (`===`) with equality method calls
-5. Provide factory or constructor-based creation; remove mutation methods
-6. Eliminate any remaining mutable operations
+1. Lock down mutability by removing setters and declaring properties as final or readonly
+2. Implement content-based equality (for example, an `equals()` method or PHP 8.1+ readonly semantics)
+3. Provide hashing support if the object will live inside hash-based collections
+4. Swap any identity comparisons (`===`) for equality method calls
+5. Offer factory or constructor-based creation; remove mutation methods
+6. Eliminate any leftover mutable operations
 
 ## Before/After PHP 8.3+ Code
 
@@ -162,12 +162,12 @@ final readonly class Money
 
 ## Benefits
 
-- **Predictable Equality**: Comparisons reflect data content rather than object identity
-- **Safety through Immutability**: Ruling out mutation prevents a wide class of state-related bugs
-- **Caching and Reuse**: Immutable value objects can be freely shared and cached
-- **Clear Semantics**: The code communicates that two objects with the same data are equivalent
-- **Compile-Time Guarantees**: Readonly properties enforce immutability at the language level
-- **Simple Testing**: Tests verify data values without tracking specific object instances
+- **Reliable Equality**: Comparisons reflect actual data instead of object identity
+- **Immutability Guarantees**: Preventing mutation eliminates an entire category of state-related bugs
+- **Shareability and Caching**: Immutable value objects can be passed around and cached without risk
+- **Expressive Semantics**: The code clearly conveys that two objects with matching data are equivalent
+- **Language-Level Enforcement**: Readonly properties enforce immutability at compile time
+- **Straightforward Testing**: Tests check data values without needing to track specific instances
 
 ## When NOT to Use
 

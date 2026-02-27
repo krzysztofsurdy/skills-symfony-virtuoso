@@ -2,15 +2,15 @@
 
 ## Overview
 
-Push Down Field is a refactoring technique that relocates a field from a superclass to the specific subclasses that actually use it. When a field is declared at the parent level but utilized by only certain child classes, this refactoring ensures better code organization and clarity.
+Push Down Field moves a field from a superclass into the specific subclasses that actually use it. When a field declared at the parent level is relevant to only some children, relocating it narrows the parent's scope and ensures each class holds only the state it genuinely needs.
 
 ## Motivation
 
-This situation arises when planned features don't materialize as expected or when functionality is extracted from a class hierarchy. A field in the parent class that serves only some subclasses creates unnecessary coupling and reduces coherency. By moving the field down to the subclasses that actually need it, you:
+Fields sometimes land in a parent class during early design or optimistic planning, then remain there even after only a subset of subclasses turns out to need them. A field that sits unused in most children clutters the parent interface, introduces misleading state, and couples unrelated parts of the hierarchy. Moving it down to the subclasses that depend on it:
 
-- Eliminate unnecessary dependencies between parent and child classes
-- Make class relationships clearer and more explicit
-- Reduce the interface of the parent class
+- Removes unnecessary baggage from classes that never touch the field
+- Makes each class's responsibilities immediately visible from its declaration
+- Trims the parent's surface area to genuinely shared concerns
 
 ## Mechanics
 
@@ -90,11 +90,11 @@ class Bicycle extends Vehicle
 
 ## Benefits
 
-- **Enhanced Coherency**: Fields reside where they're genuinely needed, improving class organization and clarity
-- **Reduced Coupling**: The parent class is no longer unnecessarily coupled to subclass-specific functionality
-- **Clearer Intent**: Makes it explicit which subclasses depend on which fields
-- **Independent Evolution**: Subclasses can independently evolve their field implementations and usage patterns
-- **Simpler Contracts**: The parent class interface becomes smaller and more focused on truly shared behavior
+- **Tighter Cohesion**: Each class holds only the state it works with, making its purpose self-evident
+- **Lighter Parent**: The superclass no longer carries fields that some children ignore
+- **Explicit Dependencies**: It is immediately clear which subclasses rely on a given field
+- **Independent Evolution**: Subclasses can change field types or access patterns without affecting siblings
+- **Focused Contracts**: The parent's interface reflects only genuinely shared behavior
 
 ## When NOT to Use
 

@@ -1,22 +1,22 @@
 ## Overview
 
-A Data Class is a code smell where a class serves primarily as a passive container for data with only getters and setters, lacking meaningful behavior or responsibility. These classes function as data transfer objects but miss opportunities to encapsulate logic that operates on that data. The class cannot perform independent actions with its own data.
+A Data Class is a class that exists solely as a passive container for data -- it exposes fields through getters and setters but contains no meaningful behavior. The class cannot act on its own data; instead, all the logic that operates on that data is pushed out into client code. This is a missed opportunity for encapsulation, and it often signals that the class has not yet been fully designed.
 
 ## Why It's a Problem
 
-- **Violated OOP Principles**: Objects should contain both data and behavior that operates on that data
-- **Scattered Logic**: Business logic ends up scattered across client classes instead of residing in cohesive objects
-- **Poor Cohesion**: Classes become fragile and disconnected from the operations they support
-- **Duplicated Code**: Multiple clients may implement similar logic to process the same data structure
-- **Harder Maintenance**: Changes to data structure or behavior require updates across multiple classes
+- **Behavior Without a Home**: Objects should bundle data with the operations that act on it; a data-only class pushes behavior into every consumer
+- **Logic Scattering**: Business rules that belong to the data end up dispersed across multiple client classes
+- **Fragile Coupling**: Client code becomes tightly bound to the data class's internal structure
+- **Duplicated Effort**: Multiple consumers independently implement the same calculations, validations, or transformations on the same data
+- **Costly Structural Changes**: Modifying the data layout requires updating every client that directly manipulates the fields
 
 ## Signs and Symptoms
 
-- Class contains only public fields or simple getter/setter methods
-- No business methods or meaningful operations beyond data access
-- Client code performs calculations, transformations, or validations using the class's data
-- Class has no reason to exist beyond holding data temporarily
-- Methods are trivial and don't interact with the object's state
+- The class contains only public fields or trivial getter/setter methods
+- No operations beyond basic data access exist on the class
+- Client code performs calculations, transformations, or validation using the class's fields
+- The class serves no purpose beyond temporarily holding data between other operations
+- Methods on the class do not meaningfully interact with the object's own state
 
 ## Before/After Examples
 
@@ -158,34 +158,12 @@ The key distinction: intentional DTOs with clear purpose differ from accidental 
 
 ## Related Smells
 
-- **Anemic Domain Model**: The larger architectural pattern where all behavior lives outside domain objects
-- **Middle Man**: Excessive delegation of method calls through wrapper classes
-- **Feature Envy**: When a method uses more of another object's fields than its own
-- **Primitive Obsession**: Using primitives instead of small domain objects to represent concepts
-- **Inappropriate Intimacy**: Classes that rely too heavily on internals of other classes (often paired with data classes)
+- **Anemic Domain Model**: The architectural-scale version of this problem, where all domain objects are data-only and behavior lives entirely in service layers
+- **Middle Man**: Excessive delegation through wrapper classes, which may themselves be data-class-like
+- **Feature Envy**: Methods that pull data from a data class to perform logic that belongs inside that class
+- **Primitive Obsession**: Using raw primitives instead of small domain objects -- data classes often consist entirely of primitives
+- **Inappropriate Intimacy**: Client classes that rely heavily on a data class's internal structure
 
 ---
 
-**Key Takeaway**: Classes should encapsulate both data and the behavior that operates on that data. If your class exists only to hold data while client code performs the work, move that work into the class where it belongs.
-
-## Refactoring.guru Guidance
-
-### Signs and Symptoms
-
-A class contains only fields and crude methods for accessing them (getters and setters). It is simply a container for data used by other classes and cannot independently operate on the data it owns.
-
-### Reasons for the Problem
-
-It is normal when a newly created class contains only a few public fields. But the true power of objects is that they can contain behavior or operations on their data.
-
-### Treatment
-
-- **Encapsulate Field**: Make public fields private and provide controlled access through getters and setters.
-- **Encapsulate Collection**: Apply similar protection to collection data.
-- **Move Method** and **Extract Method**: Find operations in client code that logically belong in the data class and migrate them there.
-- **Remove Setting Method** and **Hide Method**: Once the class gains meaningful behavior, restrict overly permissive access to its internals.
-
-### Payoff
-
-- Improves understanding and organization of code by centralizing operations on related data.
-- Helps discover duplication of client code that operates on the same data.
+**Key Takeaway**: A newly created class with only fields is normal -- it becomes a smell when it stays that way. The power of objects lies in combining data with the operations that act on it. When client code performs calculations, validations, or transformations using a class's fields, that logic belongs inside the class itself. Moving it there centralizes the behavior, eliminates duplication across clients, and makes the class a genuine participant in the system rather than an inert container.

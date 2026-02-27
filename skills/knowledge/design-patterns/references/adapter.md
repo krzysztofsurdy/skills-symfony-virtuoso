@@ -1,44 +1,44 @@
 ## Overview
 
-The Adapter design pattern is a structural pattern that enables objects with incompatible interfaces to collaborate. It wraps an object with an incompatible interface and exposes a new interface that the client expects, acting as a translator between two incompatible systems.
+The Adapter is a structural pattern that reconciles two interfaces that were never designed to work together. It places a thin wrapper around an existing class, exposing a new interface that matches what the client expects. The wrapper acts as a translator -- converting calls, parameters, and return values so that both sides communicate without either needing to change.
 
 ## Intent
 
-The Adapter pattern solves the problem of using a class that doesn't match the interface you need. It allows you to:
+The Adapter pattern targets scenarios where a class has the right behavior but the wrong interface for your context. It enables you to:
 
-- Make incompatible interfaces compatible
-- Integrate third-party libraries seamlessly
-- Decouple client code from specific implementations
-- Reuse existing classes with different interfaces
+- Make independently developed interfaces cooperate without modifying either one
+- Integrate third-party or legacy libraries into an application through a stable internal contract
+- Insulate client code from the details and quirks of external APIs
+- Reuse proven classes whose method signatures differ from what your system demands
 
 ## Problem and Solution
 
-**Problem:** You have a useful library or class that provides functionality you need, but its interface doesn't match what your application expects. Modifying the library is not possible or practical.
+**Problem:** A class or library provides exactly the functionality you need, but its interface does not match the contract your application relies on. Modifying the library is either impractical or out of your control.
 
-**Solution:** Create an adapter class that implements the interface your application expects while wrapping the incompatible class. The adapter translates calls from the expected interface to the actual interface of the wrapped class.
+**Solution:** Create an adapter class that satisfies the interface your application depends on and internally delegates every call to the incompatible class. The adapter absorbs all the translation work -- mapping method names, reshaping parameters, and converting return values -- so both the client and the adaptee remain unaware of each other.
 
 ## Structure
 
 The Adapter pattern involves these participants:
 
-- **Client:** Code that expects a specific interface
-- **Target Interface:** The interface the client expects
-- **Adapter:** Implements the target interface and wraps the adaptee
-- **Adaptee:** The existing class with an incompatible interface
+- **Client:** Code that depends on a specific interface
+- **Target Interface:** The contract the client depends on
+- **Adapter:** Bridges the gap by implementing the target interface and wrapping the adaptee
+- **Adaptee:** The pre-existing class with a different interface
 
-Two main approaches:
-1. **Class Adapter:** Uses inheritance (multiple inheritance)
-2. **Object Adapter:** Uses composition (preferred in PHP)
+Two main flavors:
+1. **Class Adapter:** Leverages inheritance (requires multiple inheritance support)
+2. **Object Adapter:** Leverages composition (the standard approach in PHP)
 
 ## When to Use
 
 Use the Adapter pattern when:
 
-- Working with legacy code or third-party libraries with incompatible interfaces
-- You need to reuse existing classes with different expected interfaces
-- You want to create a common interface for a group of classes
-- Integrating multiple systems with different APIs
-- You need to avoid modifying existing code (Open/Closed Principle)
+- You need to integrate legacy code or third-party libraries whose interfaces differ from your application's expectations
+- You want to repurpose existing classes without altering them
+- You are building a common abstraction over multiple systems with varying APIs
+- Connecting disparate subsystems that were developed independently
+- You want to honor the Open/Closed Principle by extending behavior without modifying source
 
 ## Implementation (PHP 8.3+)
 
@@ -98,33 +98,33 @@ if ($adapter->process(99.99)) {
 
 ## Real-World Analogies
 
-- **Power Adapter:** An electrical outlet adapter allows you to plug European plugs into American sockets by translating the physical interface.
-- **Language Interpreter:** A translator adapts communication between people speaking different languages.
-- **Database Drivers:** Database abstraction layers adapt different database APIs to a common interface.
-- **Media Player Codec:** Video players use codecs to adapt different media formats to a playable interface.
+- **Travel Power Adapter:** An international plug adapter reshapes your device's prongs to fit a foreign socket. The electricity is identical -- only the physical interface differs.
+- **Conference Interpreter:** A human interpreter translates between two speakers with different native languages, enabling a conversation that neither could hold directly.
+- **Database Abstraction Libraries:** ORMs and DBAL layers normalize vendor-specific SQL dialects behind a single query interface that the application uses uniformly across database engines.
+- **Video Codecs:** A media player relies on codecs to bridge different encoding formats with its internal rendering pipeline, playing any file through the same playback API.
 
 ## Pros and Cons
 
 **Pros:**
-- Single Responsibility Principle: Separates interface conversion from business logic
-- Open/Closed Principle: Add new adapters without changing existing code
-- Flexibility: Use multiple implementations interchangeably
-- Reusability: Leverage existing classes without modification
-- Loose Coupling: Client depends on abstraction, not concrete implementations
+- Interface translation lives in a dedicated class, isolated from business logic (Single Responsibility)
+- Additional adapters can be introduced without altering existing code (Open/Closed)
+- Implementations become interchangeable behind a stable contract
+- Original classes remain untouched and fully reusable elsewhere
+- Client code programs against abstractions rather than concrete dependencies
 
 **Cons:**
-- Increased Complexity: Additional classes can make codebase more complex
-- Performance Overhead: Extra layer of indirection in method calls
-- Over-Engineering: Simple cases don't need adaptation patterns
-- Harder Debugging: Stack traces become longer with wrapper layers
+- Each adapted interface requires at least one new class, expanding the project's file count
+- The extra delegation layer introduces a small runtime cost
+- For trivial integrations, a full adapter adds ceremony that a simple wrapper would avoid
+- Deeper call stacks make stack traces harder to follow during debugging
 
 ## Relations with Other Patterns
 
-- **Decorator:** Similar structure (wrapping), but Decorator adds responsibility while Adapter converts interface
-- **Facade:** Simplifies complex subsystems while Adapter makes incompatible interfaces compatible
-- **Bridge:** Similar intent of decoupling abstraction from implementation
-- **Strategy:** Both encapsulate varying behavior; Adapter often used with Strategy
-- **Factory Method:** Can be used with Adapter to create appropriate adapters dynamically
+- **Decorator:** Both wrap an object, but Decorator layers new behavior onto it while Adapter converts its interface to a different one.
+- **Facade:** Facade presents a simplified view of a complex subsystem; Adapter makes an incompatible interface conform to an expected contract.
+- **Bridge:** Both separate abstraction from implementation, but Bridge is an intentional upfront design choice while Adapter is applied after the fact to fix a mismatch.
+- **Strategy:** Both allow swappable behavior behind an interface; Adapter is frequently paired with Strategy for pluggable third-party integrations.
+- **Factory Method:** A factory can choose and instantiate the correct adapter at runtime based on configuration or context.
 
 ## Additional Considerations
 

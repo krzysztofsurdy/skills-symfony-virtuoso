@@ -1,33 +1,28 @@
 ## Overview
 
-Encapsulate Field is a fundamental refactoring that replaces direct access to a class's public fields with getter and setter methods. Unlike Self Encapsulate Field which applies to internal class usage, this refactoring focuses on controlling external access by forcing clients to interact with fields through methods rather than direct property access.
-
-This creates a boundary between the internal state representation and the external interface, enabling you to change how data is stored without affecting code that uses the class.
+Encapsulate Field replaces direct access to a public class field with getter and setter methods. This draws a boundary between the internal representation and the external contract, allowing you to add validation, change storage mechanisms, or introduce computed properties without affecting any calling code.
 
 ## Motivation
 
-**Why encapsulate fields for external access:**
+**Why wrap fields in accessor methods:**
 
-1. **Control External Access**: Prevent unauthorized or invalid modifications from client code
-2. **Hide Implementation Details**: Storage mechanism becomes an internal concern
-3. **Add Validation**: Enforce constraints and business rules at the boundary
-4. **Enable Change**: Switch from fields to computed properties without breaking clients
-5. **Observable Boundaries**: Clear separation between public interface and private state
-6. **Future Flexibility**: Add side effects, caching, or notifications later
-7. **Type Safety**: Enforce type constraints through method signatures
+1. **Guard External Access**: Prevent callers from assigning invalid or inconsistent values
+2. **Conceal Storage Details**: How data is stored becomes an internal decision
+3. **Enforce Constraints**: Setter methods can reject values that violate business rules
+4. **Support Evolution**: Swap a stored field for a computed property without breaking clients
+5. **Clean Boundaries**: Public methods form a stable contract; private fields can change freely
+6. **Enable Side Effects**: Add logging, caching, or event notifications later without a signature change
+7. **Stronger Typing**: Method signatures enforce types more explicitly than raw field access
 
 ## Mechanics
 
-The refactoring process involves:
-
-1. Identify public or protected fields accessed by external code
-2. Create a public getter method that returns the field's current value
-3. Create a public setter method that assigns a new value to the field
-4. Find all external accesses to the field (in client code)
-5. Replace direct field reads with getter method calls
-6. Replace direct field writes with setter method calls
-7. Make the field private
-8. Add validation and constraints to setter methods
+1. Locate public or protected fields that external code reads or writes
+2. Create a getter method that returns the field value
+3. Create a setter method that assigns the value (with optional validation)
+4. Find every external read and replace it with a getter call
+5. Find every external write and replace it with a setter call
+6. Change the field visibility to private
+7. Add validation or constraints inside the setter
 
 ## Before/After PHP 8.3+ Code
 
@@ -153,32 +148,31 @@ $product->applyDiscount(10); // Controlled, validated change
 
 ## Benefits
 
-- **Validation**: Enforce business rules and constraints in setter methods
-- **Encapsulation**: Hide implementation details from client code
-- **Change Control**: Switch storage mechanism without affecting clients
-- **Computed Properties**: Replace simple fields with derived calculations
-- **Observable Changes**: Add logging, notifications, or triggers when state changes
-- **Type Enforcement**: Strict typing through method signatures
-- **Documentation**: Method names and docblocks clarify intent
-- **Flexibility**: Add side effects or lazy evaluation without breaking contracts
+- **Input Validation**: Setters reject values that break business rules
+- **Hidden Internals**: Callers interact with a stable method-based contract
+- **Seamless Migration**: Switch from a stored field to a derived computation without touching clients
+- **Computed Properties**: A getter can calculate its return value on the fly
+- **Observable State Changes**: Setters can trigger logging, events, or cache invalidation
+- **Strict Types**: Method signatures give callers and IDEs precise type information
+- **Self-Documenting**: Method names and signatures describe what the class offers
+- **Room to Grow**: New behavior can be layered into accessors without altering the public contract
 
 ## When NOT to Use
 
-- **Value Objects**: Immutable, final objects might not benefit
-- **DTOs**: Simple data containers in private layers may not need encapsulation
-- **Internal Helpers**: Private utility classes accessed only internally
-- **Performance-Critical Hot Paths**: Though modern PHP optimizes method calls well
-- **Already Encapsulated**: If clients already use methods exclusively
-- **Frequent Direct Access**: If changing numerous access points is costly and low-value
+- **Immutable Value Objects**: Final readonly classes may not need setters at all
+- **Simple DTOs in Private Layers**: Internal data carriers with no validation needs may not benefit
+- **Internal Utility Classes**: Private helpers with no outside consumers
+- **Already Encapsulated**: If callers already go through methods, the work is done
+- **Minimal Payoff**: Wrapping a field that will never need validation or change adds ceremony for little gain
 
 ## Related Refactorings
 
-- **Self Encapsulate Field**: Encapsulate fields accessed internally within a class
-- **Hide Delegate**: Encapsulate another object's fields within a wrapper
-- **Replace Data Value with Object**: Convert primitive field to a dedicated class
-- **Extract Class**: Move related fields into a separate class
-- **Introduce Parameter Object**: Group related fields into a parameter object
-- **Remove Setter**: Make fields read-only by removing setter methods
+- **Self Encapsulate Field**: Applies the same idea to internal access within the class itself
+- **Hide Delegate**: Wraps another object's fields behind the delegating class
+- **Replace Data Value with Object**: Promotes a primitive field into a dedicated class
+- **Extract Class**: Moves related fields into their own class
+- **Introduce Parameter Object**: Groups related fields into a single parameter object
+- **Remove Setter**: Makes fields read-only by dropping the setter
 
 ## Examples in Other Languages
 

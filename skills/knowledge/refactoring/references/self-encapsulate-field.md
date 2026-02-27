@@ -1,31 +1,31 @@
 ## Overview
 
-Self Encapsulate Field is a fundamental refactoring technique that involves replacing direct access to a class field with getter and setter methods. This creates an intermediary layer between the field and its users, allowing for future modifications without affecting external code.
+Self Encapsulate Field is a foundational refactoring that replaces direct field access within a class with getter and setter methods. This introduces an intermediary layer between the field and all code that reads or writes it, allowing the class to evolve its internal representation without disrupting external consumers.
 
-Rather than accessing a field directly (e.g., `$this->name`), you create getter and setter methods (`getName()` and `setName()`) and route all access through these methods. This is particularly valuable in larger systems where fields may need validation, notification, or lazy initialization.
+Instead of referencing a field directly (e.g., `$this->name`), you route all access through accessor methods (`getName()` and `setName()`). This becomes especially valuable in larger systems where fields eventually need validation, change notification, or deferred initialization.
 
 ## Motivation
 
 **Why encapsulate fields:**
 
-1. **Flexibility**: Future code changes to field storage or computation become possible without breaking client code
-2. **Validation**: Setters can enforce constraints and business rules
-3. **Notifications**: You can trigger side effects when fields change (observers, dirty flags, etc.)
-4. **Lazy initialization**: Getters can defer expensive object creation until actually needed
-5. **Single Responsibility**: Separates data access from data modification logic
-6. **Controlled Evolution**: Allows gradual introduction of computed properties or derived values
+1. **Flexibility**: Storage format or computation logic can change without breaking callers
+2. **Validation**: Setters can enforce constraints and business rules at the point of assignment
+3. **Side effects**: Field changes can trigger observers, dirty flags, or audit logging
+4. **Lazy initialization**: Getters can delay expensive object creation until first access
+5. **Single Responsibility**: Separates the concern of data access from data storage
+6. **Gradual evolution**: Provides a path to introduce computed properties or derived values over time
 
 ## Mechanics
 
-The refactoring process involves:
+The refactoring proceeds as follows:
 
-1. Create a getter method that returns the field's current value
-2. Create a setter method that assigns a new value to the field
-3. Find all direct accesses to the field (both reads and writes)
-4. Replace field reads with getter calls
-5. Replace field assignments with setter calls
-6. Make the field private or protected
-7. Consider adding validation or side effects in setters
+1. Write a getter method that returns the field value
+2. Write a setter method that assigns a new value to the field
+3. Locate every direct read of the field throughout the class
+4. Replace each direct read with a call to the getter
+5. Replace each direct write with a call to the setter
+6. Restrict the field's visibility to private or protected
+7. Add validation or side-effect logic inside the setter as needed
 
 ## Before/After PHP 8.3+ Code
 
@@ -143,30 +143,30 @@ echo $user->getStatus(); // Through getter
 
 ## Benefits
 
-- **Validation & Constraints**: Enforce business rules in setters before state changes
-- **Change Location**: Centralize field modification logic for easier debugging
-- **Lazy Initialization**: Defer expensive computations until needed
-- **Observable State**: Add notifications when fields change (observer pattern)
-- **Computed Properties**: Fields can become derived from other values
-- **Backward Compatible**: Change implementation without affecting public contracts
-- **Debugging**: Set breakpoints in getters/setters to trace field access
-- **Polymorphic Behavior**: Override getters/setters in subclasses
+- **Validation and constraints**: Business rules are enforced at the moment of assignment
+- **Centralized modification**: All changes to a field flow through a single point, simplifying debugging
+- **Lazy initialization**: Expensive computations can be deferred until the getter is first called
+- **Observable state**: Observers or event handlers can be triggered on field changes
+- **Computed properties**: Fields can be transparently replaced by derived values
+- **Backward compatibility**: Internal representation can change without altering the public API
+- **Debugging support**: Breakpoints in getters and setters make it easy to trace access
+- **Polymorphic behavior**: Subclasses can override accessors to customize field behavior
 
 ## When NOT to Use
 
-- **Value Objects**: Immutable value classes with final fields may not need encapsulation
-- **DTOs**: Simple data transfer objects might not benefit from getter/setter overhead
-- **Performance-Critical Code**: High-frequency access might suffer minimal overhead impact (though usually negligible)
-- **Legacy Systems**: If the codebase uses public fields universally, massive refactoring may not be justified
-- **Getters/Setters Exist**: If the pattern is already established, applying it further offers diminishing returns
+- **Value Objects**: Immutable value classes with final fields may not benefit from encapsulation
+- **DTOs**: Simple data transfer objects might not justify the overhead of getters and setters
+- **High-frequency access**: Accessor methods add negligible overhead, but in extreme cases it may be a consideration
+- **Wholesale public fields**: If the entire codebase relies on public fields, a massive encapsulation effort may not be justified
+- **Already encapsulated**: If getters and setters are already in place, further application yields diminishing returns
 
 ## Related Refactorings
 
-- **Replace Data Value with Object**: Convert primitive field to a dedicated object
-- **Remove Setter**: For immutable or write-once fields, eliminate setters
-- **Replace Temp with Query**: Extract field initialization logic into methods
-- **Hide Delegate**: Encapsulate dependencies within the class
-- **Introduce Parameter Object**: Group related fields into a single parameter object
+- **Replace Data Value with Object**: Upgrade a primitive field to a dedicated object with richer behavior
+- **Remove Setter**: Eliminate setters for fields that should be immutable or write-once
+- **Replace Temp with Query**: Extract field initialization logic into query methods
+- **Hide Delegate**: Encapsulate internal dependencies behind the class's own interface
+- **Introduce Parameter Object**: Bundle related fields into a single parameter object
 
 ## Examples in Other Languages
 

@@ -2,23 +2,23 @@
 
 ## Overview
 
-Refused Bequest occurs when a subclass inherits from a parent class but only uses some (or none) of the inherited methods and properties. The subclass refuses to fully embrace the parent's interface, either by ignoring inherited members or overriding them to throw exceptions. This indicates a fundamental problem with the inheritance hierarchy and violates the Liskov Substitution Principle.
+Refused Bequest occurs when a subclass inherits from a parent but ignores or actively rejects much of what it receives. The subclass might leave inherited methods unused, or override them solely to throw exceptions. This is a strong signal that the inheritance relationship is wrong -- the subclass is borrowing code rather than genuinely being a specialized version of the parent. The Liskov Substitution Principle is the clearest casualty: you cannot safely substitute the child where the parent is expected.
 
 ## Why It's a Problem
 
-- **Violates "is-a" relationship**: Inheritance should represent a genuine conceptual relationship, not just code reuse
-- **Misleads developers**: Creates confusion about class responsibilities and relationships
-- **Increases coupling**: Forced dependencies between unrelated concepts
-- **Breaks polymorphism**: Subclasses that throw exceptions violate substitutability
-- **Maintenance burden**: Changes to parent classes cascade unpredictably
+- **False "is-a" Relationship**: Inheritance should express a genuine conceptual specialization, not serve as a shortcut for code reuse
+- **Developer Confusion**: The class hierarchy sends misleading signals about what each class represents and how it should be used
+- **Artificial Coupling**: The subclass becomes dependent on a parent it has little real connection to
+- **Broken Substitutability**: Subclasses that throw exceptions on inherited methods cannot be used interchangeably with the parent
+- **Unpredictable Cascading**: Changes to the parent ripple into the subclass in unexpected ways
 
 ## Signs and Symptoms
 
-- A subclass overrides parent methods just to throw exceptions
-- Most inherited methods/properties go unused in the subclass
-- The parent and child classes represent fundamentally different concepts
-- You find yourself with conditional logic checking the actual type instead of trusting polymorphism
-- The inheritance feels forced or arbitrary in code reviews
+- A subclass overrides parent methods only to throw exceptions or return dummy values
+- The majority of inherited methods and properties go unused in the subclass
+- Parent and child represent fundamentally different domain concepts
+- Client code uses type checks or instanceof rather than trusting polymorphism
+- Code reviewers question why the inheritance relationship exists
 
 ## Before/After
 
@@ -213,23 +213,7 @@ Refused Bequest is acceptable in these scenarios:
 
 ## Related Smells
 
-- **Parallel Inheritance Hierarchies**: Multiple inheritance chains that mirror each other
-- **Inappropriate Intimacy**: Classes that know too much about each other's internals
-- **Large Class**: Often the root cause when a parent class does too much
-- **Lazy Class**: Subclass that adds little value over its parent
-
-## Refactoring.guru Guidance
-
-### Signs and Symptoms
-A subclass uses only some of the methods and properties inherited from its parents. The hierarchy is off-kilter. The unneeded methods may simply go unused or be redefined to give off exceptions.
-
-### Reasons for the Problem
-Someone was motivated to create inheritance between classes only by the desire to reuse the code in a superclass. But the superclass and subclass are completely different.
-
-### Treatment
-- **Replace Inheritance with Delegation**: Use when the inheritance relationship does not actually make sense and the classes share little in common
-- **Extract Superclass**: Remove unneeded fields and methods from the subclass, then extract common elements into a new parent class that both the original classes can inherit from
-
-### Payoff
-- Improved code clarity and organization
-- Eliminates confusing hierarchies where unrelated concepts inherit from one another
+- **Parallel Inheritance Hierarchies**: Multiple inheritance chains that mirror each other's structure
+- **Inappropriate Intimacy**: Classes that know too much about each other's implementation details
+- **Large Class**: An overly broad parent class is a common root cause -- the child only needs a fraction of what the parent offers
+- **Lazy Class**: A subclass that contributes almost nothing beyond its parent

@@ -1,22 +1,22 @@
 ## Overview
 
-Divergent Change occurs when a single class is modified for different reasons and in unrelated ways. Unlike Shotgun Surgery (which involves modifying multiple classes for one reason), Divergent Change means one class has multiple reasons to change. This indicates the class has too many responsibilities and violates the Single Responsibility Principle.
+Divergent Change occurs when a single class must be modified for multiple, unrelated reasons. It is the mirror image of Shotgun Surgery: where Shotgun Surgery means one change touches many classes, Divergent Change means many different changes all land in the same class. This is a direct violation of the Single Responsibility Principle -- the class has accumulated too many distinct responsibilities.
 
 ## Why It's a Problem
 
-- **Maintenance Burden**: Each change requires understanding and modifying scattered, unrelated parts of the same class
-- **Reduced Cohesion**: Methods serve different concerns, making the class harder to understand as a whole
-- **Higher Bug Risk**: Modifications in one area may unexpectedly affect unrelated functionality
-- **Poor Testability**: Multiple responsibilities require complex test scenarios
-- **Evolution Difficulty**: Adding new features requires modifying existing classes in unexpected ways
+- **Tangled Maintenance**: Each change forces you to navigate unrelated parts of the same class, increasing the risk of accidental side effects
+- **Weak Cohesion**: Methods within the class serve fundamentally different concerns, making the class hard to reason about as a unit
+- **Collateral Damage**: Modifying one responsibility can inadvertently break another that shares the same class
+- **Difficult Testing**: Multiple concerns interleaved in one class demand complex, scenario-heavy test setups
+- **Friction on Growth**: Adding new features means modifying an already-overloaded class rather than creating focused new components
 
 ## Signs and Symptoms
 
-- A class changes for multiple, unrelated reasons (e.g., when adding a product type, you modify finding, displaying, and ordering methods)
-- Methods in the class serve fundamentally different business concerns
-- Comments describing different "sections" or "parts" of the class functionality
-- Difficulty naming the class because it does too many things
-- Some instance variables are only used by certain methods
+- A single class changes for multiple unrelated reasons (e.g., adding a product type requires editing finder, display, and ordering methods in the same class)
+- Methods within the class address fundamentally different business concerns
+- Inline comments or region markers dividing the class into conceptual "sections"
+- The class is hard to name concisely because it does too many things
+- Certain instance variables are only relevant to a subset of the class's methods
 
 ## Before/After
 
@@ -192,24 +192,9 @@ Reduce coupling and improve testability by injecting dependencies rather than ma
 
 ## Related Smells
 
-- **Shotgun Surgery**: The opposite problem—one change requires modifications across many classes
-- **God Object**: A more severe version where one class handles too many responsibilities
-- **Feature Envy**: Classes accessing too much of another class's data, indicating misplaced methods
-- **Inappropriate Intimacy**: Classes that know too much about each other's internals
+- **Shotgun Surgery**: The inverse problem -- a single change scattered across many classes, while Divergent Change is many changes funneling into one class
+- **God Object**: An extreme form of Divergent Change where one class has become the center of gravity for most of the system
+- **Feature Envy**: Methods that work primarily with another class's data, suggesting they belong elsewhere
+- **Inappropriate Intimacy**: Classes entangled in each other's internals, often a companion to classes with too many responsibilities
 
-## Refactoring.guru Guidance
-
-### Signs and Symptoms
-You find yourself having to change many unrelated methods when you make changes to a class. For example, when adding a new product type you have to change the methods for finding, displaying, and ordering products.
-
-### Reasons for the Problem
-Divergent modifications frequently stem from inadequate program architecture or repetitive coding practices (copy-paste programming).
-
-### Treatment
-- **Extract Class** to split up the behavior of the class into separate components
-- **Extract Superclass** and **Extract Subclass** when multiple classes exhibit identical behavior
-
-### Payoff
-- Improves code organization
-- Reduces code duplication
-- Simplifies support
+Divergent Change often stems from poor initial architecture or copy-paste habits that pile unrelated functionality into a convenient existing class. The remedy is straightforward: give each responsibility its own class.

@@ -1,6 +1,6 @@
 ## Overview
 
-Preserve Whole Object is a refactoring technique that involves passing an entire object as a method parameter rather than extracting and passing individual values from that object. This consolidates the interaction between objects and improves code maintainability.
+Preserve Whole Object passes an entire object as a method argument instead of pulling individual values out of it first. When a caller extracts several fields from an object only to hand them to another method, passing the object itself simplifies the call site and keeps the extraction logic in one place.
 
 Instead of:
 ```php
@@ -16,7 +16,7 @@ $withinPlan = $plan->withinRange($daysTempRange);
 
 ## Motivation
 
-When method requirements change, extracting multiple values from objects at numerous call sites becomes burdensome and error-prone. By consolidating this logic within the method itself, updates need only occur in one location rather than scattered throughout the codebase.
+Extracting multiple values from an object at every call site is repetitive and fragile. If the receiving method later needs an additional piece of data, every caller must be updated to extract and pass the new value. By handing over the whole object, the receiving method can reach for whatever it needs internally, and callers remain untouched when requirements evolve.
 
 Key motivations include:
 - **Reduce boilerplate**: Eliminate repetitive extraction of values before method calls
@@ -113,11 +113,11 @@ class Client
 
 ## Benefits
 
-- **Reduced Coupling to Data**: Methods don't need to know which specific values to extract
-- **Better Maintainability**: Adding new data needs to the method requires changes only in the method body
-- **Cleaner Interfaces**: Shorter parameter lists make method signatures more readable
-- **Increased Flexibility**: The receiving method can access any data it needs from the object
-- **Future-Proof**: When requirements evolve, fewer call sites need modification
+- **Shorter Parameter Lists**: Method signatures become concise and self-explanatory
+- **Resilient to Change**: The receiving method can access additional data without altering callers
+- **Less Duplication**: Extraction logic lives inside the method, not at every call site
+- **Stronger Abstractions**: Parameters express domain concepts rather than raw primitives
+- **Simpler Call Sites**: Callers pass one object instead of juggling several extracted values
 
 ## When NOT to Use
 

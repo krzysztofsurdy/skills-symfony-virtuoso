@@ -2,19 +2,19 @@
 
 ## Overview
 
-Parallel Inheritance Hierarchies is a code smell where you maintain multiple class hierarchies that mirror each other's structure. Whenever you need to create a subclass in one hierarchy, you find yourself creating a matching subclass in another hierarchy. This creates unnecessary duplication and tight coupling between seemingly independent class structures.
+Parallel Inheritance Hierarchies emerge when two or more class hierarchies mirror each other's structure. Adding a subclass to one hierarchy compels you to add a corresponding subclass to the other. What starts as a minor inconvenience compounds as the hierarchies grow, producing systematic duplication and fragile coupling between structures that should be independent.
 
 ## Why It's a Problem
 
-Parallel hierarchies increase maintenance burden as changes must be propagated across multiple structures. The dependencies between hierarchies become implicit and fragile, making code harder to understand and modify. As both hierarchies grow, the duplication becomes increasingly difficult to manage and increases the risk of inconsistencies.
+Every new class added to one hierarchy demands a matching class in the other, doubling the maintenance effort. The implicit dependencies between the two structures are easy to overlook and hard to keep synchronized. As the hierarchies expand, the risk of inconsistencies rises, and the cognitive overhead of understanding the full picture grows substantially. Refactoring one hierarchy without accidentally breaking the other becomes increasingly difficult.
 
 ## Signs and Symptoms
 
-- Creating a new subclass in one hierarchy forces you to create a corresponding subclass in another
-- Class hierarchies grow in lockstep with identical or very similar structures
-- Multiple abstract base classes with mirrored method signatures
-- Changes to one hierarchy's structure require parallel changes elsewhere
-- High cohesion between nominally independent class hierarchies
+- Adding a subclass in one hierarchy always requires creating a matching subclass elsewhere
+- Two hierarchies grow in tandem with nearly identical structures
+- Abstract base classes in separate hierarchies have mirrored method signatures
+- Structural changes in one hierarchy force corresponding adjustments in the other
+- Strong coupling between hierarchies that are nominally independent
 
 ## Before/After Examples
 
@@ -146,25 +146,9 @@ When parallel hierarchies represent different concerns (e.g., export format vs. 
 
 ## Related Smells
 
-- **Duplicate Code**: Parallel hierarchies are a manifestation of systematic duplication across multiple classes.
-- **Feature Envy**: When methods in one hierarchy frequently reference another hierarchy's structure.
-- **God Class**: Parallel hierarchies sometimes emerge when a single domain concept is split incorrectly.
-- **Middle Man**: Composition can introduce unnecessary delegation if not designed carefully.
+- **Duplicate Code**: Parallel hierarchies are a structural form of systematic duplication spread across multiple classes.
+- **Feature Envy**: Methods in one hierarchy that constantly reference the other hierarchy's data suggest the logic belongs elsewhere.
+- **God Class**: Parallel hierarchies sometimes result from incorrectly splitting a single domain concept.
+- **Middle Man**: Consolidating via composition can introduce pointless delegation if not designed thoughtfully.
 
-## Refactoring.guru Guidance
-
-### Signs and Symptoms
-Whenever you create a subclass for a class, you find yourself needing to create a subclass for another class. Class hierarchies grow in tandem, creating unnecessary structural coupling.
-
-### Reasons for the Problem
-While small hierarchies pose no issues, problems emerge as new classes accumulate. The difficulty in implementing changes increases proportionally with hierarchy expansion.
-
-### Treatment
-- First, establish references between instances of one hierarchy to instances of another
-- Then eliminate the redundant hierarchy by employing **Move Method** and **Move Field** refactoring techniques
-
-### Payoff
-- Reduces code duplication
-- Can improve overall code organization and structure
-
-Note: If deduplication attempts produce messier code, abandoning the refactoring may be the pragmatic choice.
+Note: Small parallel hierarchies may not cause noticeable pain, but the cost grows proportionally with each new subclass pair. If attempting to consolidate the hierarchies produces messier code than the duplication itself, it may be more pragmatic to leave them as-is.

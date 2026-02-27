@@ -2,13 +2,11 @@
 
 ## Overview
 
-Replace Delegation with Inheritance is a refactoring technique that converts a class that delegates to another class into a subclass of that delegate. This eliminates unnecessary delegation methods when a class delegates its entire public interface to a single delegate object.
-
-Instead of maintaining wrapper methods that forward calls, the class inherits directly from the delegate, gaining direct access to all parent methods.
+Replace Delegation with Inheritance converts a class that wraps another object and forwards most of its methods into a subclass of that object. When a class delegates virtually its entire public interface to a single collaborator, the wrapper layer adds mechanical boilerplate without contributing meaningful abstraction. Inheriting directly removes the forwarding code and lets the subclass access parent behavior natively.
 
 ## Motivation
 
-While delegation is powerful and flexible, this advantage diminishes when:
+Delegation is a powerful composition tool, but its advantage erodes when:
 
 - A class delegates to **only one** delegate object
 - The class delegates **all or most** public methods of that delegate
@@ -136,15 +134,15 @@ final class Employee extends PersonAddress
 
 ## Benefits
 
-- **Reduced code duplication**: Eliminates boilerplate delegation methods
-- **Improved maintainability**: Fewer methods to update when parent class changes
-- **Clearer intent**: Direct inheritance semantically expresses "is-a" relationships
-- **Simpler API**: One coherent interface instead of repeated wrapper methods
-- **Better polymorphism**: Subclass can be used wherever parent is expected
+- **Eliminated boilerplate**: Forwarding methods vanish, replaced by inherited behavior
+- **Automatic synchronization**: Changes to the parent class are picked up without touching the subclass
+- **Semantic clarity**: An "is-a" relationship is expressed through the type system rather than implied by code patterns
+- **Unified interface**: One coherent class instead of mirrored method signatures
+- **Polymorphic substitution**: The subclass can be used wherever the parent type is expected
 
 ## When NOT to Use
 
-- **Partial delegation**: If your class only delegates *some* methods, not all—this violates Liskov Substitution Principle and breaks polymorphic contracts
+- **Partial delegation**: If your class only delegates *some* methods, not all -- this violates Liskov Substitution Principle and breaks polymorphic contracts
 - **Multiple inheritance needed**: If the class already extends another class (use composition instead)
 - **Semantically incorrect**: If the relationship is truly "has-a" not "is-a"
 - **Encapsulation breaking**: If inheritance exposes methods that should remain hidden
@@ -153,7 +151,7 @@ final class Employee extends PersonAddress
 ## Related Refactorings
 
 - **Extract Superclass**: Create a common parent for multiple delegating classes
-- **Hide Delegate**: Reverse operation—convert inheritance to delegation for better encapsulation
+- **Hide Delegate**: Reverse operation -- convert inheritance to delegation for better encapsulation
 - **Replace Type Code with Subclasses**: Use inheritance to handle variant behaviors
 - **Form Template Method**: When subclasses have similar structure, extract common behavior
 - **Introduce Strategy Pattern**: Use composition when multiple algorithms apply to same data

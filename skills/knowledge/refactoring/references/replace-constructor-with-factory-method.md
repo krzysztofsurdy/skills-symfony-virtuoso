@@ -1,12 +1,12 @@
 ## Overview
 
-Replace Constructor with Factory Method refactoring creates a static factory method to handle object instantiation instead of relying on direct constructor calls. The factory method encapsulates creation logic and can perform additional operations beyond simple initialization, including returning appropriate subclass instances, caching objects, or handling complex initialization sequences.
+Replace Constructor with Factory Method introduces a static creation method that takes over the job of instantiating objects. A factory method can perform logic that constructors cannot -- selecting which subclass to return, caching previously created instances, or expressing intent through a descriptive name. The constructor itself often becomes private, funneling all creation through the factory.
 
 ## Motivation
 
 This refactoring becomes essential in several scenarios:
 
-1. **Subclass-based type handling**: After refactoring type codes into subclasses, factory methods enable returning the correct subclass instance based on parameters—something constructors cannot accomplish.
+1. **Subclass-based type handling**: After refactoring type codes into subclasses, factory methods enable returning the correct subclass instance based on parameters -- something constructors cannot accomplish.
 
 2. **Complex initialization logic**: When constructors perform operations beyond simple field assignment, a factory method can better express intent and manage this complexity.
 
@@ -141,11 +141,11 @@ $conn2 = DatabaseConnection::create('localhost', 'mydb');
 
 ## Benefits
 
-- **Polymorphic returns**: Factory methods can return subclass instances selected by internal logic
-- **Descriptive naming**: Method names like `create()` or `fromString()` clarify purpose better than generic constructors
-- **Object reuse**: Can return existing instances instead of always creating new objects
-- **Separated concerns**: Construction logic and initialization are properly separated
-- **Testability**: Easier to mock and test factory methods compared to constructors
+- **Subclass selection**: The factory can inspect arguments and return the appropriate concrete type
+- **Meaningful names**: Methods like `createFromArray()` or `withDefaults()` reveal purpose far better than a generic constructor
+- **Instance reuse**: The factory can return cached objects rather than always allocating fresh ones
+- **Clean separation**: Creation decisions live in the factory, keeping the constructor focused on field assignment
+- **Test-friendly**: Factories are straightforward to stub or mock in unit tests
 
 ## When NOT to Use
 

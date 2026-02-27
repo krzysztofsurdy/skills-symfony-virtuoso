@@ -1,33 +1,33 @@
 ## Overview
 
-Change Value to Reference is a refactoring technique that converts a value object (created and discarded frequently) into a reference object (managed globally and reused). This is particularly useful when you have multiple copies of the same object that should always reflect the same state. Instead of creating new instances, you maintain a single instance and share references to it.
+Change Value to Reference transforms a value object -- one that is freely created and discarded -- into a reference object managed through a central registry or factory. This is appropriate when multiple parts of the system should share a single canonical instance rather than working with independent copies.
 
-This refactoring is the inverse of Change Reference to Value and is commonly applied when dealing with entities that represent real-world objects that should have single, canonical representations in memory.
+The refactoring is the inverse of Change Reference to Value. It applies most naturally to entities that model real-world concepts requiring a single, authoritative representation in memory.
 
 ## Motivation
 
 ### When to Apply
 
-- **Duplicate objects**: Multiple instances represent the same logical entity (e.g., customer, department)
-- **State inconsistency**: Changes to one instance don't reflect in "equivalent" instances
-- **Identity matters**: Objects should have identity-based equality rather than value-based equality
-- **Memory pressure**: Creating many duplicate objects wastes memory
-- **Shared mutable state**: Multiple references need to reflect changes immediately
-- **Database records**: Representing rows from a database where identity is crucial
+- **Redundant copies**: Several instances represent the same logical entity (e.g., a customer or account)
+- **Inconsistent state**: Updating one copy leaves other copies stale
+- **Identity semantics**: The object should be compared by identity, not by field values
+- **Memory waste**: Duplicating large or numerous objects consumes memory unnecessarily
+- **Shared mutation**: All consumers should see changes immediately when the object is modified
+- **Database alignment**: The object maps to a database row where a single record is the source of truth
 
 ### Why It Matters
 
-Converting to reference objects ensures that your system has a single source of truth for each entity. This eliminates the risk of inconsistent state, simplifies data synchronization, and makes the codebase more maintainable by clarifying that certain objects have identity-based semantics.
+When the same entity is represented by multiple independent instances, changes to one go unnoticed by the others. Converting to reference semantics establishes a single source of truth, guaranteeing that every part of the system operates on the same, current data.
 
 ## Mechanics: Step-by-Step
 
-1. **Create a registry or factory**: Establish a mechanism to store and retrieve reference objects
-2. **Add identity access**: Implement a way to look up objects (usually by ID or unique key)
-3. **Replace constructors**: Route object creation through the factory instead of direct instantiation
-4. **Implement equality**: Change equality comparison from value-based to reference-based (identity)
-5. **Update client code**: Replace value object creation with references from the registry
-6. **Remove duplication**: Ensure old value object instances are no longer created
-7. **Test consistency**: Verify that all references to the same entity stay in sync
+1. **Build a registry or factory**: Create a mechanism that stores and retrieves instances by a unique key
+2. **Provide identity-based lookup**: Allow clients to obtain an existing instance by its identifier
+3. **Route creation through the factory**: Replace direct constructor calls with factory lookups
+4. **Switch to identity equality**: Adjust comparisons from value-based to reference-based
+5. **Update all client code**: Ensure every consumer obtains instances from the registry
+6. **Eliminate stale copies**: Remove code paths that create duplicate instances
+7. **Validate consistency**: Confirm that all references to a given entity stay in sync
 
 ## Before: PHP 8.3+ Example
 
@@ -191,28 +191,28 @@ echo $order2->getCustomer()->getName(); // "John Smith" - CONSISTENT!
 
 ## Benefits
 
-- **Data Consistency**: All references to the same entity reflect changes immediately
-- **Identity Clarity**: Objects have clear identity semantics rather than value semantics
-- **Memory Efficiency**: Eliminates duplicate instances of the same logical entity
-- **Simplified Synchronization**: No need to manually propagate state changes across multiple instances
-- **Easier Debugging**: Single source of truth makes it easier to track object state
-- **Better Database Integration**: Aligns with how databases handle records (one canonical row per ID)
-- **Reduced Bugs**: Prevents subtle bugs from inconsistent state across copies
+- **Guaranteed Consistency**: Every consumer works with the same instance, so changes propagate instantly
+- **Clear Identity Semantics**: Objects are explicitly identity-based rather than ambiguously value-based
+- **Lower Memory Footprint**: One instance per entity instead of many duplicates
+- **No Manual Synchronization**: State changes are inherently visible everywhere
+- **Easier Debugging**: A single canonical instance is straightforward to inspect and trace
+- **Database Compatibility**: Mirrors how relational databases treat rows -- one record per identity
+- **Fewer State Bugs**: Eliminates a category of bugs caused by stale or divergent copies
 
 ## When NOT to Use
 
-- **Immutable objects**: Value semantics work well for immutable data (strings, numbers)
-- **Stateless objects**: Objects that never change don't need reference semantics
-- **Lightweight DTOs**: Simple data transfer objects benefit from value semantics
-- **Functional programming**: Pure functions with value objects are easier to reason about
-- **No shared mutation**: If objects are never modified after creation, reference semantics add unnecessary complexity
-- **Serialization concerns**: Reference objects with registries complicate serialization
-- **Thread safety critical**: References require synchronization if shared across threads
+- **Immutable data**: Value semantics are a better fit for objects that never change
+- **Stateless objects**: Objects without mutable state gain nothing from reference semantics
+- **Simple DTOs**: Data transfer objects benefit from being lightweight and disposable
+- **Functional style**: Pure functions and value objects are easier to reason about
+- **No shared mutation**: If objects are never modified after creation, references add unneeded complexity
+- **Serialization needs**: Registry-backed objects complicate serialization and deserialization
+- **Concurrency concerns**: Shared mutable references require synchronization in multithreaded environments
 
 ## Related Refactorings
 
-- **Change Reference to Value**: The inverse refactoring, converting reference objects back to values
-- **Extract Class**: Often used alongside to separate concerns into distinct reference objects
-- **Replace Data Value with Object**: For converting primitive values into reference objects
-- **Introduce Null Object**: For handling missing references gracefully
-- **Move Field**: To consolidate related fields into shared reference objects
+- **Change Reference to Value**: The opposite transformation, returning to value semantics
+- **Extract Class**: Often paired with this refactoring to separate concerns among reference objects
+- **Replace Data Value with Object**: Promotes primitive values into full reference objects
+- **Introduce Null Object**: Provides a safe stand-in for missing references
+- **Move Field**: Consolidates related data into shared reference objects

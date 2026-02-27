@@ -2,30 +2,30 @@
 
 ## Overview
 
-A Lazy Class is a code smell that refers to a class that doesn't provide enough functionality to justify its existence. Classes consume development time and maintenance costs, so if a class doesn't do enough to earn its keep in the codebase, it should be removed or merged with other classes.
+A Lazy Class is one that does not carry enough weight to justify its presence in the codebase. Every class incurs a cost -- developers must learn what it does, maintain it, and navigate around it. When a class contributes too little to offset these costs, it should be folded into another class or removed entirely.
 
-This typically occurs when:
-- A class is created for anticipated functionality that never materializes
-- Refactoring leaves a class with minimal responsibilities
-- A class serves as a thin wrapper around another class without adding real value
+This commonly happens when:
+- A class was built for future functionality that never arrived
+- Successive refactorings gradually stripped the class of its original responsibilities
+- A class acts as a thin pass-through to another class without adding meaningful logic
 
 ## Why It's a Problem
 
-Every class in your codebase requires:
-- **Cognitive Load**: Developers must understand its purpose and functionality
-- **Maintenance Costs**: Changes to interfaces, documentation, and testing
-- **Complexity**: Unnecessary inheritance hierarchies and dependencies
-- **Navigation**: More files to browse and understand
+Each class in the codebase demands:
+- **Cognitive Investment**: Developers must understand its role and how it fits into the system
+- **Ongoing Upkeep**: Interface changes, documentation, and test maintenance all cost effort
+- **Structural Overhead**: Unnecessary classes add depth to hierarchies and widen the dependency graph
+- **Navigation Friction**: More files to browse and search through when working on related functionality
 
-Keeping unnecessary classes increases technical debt and makes codebases harder to maintain without providing compensating benefits.
+Retaining classes that do not earn their keep steadily inflates technical debt without delivering compensating value.
 
 ## Signs and Symptoms
 
-- A class has only one or two methods that could belong elsewhere
-- A subclass adds minimal functionality beyond its parent class
-- A class exists primarily as a placeholder for future features
-- Removing a class would require minimal refactoring elsewhere
-- The class has a single, narrow responsibility that duplicates functionality in another class
+- A class has only one or two trivial methods that would fit naturally in another class
+- A subclass adds negligible functionality beyond what its parent already provides
+- A class exists mainly as a placeholder for anticipated future work
+- Removing the class would require only minor, localized refactoring
+- The class duplicates a narrow responsibility that another class already handles
 
 ## Before/After
 
@@ -181,33 +181,10 @@ Keep a class (as a lazy class) when:
 
 ## Related Smells
 
-- **Dead Code**: Classes or methods that are never used
-- **Feature Envy**: A class that seems more interested in another class's data than its own
-- **Speculative Generality**: Building features "for the future" that aren't needed yet
-- **Middleware Classes**: Classes that exist only to connect other classes without adding logic
-- **Duplicate Code**: Similar functionality across multiple small classes that could be consolidated
+- **Dead Code**: Code that is never executed -- Lazy Classes are a class-level manifestation of the same problem
+- **Feature Envy**: A class that spends more time working with another class's data than its own often signals the logic belongs in that other class
+- **Speculative Generality**: Classes built for anticipated needs that never materialized -- a common origin of Lazy Classes
+- **Middleware Classes**: Classes that exist solely to wire other classes together without contributing logic
+- **Duplicate Code**: Multiple small classes with overlapping functionality that could be consolidated into one
 
-## Refactoring.guru Guidance
-
-### Signs and Symptoms
-
-Understanding and maintaining classes always costs time and money. So if a class does not do enough to earn your attention, it should be deleted.
-
-### Reasons for the Problem
-
-- A class may have been designed to be fully functional but after refactoring it has become ridiculously small.
-- A class may have been created to support planned future development work that never materialized.
-
-### Treatment
-
-- **Inline Class**: Merge the lazy class's functionality into another class that uses it.
-- **Collapse Hierarchy**: For subclasses or superclasses with minimal added functionality, merge them into their parent or child.
-
-### Payoff
-
-- Reduced code size.
-- Easier maintenance.
-
-### When to Ignore
-
-Sometimes a Lazy Class is created to delineate intentions for future development. In this case, try to maintain a balance between clarity and simplicity in your code.
+Note: A Lazy Class sometimes exists intentionally to mark where future functionality will be added. In that case, keep it only if the planned work is imminent and documented. Otherwise, remove it and recreate it when the need is real -- the balance should tip toward simplicity.

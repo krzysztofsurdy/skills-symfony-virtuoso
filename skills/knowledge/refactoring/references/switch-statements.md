@@ -2,22 +2,22 @@
 
 ## Overview
 
-Switch statements (and lengthy if-else chains) are a code smell that signals violations of object-oriented design principles. They indicate places where polymorphism should be used instead of conditional logic. While not inherently evil, complex or scattered switch statements make code harder to maintain and extend.
+Switch statements (and lengthy if-else chains) are a code smell that points to missed opportunities for polymorphism. When you see conditional logic branching on an object's type or category, it usually means the behavior should be distributed across specialized classes rather than centralized in one block. A single, isolated switch is rarely a problem -- the smell intensifies when similar switches appear in multiple places throughout the codebase.
 
 ## Why It's a Problem
 
-Switch statements create tight coupling between the code and the types being checked. When requirements change, you must find and modify every switch statement handling that logic. This violates the Open/Closed Principle—code should be open for extension but closed for modification.
+Branching on type creates a rigid bond between the conditional logic and the set of types it handles. Every time a new type is introduced, you must track down and update every switch that deals with that classification. This directly violates the Open/Closed Principle -- the system should accommodate new variants without modifying existing code.
 
-Additionally, switch statements indicate missing abstractions. Different cases often represent different behaviors that should be encapsulated in separate classes. This makes code less flexible and harder to test.
+Beyond maintainability, scattered switch statements signal missing abstractions. Each case branch typically represents a distinct behavior that belongs in its own class, where it can be tested independently and extended without ripple effects.
 
 ## Signs and Symptoms
 
-- Complex switch operators with many cases
-- Multiple similar switch statements scattered throughout the codebase
-- Switch statements that handle type checking based on object properties
-- Adding new cases requires modifying multiple switch locations
-- Switch statements with deeply nested logic or side effects
-- Difficulty testing individual cases in isolation
+- Switch or match blocks with many cases
+- The same branching pattern duplicated in several places across the codebase
+- Conditional logic that inspects an object's type or property to decide behavior
+- Adding a new variant forces changes in multiple switch locations
+- Deeply nested logic or side effects inside case branches
+- Individual cases that are hard to test in isolation
 
 ## Before/After Examples
 
@@ -119,55 +119,37 @@ readonly class Payment {
 ## Recommended Refactorings
 
 **Replace Type Code with Subclasses**
-Create separate classes for each case instead of using type codes. Each class implements the same interface but with different behaviors.
+Instead of switching on type codes, create a class for each variant. All classes share the same interface but provide their own implementation of the behavior.
 
 **Replace Conditional with Polymorphism**
-Use inheritance or interface implementation to let each object handle its own behavior. This is the most common refactoring for switch statements.
+The most common remedy. Let each object define its own behavior through inheritance or interface implementation, eliminating the need for external branching entirely.
 
 **Introduce Strategy Pattern**
-When behavior varies at runtime, inject different strategy implementations. This allows flexible composition without inheritance.
+When behavior must vary at runtime, inject different strategy implementations. This achieves flexible composition without requiring an inheritance hierarchy.
 
 **Replace Parameter with Explicit Methods**
-Break a method accepting various type parameters into separate methods. Each method name makes the intent clearer.
+Split a method that accepts a type parameter into separate, clearly named methods. The method name itself communicates the intent.
 
 **Extract Method and Move Method**
-Isolate switch logic into dedicated methods, then move them to appropriate classes that handle specific cases.
+Pull the switch logic into its own method first, then relocate it to the class where it belongs -- typically the class representing the type being switched on.
 
 **Introduce Null Object**
-When handling null cases, create a null object implementing your interface instead of checking for null conditions.
+When one of the cases handles null, replace the null check with a dedicated null object that implements the expected interface with default behavior.
 
 ## Exceptions
 
-Simple switches are acceptable in these cases:
+Simple switches are appropriate in these situations:
 
-- **Factory patterns**: Creating appropriate objects based on input is a legitimate use of switches
-- **Mapping operations**: Simple data transformations without behavior differences (e.g., enum to string)
-- **Router/dispatcher logic**: Directing to appropriate handlers is expected in frameworks
+- **Factory patterns**: Instantiating the right class based on input is a natural use of switches
+- **Mapping operations**: Straightforward data transformations without behavioral differences (e.g., converting an enum to a display string)
+- **Router/dispatcher logic**: Directing requests to the appropriate handler is standard in frameworks
 - **Guard clauses**: Validating preconditions with early returns
-- **Single switch locations**: A well-placed switch serving one clear purpose is less problematic than scattered switches
+- **Single, isolated switches**: A switch that appears in exactly one place and serves one clear purpose is far less problematic than duplicated switches
 
 ## Related Smells
 
-- **Primitive Obsession**: Switch statements often indicate missing value objects or enums
-- **Duplicate Code**: Scattered switches suggest duplicated conditional logic
-- **Long Method**: Complex switches signal methods doing too much
-- **Speculative Generality**: Over-engineered polymorphism for non-existent requirements
-- **Lazy Class**: Unnecessary classes created solely to replace switches
-
-## Refactoring.guru Guidance
-
-### Signs and Symptoms
-You have a complex `switch` operator or sequence of `if` statements. Code for a single switch can be scattered in different places in the program.
-
-### Reasons for the Problem
-Switch operators are relatively rare in well-designed object-oriented code. When you see `switch` you should think of polymorphism. When requirements change, developers must locate and update every instance of the switch.
-
-### Treatment
-- **Extract Method** and **Move Method** to isolate switch logic appropriately
-- **Replace Type Code with Subclasses** or **Replace Type Code with State/Strategy** for type code-based switches
-- **Replace Conditional with Polymorphism** after establishing inheritance structure
-- **Replace Parameter with Explicit Methods** when conditions call identical methods with different parameters
-- **Introduce Null Object** if null is a conditional option
-
-### Payoff
-- Improved code organization
+- **Primitive Obsession**: Switches often compensate for missing value objects or enums
+- **Duplicate Code**: Repeated switches across the codebase indicate duplicated conditional logic
+- **Long Method**: Complex switches are a sign that a method is handling too many responsibilities
+- **Speculative Generality**: Replacing simple switches with elaborate polymorphism for hypothetical future needs
+- **Lazy Class**: Classes created solely to replace a switch that didn't warrant the abstraction

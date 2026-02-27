@@ -1,20 +1,20 @@
 ## Overview
 
-The Bridge design pattern is a structural pattern that decouples abstraction from implementation by creating a bridge between them. It allows multiple abstractions and implementations to coexist without creating a combinatorial explosion of classes.
+The Bridge is a structural pattern that decomposes a monolithic class hierarchy into two orthogonal dimensions -- abstraction and implementation -- joined by composition instead of inheritance. By separating what an object does from how it does it, the pattern avoids the combinatorial class explosion that occurs when both dimensions evolve independently, and allows each side to vary without disturbing the other.
 
 ## Intent
 
-The pattern's intent is to:
-- Separate abstraction from implementation so they can vary independently
-- Avoid a permanent binding between abstraction and implementation
-- Reduce the number of classes in a hierarchy by using composition instead of inheritance
-- Allow runtime selection of implementations
+The pattern aims to:
+- Sever the tight coupling between an abstraction and its implementation so neither constrains the other's evolution
+- Substitute rigid inheritance trees with a flexible composition-based link
+- Keep the total class count linear rather than multiplicative when two dimensions of variation exist
+- Permit implementations to be selected or replaced at runtime without touching the abstraction layer
 
 ## Problem & Solution
 
 ### Problem
 
-When you have an abstraction (e.g., Shape) with multiple implementations (e.g., Circle, Rectangle) and multiple variants of each implementation (e.g., Windows rendering, Linux rendering), using inheritance creates a combinatorial explosion:
+When a design involves two independent axes of variation (for example, Shape and RenderingEngine), encoding both through inheritance produces a Cartesian product of subclasses:
 - Shape (base)
   - Circle (abstraction)
     - CircleWindows (implementation)
@@ -23,37 +23,37 @@ When you have an abstraction (e.g., Shape) with multiple implementations (e.g., 
     - RectangleWindows (implementation)
     - RectangleLinux (implementation)
 
-This hierarchy becomes unmaintainable as new dimensions of variation are added.
+Each additional shape or rendering platform multiplies the total number of classes, quickly making the hierarchy unwieldy.
 
 ### Solution
 
-The Bridge pattern solves this by:
-1. Creating two separate hierarchies: one for abstraction, one for implementation
-2. Connecting them via composition rather than inheritance
-3. Using a bridge interface/abstraction that the high-level classes depend on
+The Bridge pattern resolves this by:
+1. Factoring the hierarchy into two separate trees: one for the abstraction, one for the implementation
+2. Connecting them via composition -- the abstraction holds a reference to an implementor object
+3. Letting each tree grow at its own pace without creating cross-product classes
 
-Instead of inheritance, the abstraction holds a reference to an implementation object and delegates work to it.
+The abstraction forwards platform-dependent work to the implementor, keeping both hierarchies focused and independent.
 
 ## Structure
 
 **Key Components:**
 
-- **Abstraction**: Defines the high-level interface and holds a reference to an implementor
-- **RefinedAbstraction**: Extends the abstraction with more specific operations
-- **Implementor**: Defines the interface for implementation classes
-- **ConcreteImplementor**: Implements the implementor interface with specific logic
+- **Abstraction**: High-level interface that holds a reference to an implementor and defines domain-oriented operations
+- **RefinedAbstraction**: Extends the abstraction with more specialized behavior
+- **Implementor**: Low-level interface that defines the platform or technology-specific operations
+- **ConcreteImplementor**: Provides the actual platform-specific logic
 
 **Relationship:** Abstraction → (has-a) → Implementor ← ConcreteImplementor
 
 ## When to Use
 
-Use the Bridge pattern when:
-- You want to avoid permanent binding between abstraction and implementation
-- Changes to the implementation shouldn't affect clients
-- You want to share an implementation among multiple objects
-- You need to reduce class hierarchies (multiple inheritance of type)
-- You want to vary both abstraction and implementation at runtime
-- You have platforms/graphics renderers, UI themes, databases, or drivers
+Apply the Bridge pattern when:
+- You need to avoid a permanent lock between an abstraction and its implementation
+- Implementation changes should be invisible to consuming code
+- You want to share a single implementation across multiple abstraction instances
+- Class hierarchies are growing in two dimensions simultaneously
+- You need to select or swap implementations at runtime
+- You are dealing with platform renderers, UI themes, database drivers, or similar multi-dimensional concerns
 
 ## Implementation
 
@@ -173,37 +173,36 @@ $rect->draw(); // Output: Drawing rectangle on Windows...
 
 ## Real-World Analogies
 
-1. **Vehicle Remote Controls**: The abstraction is the remote interface (buttons), implementations are Bluetooth, IR, or RF protocols. Changing the protocol doesn't affect the remote's interface.
+1. **Remote Controls and Devices**: The remote defines the user-facing buttons (abstraction), while the communication protocol -- Bluetooth, IR, or RF -- handles signal transmission (implementation). Swapping protocols requires no redesign of the remote's button layout.
 
-2. **Database Adapters**: The abstraction is your application (queries), implementations are MySQL, PostgreSQL, SQLite drivers. Switching databases requires no application changes.
+2. **Application Code and Database Drivers**: Business logic (the abstraction) formulates queries, while MySQL, PostgreSQL, or SQLite drivers (the implementations) translate them into vendor-specific calls. Switching database engines leaves the application layer unchanged.
 
-3. **Payment Gateways**: The abstraction is your checkout interface, implementations are Stripe, PayPal, Square API integrations.
+3. **Checkout Flow and Payment Gateways**: The checkout interface (abstraction) gathers payment details, while Stripe, PayPal, or Square integrations (implementations) carry out the actual transaction. Adding a new payment provider requires no changes to the checkout flow.
 
-4. **UI Rendering**: The abstraction is your UI components (buttons, dialogs), implementations are native platform renderers (Windows, macOS, Linux).
+4. **UI Widgets and Platform Renderers**: Buttons and dialogs (abstractions) declare what to display, while OS-specific renderers (implementations) control how those elements appear on Windows, macOS, or Linux.
 
 ## Pros & Cons
 
 ### Pros
-- Decouples abstraction from implementation
-- Reduces class hierarchies (no combinatorial explosion)
-- Improves flexibility and maintainability
-- Enables runtime selection of implementations
-- Open/Closed Principle: open for extension, closed for modification
-- Single Responsibility: each class has one reason to change
+- Draws a clear boundary between what an object does and how it accomplishes it
+- Keeps the class count linear instead of multiplicative as dimensions grow
+- Simplifies extension and maintenance on both the abstraction and implementation sides
+- Supports hot-swapping implementations at runtime
+- Naturally adheres to the Open/Closed and Single Responsibility principles
 
 ### Cons
-- Increased complexity with more classes and abstraction layers
-- Can be overkill for simple use cases
-- Slight performance overhead from extra indirection
-- Requires upfront planning to identify abstraction boundaries
+- Introduces additional classes and indirection layers, raising architectural complexity
+- Feels disproportionate when the design involves only a single dimension of variation
+- Delegation through the bridge adds a minor runtime cost
+- Requires deliberate upfront analysis to correctly identify the two orthogonal dimensions
 
 ## Relations with Other Patterns
 
-- **Adapter**: Connects incompatible interfaces after design; Bridge connects them during design
-- **Abstract Factory**: Often used together to create families of objects that work with Bridge
-- **Strategy**: Similar structure, but different intent (algorithms vs. implementations)
-- **Decorator**: Both use composition, but for different purposes (adding features vs. varying implementation)
-- **Facade**: Provides simplified interface; Bridge provides abstraction-implementation separation
+- **Adapter**: Adapter is applied retroactively to make incompatible interfaces work together; Bridge is an intentional upfront separation of abstraction from implementation
+- **Abstract Factory**: Often paired with Bridge -- Abstract Factory can supply the correct implementor objects for a given abstraction
+- **Strategy**: Structurally alike (both vary behavior via composition), but Strategy swaps interchangeable algorithms while Bridge decouples an abstraction from its implementation
+- **Decorator**: Both leverage composition, but toward different ends -- Decorator stacks additional behavior, Bridge partitions two independent dimensions of variation
+- **Facade**: Facade conceals subsystem complexity behind a simplified interface; Bridge provides a principled separation between abstraction and implementation layers
 
 ## Examples in Other Languages
 

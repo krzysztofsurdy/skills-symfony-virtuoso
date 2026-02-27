@@ -1,25 +1,25 @@
 ## Overview
 
-The Builder pattern is a creational design pattern that addresses the problem of constructing complex objects. Rather than passing numerous parameters to a constructor or creating multiple overloaded constructors, the Builder pattern uses a separate builder object to construct the target object step-by-step, with a fluent interface for clarity and flexibility.
+The Builder pattern is a creational design pattern that separates the construction of a complex object from its representation. Instead of funneling dozens of parameters into a single constructor call or juggling overloaded variants, it hands the assembly work to a dedicated builder that configures the target step by step through clearly named methods.
 
 ## Intent
 
-- Separate the construction logic of a complex object from its representation
-- Allow the same construction process to create different representations
-- Avoid "telescoping constructors" (multiple overloaded constructors with different parameter combinations)
-- Provide a clear, readable way to build objects with many optional or required parameters
+- Decouple how a complex object is assembled from what the finished object looks like
+- Enable multiple representations of the same product by reusing identical construction steps
+- Eliminate the "telescoping constructor" problem where parameter lists grow unwieldy with every new option
+- Provide a fluent, self-documenting API for setting up objects that carry many required and optional attributes
 
 ## Problem & Solution
 
 **Problem:**
-When creating objects with many parameters, especially optional ones, you face challenges:
-- Constructor parameter lists become unwieldy and hard to maintain
-- Multiple overloaded constructors create confusion about which to use
-- Setting properties after construction violates immutability
-- The client code becomes difficult to read with many parameters
+Objects that require many parameters -- particularly optional ones -- create persistent difficulties:
+- Long positional argument lists are fragile and opaque to callers
+- Constructor overloads proliferate rapidly and blur the distinction between variants
+- Post-construction mutation to set optional fields breaks immutability guarantees
+- Call sites packed with unnamed arguments resist comprehension and review
 
 **Solution:**
-The Builder pattern introduces a builder class that handles the step-by-step construction. The client uses a fluent interface to configure the object, and only when `build()` is called does the final object get created.
+The Builder pattern supplies a separate builder class whose named setter methods accumulate configuration incrementally. The final object is produced only when the caller invokes `build()`, which validates all accumulated state and returns a fully initialized, consistent product.
 
 ## Structure
 
@@ -43,12 +43,12 @@ The Builder pattern introduces a builder class that handles the step-by-step con
 ## When to Use
 
 Use the Builder pattern when:
-- An object requires many constructor parameters (3+ optional parameters)
-- You need to construct different variations/representations of an object
-- The construction process should be independent of the parts that make up the object
-- You want immutable objects with clear initialization
-- You need validation or complex initialization logic
-- Working with fluent/method-chaining APIs
+- An object has more than a handful of constructor parameters, especially when many are optional
+- You need to produce different variants or representations of the same type of object
+- The assembly process must remain independent from the components that form the final product
+- You want immutable objects but still need a flexible way to set them up
+- Construction involves validation or multi-step initialization logic
+- You are designing fluent or method-chaining APIs
 
 Common scenarios:
 - Building configuration objects
@@ -319,37 +319,32 @@ $sql = (new QueryBuilder())
 
 ## Real-World Analogies
 
-**Restaurant Order:** A customer (builder) customizes their meal by choosing:
-- Main ingredient (builder method)
-- Sauce type (builder method)
-- Side dishes (builder method)
-- Drinks (builder method)
-Then says "prepare order" (build method) and receives the complete meal.
+**Deli Sandwich Counter:** You specify bread, filling, toppings, and sauce one selection at a time. The sandwich maker assembles everything according to your choices, and only when you confirm "that's all" does the finished sandwich get wrapped and handed over.
 
-**House Construction:** A contractor (director) builds a house following a construction plan (builder interface) that defines steps like foundation, walls, roof, interior finishing. Different builders can create different house styles following the same plan.
+**Custom PC Configuration:** When building a custom workstation, you pick the processor, memory, storage, and graphics card independently. The technician follows the same assembly process regardless of which specific parts you selected, and the machine is not powered on until every component is in place.
 
 ## Pros and Cons
 
 **Advantages:**
-- Cleaner, more readable code (fluent interface)
-- Flexibility in object creation (different configurations)
-- Immutable objects (when combined with readonly classes)
-- Single Responsibility (construction logic separated from product)
-- Better validation before object creation
-- Easy to add new parameters without breaking existing code
+- Yields readable, self-documenting call sites through fluent method chaining
+- Accommodates many object configurations without spawning constructor overloads
+- Complements readonly or immutable classes naturally -- the product is finalized in one shot
+- Concentrates all construction logic in the builder, away from the product class itself
+- Runs validation at build time, before the object exists, catching invalid state early
+- New optional fields can be added to the builder without breaking existing callers
 
 **Disadvantages:**
-- More classes to maintain (builder + product)
-- Overhead for simple objects
-- Builder instance needs garbage collection
-- Thread safety requires careful implementation
+- Requires an extra class per product type, increasing the project's class count
+- Adds unnecessary ceremony when the product has only a handful of straightforward parameters
+- Builder instances occupy memory until they go out of scope or are garbage collected
+- Shared or reused builder instances need synchronization in concurrent environments
 
 ## Relations with Other Patterns
 
-**Composite:** Can use Builder to construct complex composite trees
-**Abstract Factory:** Similar intent but different approach; Factory emphasizes families of objects, Builder emphasizes step-by-step construction
-**Strategy:** Builder can be parameterized with different strategies for constructing variations
-**Prototype:** Both deal with object creation; Builder is more flexible for complex construction
+**Composite:** Builder can orchestrate the assembly of complex composite tree structures
+**Abstract Factory:** Both create objects, but Factory coordinates families of products while Builder focuses on incremental, step-by-step construction of a single product
+**Strategy:** Different construction strategies can be injected into a builder to produce distinct product variants
+**Prototype:** Both address object creation, but Builder offers finer control when construction involves multiple configurable steps
 
 ---
 
@@ -645,5 +640,3 @@ def main():
 if __name__ == "__main__":
     main()
 ```
-
-*Source: [sourcemaking.com/design_patterns/builder](https://sourcemaking.com/design_patterns/builder)*

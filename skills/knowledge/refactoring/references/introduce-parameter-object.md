@@ -2,26 +2,26 @@
 
 ## Overview
 
-The Introduce Parameter Object refactoring consolidates multiple related parameters into a single object. This technique eliminates code duplication when the same group of parameters appears repeatedly across methods, making code more maintainable and readable.
+Introduce Parameter Object bundles a recurring group of parameters into a dedicated object. When the same cluster of arguments appears across multiple method signatures, replacing them with a single object reduces duplication, clarifies intent, and opens the door for moving related behavior into the new class.
 
 ## Motivation
 
-**The Problem**: When identical groups of parameters are scattered throughout your codebase, they create code duplication and make methods harder to understand. Long parameter lists are a common code smell that signals data clumping.
+**The Problem**: Identical groups of parameters repeated across method signatures are a form of data clumping. Long parameter lists are hard to read, easy to misorder, and painful to extend.
 
-**The Solution**: Instead of passing multiple related parameters individually, create a dedicated object class that groups them together. This provides several advantages:
+**The Solution**: Create a small, typically immutable class that holds the related values. Pass one object instead of many primitives. This:
 
-- Single, meaningful parameter instead of a long list
-- Self-documenting code through the object's name
-- Easier to add new related parameters in the future
-- Preparation for moving related behaviors into the parameter object
+- Replaces a long parameter list with a single, meaningful argument
+- Makes the method signature self-documenting through the object's class name
+- Centralizes validation logic that was previously duplicated at every call site
+- Provides a natural home for methods that operate on the grouped data
 
 ## Mechanics
 
-1. **Create a new class** to represent the parameter group (typically immutable)
-2. **Add the new parameter** to your method signature while keeping existing parameters
-3. **Replace old parameters one by one** with references to the object fields
-4. **Test after each change** to ensure correctness
-5. **Consider moving methods** into the parameter object using Move Method or Extract Method
+1. **Define a new class** to represent the parameter group (typically readonly/immutable)
+2. **Add the new parameter** to the method signature alongside the existing ones
+3. **Migrate parameters one by one** into the object, updating callers as you go
+4. **Run tests after each step** to catch breakage early
+5. **Move related behavior** into the parameter object if it makes sense (validation, formatting, etc.)
 
 ## Before & After: PHP 8.3+ Code
 
@@ -115,25 +115,25 @@ class OrderService
 
 ## Benefits
 
-- **Improved Readability**: Method signatures become clearer and self-documenting
-- **Reduced Duplication**: Eliminates repetitive parameter patterns across methods
-- **Better Maintainability**: Adding related parameters requires only class modification
-- **Encapsulation**: Related data and validation logic can be grouped together
-- **Type Safety**: Parameter objects provide stronger typing than individual primitives
-- **Scalability**: Easier to extend functionality as the parameter object grows
+- **Readable Signatures**: A single named parameter communicates the group's purpose at a glance
+- **Eliminated Duplication**: The same parameter cluster appears in one class definition, not in every method
+- **Easier Extension**: Adding a field to the group requires changing only the class, not every caller
+- **Centralized Validation**: Constraints are enforced once in the constructor, not scattered across call sites
+- **Stronger Types**: An object provides richer type information than a list of primitives
+- **Behavior Magnet**: The parameter object naturally attracts related methods (formatting, comparison, etc.)
 
 ## When NOT to Use
 
-- When parameters are unrelated and appear together coincidentally
-- If the parameter object would be used only once or twice
-- When adding an intermediate class adds unnecessary complexity
-- For simple, stable APIs where change frequency is low
-- When domain models already encapsulate the data better
+- Parameters that appear together by coincidence, not because they represent a coherent concept
+- The grouped parameters would be used in only one or two places
+- The additional class adds complexity without measurable benefit
+- The API is simple, stable, and unlikely to change
+- Existing domain models already encapsulate the data better
 
 ## Related Refactorings
 
-- **Replace Parameter with Query**: Simplify method signatures by computing parameters
-- **Extract Class**: Split parameter objects when they become too large
-- **Move Method**: Transfer validation and behavior to the parameter object
-- **Remove Parameter**: Clean up parameters no longer needed
-- **Preserve Whole Object**: Pass an object instead of extracting multiple fields
+- **Replace Parameter with Query**: Simplify signatures by computing values instead of passing them
+- **Extract Class**: Split a parameter object that grows too large
+- **Move Method**: Relocate validation and formatting logic into the parameter object
+- **Remove Parameter**: Drop parameters that the parameter object makes unnecessary
+- **Preserve Whole Object**: Pass an existing object rather than pulling fields out of it

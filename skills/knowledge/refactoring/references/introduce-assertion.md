@@ -1,31 +1,31 @@
 ## Overview
 
-The Introduce Assertion refactoring replaces implicit assumptions and undocumented preconditions with explicit assertion statements. Rather than relying on comments or hoping developers remember requirements, assertions make assumptions visible, testable, and executable.
+Introduce Assertion replaces implicit assumptions and undocumented preconditions with explicit assertion statements. Rather than relying on comments or hoping developers will remember constraints, assertions turn assumptions into executable checks that fail fast when violated.
 
-Assertions serve as a bridge between documentation and code—they verify that conditions necessary for correct execution are actually met before proceeding.
+Assertions bridge the gap between documentation and code -- they verify that conditions necessary for correct execution actually hold before the code proceeds.
 
 ## Motivation
 
-Code often depends on specific conditions being true for correct execution. These assumptions may be:
+Code frequently depends on conditions that are never stated outright. These assumptions may be:
 
-- Only documented in comments that can become outdated
-- Implicit in the logic, making them invisible to future developers
-- Vulnerable to being violated during maintenance or refactoring
+- Buried in comments that fall out of date
+- Implied by the logic, invisible to anyone reading the code for the first time
+- Silently violated during maintenance or refactoring, leading to subtle bugs
 
-By introducing assertions, you:
+Expressing these assumptions as assertions:
 
-- Make assumptions explicit and verifiable
-- Catch programmer errors early in development and testing
-- Create executable documentation that cannot become stale
-- Improve code reliability and maintainability
+- Makes preconditions discoverable and verifiable
+- Surfaces programmer errors during development and testing rather than in production
+- Creates documentation that is always accurate because it runs with the code
+- Strengthens confidence that the code operates within its expected boundaries
 
 ## Mechanics
 
-1. Identify comments describing conditions necessary for the code to work correctly
-2. Locate the code that depends on these conditions
-3. Add assertion statements that verify these conditions before they're relied upon
-4. Ensure assertions don't alter program behavior when conditions are met
-5. Consider removing assertions in production code if performance is critical
+1. Identify comments or implicit logic that describe conditions the code requires
+2. Locate the code that depends on those conditions
+3. Insert assertion statements that verify the conditions before they are relied upon
+4. Confirm that assertions do not change program behavior when conditions are met
+5. Optionally disable assertions in production if performance is a concern
 
 ## Before/After (PHP 8.3+ Code)
 
@@ -110,27 +110,27 @@ public function setDiscount(float $discount): void
 
 ## Benefits
 
-- **Early Failure Detection**: Assertions catch violations immediately rather than allowing corrupt data to propagate
-- **Live Documentation**: Assertions serve as executable specifications that cannot become outdated
-- **Improved Debugging**: Clear assertion messages pinpoint exactly what assumption was violated
-- **Code Confidence**: Developers can rely on preconditions being met throughout method execution
-- **Test Coverage**: Assertions help identify untested code paths and edge cases
-- **Reduced Defensive Programming**: Less need for excessive null checks and type guards when preconditions are guaranteed
+- **Immediate Failure**: Violations surface at the point of origin rather than propagating through the system
+- **Executable Documentation**: Assertions cannot become stale because they run alongside the code
+- **Precise Diagnostics**: Assertion messages pinpoint exactly which assumption was violated and where
+- **Developer Confidence**: Knowing that preconditions are enforced makes it safer to build on existing logic
+- **Gap Identification**: Writing assertions reveals untested paths and overlooked edge cases
+- **Less Defensive Clutter**: With preconditions guaranteed, downstream code can drop redundant null checks and type guards
 
 ## When NOT to Use
 
-- **User Input Validation**: Use exceptions and validation instead—users can trigger assertion failures through bad input
-- **Expected Error Conditions**: If an exception can be caused by system actions, use proper exception handling
-- **Non-Critical Conditions**: Don't assert conditions that are nice-to-have but not essential for correctness
-- **Performance-Critical Code**: Assertions can be disabled in production; rely on them only for development/testing
-- **External API Contracts**: For third-party integrations, use validation and exceptions instead of assertions
+- **User input**: Assertions are for programmer errors, not user mistakes; validate user input with exceptions
+- **Expected failures**: If a condition can legitimately fail at runtime, use proper error handling
+- **Non-essential checks**: Do not assert conditions that are merely desirable but not required for correctness
+- **Performance-sensitive paths**: Assertions may be disabled in production; do not use them for security-critical validation
+- **Third-party boundaries**: At integration points with external systems, use validation and exceptions instead
 
 ## Related Refactorings
 
-- **Extract Method**: Often used alongside Introduce Assertion to isolate assumptions in separate methods
-- **Guard Clauses**: Complement assertions by handling valid variations of preconditions
-- **Replace Error Code with Exception**: Alternative when failure is expected from external sources
-- **Introduce Parameter Object**: Reduces parameter count and makes preconditions clearer
+- **Extract Method**: Isolates assertion logic when precondition checks become complex
+- **Guard Clauses**: Complement assertions by handling expected variations in input
+- **Replace Error Code with Exception**: The appropriate pattern when failure stems from external sources
+- **Introduce Parameter Object**: Consolidates parameters and makes their constraints easier to assert
 
 ## Examples in Other Languages
 

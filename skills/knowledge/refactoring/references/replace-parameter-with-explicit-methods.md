@@ -2,27 +2,27 @@
 
 ## Overview
 
-This refactoring extracts parameter-dependent method variants into separate, dedicated methods. Instead of passing parameters to control which code path executes, you create explicit methods for each behavior variant. This transforms methods that handle multiple concerns based on conditional logic into focused, single-purpose methods.
+This refactoring breaks a single parameter-driven method into multiple dedicated methods, one per behavior variant. Rather than accepting a parameter that steers internal branching logic, each variant gets its own clearly named method. The result is a set of focused, single-purpose operations that replace one method doing many things based on conditional checks.
 
 ## Motivation
 
 Parameter-driven methods become problematic when:
 
-- **Code clarity suffers** - Method calls like `setValue("height", 100)` require understanding what "height" means
-- **Methods grow large** - Each parameter variant adds branches, increasing cyclomatic complexity
-- **Maintenance becomes difficult** - Changes to one variant may inadvertently affect others
-- **Variants are stable** - When parameter values rarely change, explicit methods are justified
+- **Readability degrades** - Calls like `setValue("height", 100)` force the reader to know what "height" means in context
+- **Methods bloat** - Every new parameter variant introduces another branch, inflating cyclomatic complexity
+- **Maintenance risk grows** - Altering one variant's logic can accidentally break others sharing the same method body
+- **Variants are stable** - When the set of parameter values rarely changes, individual methods are a better fit
 
-The refactoring is particularly valuable when each parameter variant contains substantial, non-trivial logic.
+The refactoring is most worthwhile when each variant carries meaningful, non-trivial logic of its own.
 
 ## Mechanics
 
-The refactoring process involves three main steps:
+The process consists of four steps:
 
-1. **Create explicit methods** - For each parameter value variant, create a dedicated method with a descriptive name
-2. **Transfer logic** - Move the conditional branch logic into the corresponding explicit method
-3. **Update callers** - Replace all calls to the parameterized method with appropriate explicit method calls
-4. **Remove original** - Delete the original parameter-driven method once migration is complete
+1. **Define explicit methods** - Create a separate method with a descriptive name for each parameter value variant
+2. **Migrate logic** - Move each conditional branch's body into the corresponding new method
+3. **Redirect callers** - Change every call site to invoke the appropriate explicit method instead
+4. **Delete the original** - Remove the parameter-driven method once no callers remain
 
 ## Before/After Examples
 
@@ -152,28 +152,28 @@ $sick = $employee->getSickDaysOff();
 
 ## Benefits
 
-- **Self-documenting code** - Method names like `setHeight()` immediately convey intent without documentation
-- **Type safety** - Each method can accept appropriate parameter types and counts
-- **IDE support** - Better autocomplete and parameter hints from IDEs
-- **Easier testing** - Each explicit method can be tested independently
-- **Reduced complexity** - Eliminates conditional logic and branching within methods
-- **Better refactoring** - Explicit methods are easier to further optimize or override in subclasses
+- **Self-documenting code** - Names like `setHeight()` convey intent instantly without needing comments
+- **Type safety** - Each method can declare the exact parameter types and counts it requires
+- **IDE support** - Autocompletion and inline parameter hints work naturally with distinct methods
+- **Easier testing** - Individual methods can be exercised in isolation
+- **Lower complexity** - Conditional branching within a single method body disappears entirely
+- **Better refactoring** - Explicit methods are simpler to optimize or override in subclasses
 
 ## When NOT to Use
 
 Avoid this refactoring when:
 
-- **High frequency of change** - If new parameter variants are added frequently, maintaining many methods becomes tedious
-- **Very few variants** - Simple methods with only one or two conditional branches may not justify the extra methods
-- **Dynamic parameters** - If parameter values come from user input or configuration, a parameterized approach may be necessary
-- **Generic APIs** - Framework methods that must accept generic parameters should remain parameter-driven
+- **Variants change frequently** - If new parameter values are added regularly, maintaining many methods becomes tedious
+- **Few variants exist** - A method with only one or two conditional branches may not warrant splitting
+- **Parameters are dynamic** - When values originate from user input or runtime configuration, a parameterized approach is necessary
+- **Generic APIs** - Framework-level methods designed to accept open-ended parameters should stay parameter-driven
 
 ## Related Refactorings
 
-- **Parameterize Method** - The inverse refactoring; consolidates multiple similar methods into one parameter-driven method
-- **Replace Conditional with Polymorphism** - When variants represent different types, use inheritance/interfaces instead
-- **Extract Method** - Often used as a first step; extract conditional branches into helper methods
-- **Remove Middle Man** - Opposite pattern when explicit methods become excessive wrappers
+- **Parameterize Method** - The inverse refactoring; merges several similar methods into one that takes a parameter
+- **Replace Conditional with Polymorphism** - When variants map to distinct types, use inheritance or interfaces
+- **Extract Method** - Frequently applied first to pull conditional branches into helper methods
+- **Remove Middle Man** - The counterpoint when explicit methods devolve into trivial pass-through wrappers
 
 ## Examples in Other Languages
 

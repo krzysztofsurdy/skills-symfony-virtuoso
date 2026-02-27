@@ -2,25 +2,23 @@
 
 ## Overview
 
-Form Template Method is a refactoring technique that eliminates code duplication occurring at the algorithmic level. When multiple classes implement similar algorithms that differ only in specific steps, you extract the common algorithm structure into a base class as a template method, leaving implementation details to subclasses.
+Form Template Method addresses duplication that lives at the algorithmic level rather than the code-block level. When several classes implement the same overall algorithm but differ in specific steps, you extract the shared algorithm skeleton into a base class method and let subclasses supply the varying steps.
 
-This addresses high-level duplication that extends beyond simple copy-paste scenarios and strengthens adherence to the Open/Closed Principle.
+This refactoring strengthens adherence to the Open/Closed Principle: new algorithm variants require only a new subclass, not changes to existing code.
 
 ## Motivation
 
-Code duplication occurs at different levels. Sometimes it's copying identical code blocks; other times it's similar algorithms that differ only in comparison logic or processing steps. The latter type often goes unnoticed but creates significant maintenance issues.
+Not all duplication is obvious copy-paste. Sometimes two classes follow the same sequence of steps -- initialize, process, finalize -- but each step has a slightly different implementation. This structural duplication is harder to spot yet just as costly to maintain, because changes to the algorithm flow must be replicated across every class that implements it.
 
-When changes to the algorithm structure are needed, you must modify every subclass that implements it. The Form Template Method consolidates this shared logic, making the codebase easier to maintain and extend.
+Consolidating the flow into a single template method eliminates that risk and makes the algorithm's structure explicit and centralized.
 
 ## Mechanics
 
-The refactoring process follows these steps:
-
-1. **Extract Method** - Break down the algorithm in each subclass into discrete, named methods
-2. **Pull Up Identical Methods** - Move methods that are identical across subclasses to the base class
-3. **Standardize Method Names** - Rename methods so similar steps have consistent names across subclasses
-4. **Pull Up Abstract Method Signatures** - Define abstract methods in the base class for steps that vary
-5. **Move Template Method** - Move the main algorithm orchestration to the base class where it calls both concrete and abstract methods
+1. **Break the algorithm into steps** -- use Extract Method in each subclass to isolate individual steps
+2. **Identify identical steps** -- move methods that are the same in every subclass up to the base class
+3. **Unify naming** -- rename steps so that corresponding methods share the same name across subclasses
+4. **Declare abstract methods** -- define abstract method signatures in the base class for steps that vary
+5. **Move the algorithm** -- place the template method in the base class, calling both concrete and abstract step methods
 
 ## Before/After
 
@@ -140,25 +138,25 @@ final readonly class JSONExporter extends Exporter
 
 ## Benefits
 
-- **Eliminates Algorithmic Duplication** - Removes duplicate algorithm structure that extends beyond simple copy-paste
-- **Single Point of Change** - Modify the algorithm once in the base class instead of updating every subclass
-- **Supports Open/Closed Principle** - New algorithm variations require only new subclasses; existing code stays unchanged
-- **Improves Code Clarity** - The template method makes the algorithm's structure explicit and easy to understand
-- **Easier Testing** - Test the template logic once; focus subclass tests on specific implementations
+- **Centralized Algorithm Structure** -- the flow is defined once in the base class, not repeated in every subclass
+- **Single Edit Point** -- changes to the algorithm sequence happen in one place
+- **Open/Closed Compliance** -- adding a new format means adding a subclass, not modifying existing ones
+- **Visible Architecture** -- the template method makes the algorithm's shape immediately apparent
+- **Focused Subclass Tests** -- test the flow once in the base; test only the varying steps in each subclass
 
 ## When NOT to Use
 
-- **Trivial Algorithms** - If the shared algorithm is very simple, the abstraction overhead may outweigh benefits
-- **Fundamentally Different Implementations** - When subclasses have completely different approaches, forcing them into a template creates artificial constraints
-- **Single Implementation** - If only one class currently uses the algorithm, defer this refactoring until duplication actually occurs
-- **Dynamic Behavior Changes** - When algorithm steps need to be swapped or reordered at runtime, consider Strategy pattern instead
+- **Simple algorithms** -- if the shared structure is trivial, the abstraction overhead outweighs the benefit
+- **Radically different implementations** -- when subclasses do not truly share a common sequence, forcing a template creates artificial constraints
+- **Single implementation** -- delay this refactoring until duplication actually appears in a second class
+- **Runtime flexibility needed** -- if the algorithm steps must be swapped or reordered dynamically, the Strategy pattern is a better choice
 
 ## Related Refactorings
 
-- **Strategy Pattern** - Use when algorithm variations need to be selected at runtime rather than via inheritance
-- **Extract Method** - Often a prerequisite step to identify discrete algorithm steps
-- **Pull Up Method** - Used to move identical methods to the base class during this refactoring
-- **Template Method Design Pattern** - The pattern this refactoring helps implement
+- **Strategy Pattern** -- preferred when algorithm selection happens at runtime rather than through inheritance
+- **Extract Method** -- a prerequisite step for identifying the discrete steps of the algorithm
+- **Pull Up Method** -- used to move identical step methods into the base class
+- **Template Method Design Pattern** -- the design pattern this refactoring produces
 
 ## Examples in Other Languages
 
