@@ -23,9 +23,9 @@ Edit the relevant `references/*.md` file directly.
 
 ## Content Guidelines
 
-- Target PHP 8.3+ and Symfony 7.x (for Symfony skills)
-- Use strict typing in all code examples (`declare(strict_types=1)`)
-- Show realistic, production-quality code — not toy examples
+- Skills should be stack-agnostic unless they live under `frameworks/`
+- Framework-specific skills (e.g., Symfony) should target the latest stable versions
+- Show realistic, production-quality examples — not toy code
 - Include both the "happy path" and error handling where relevant
 - Reference official documentation where appropriate
 - Keep instructions actionable — tell the agent what to do, not just what exists
