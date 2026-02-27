@@ -4,20 +4,24 @@
     "name": "Krzysztof Surdy"
   },
   "metadata": {
-    "description": "Agent AI skill sets — Knowledge (Design Patterns, Refactoring, SOLID, Debugging), Setup (Agentic Rules Writer), and Frameworks (Symfony)",
-    "version": "5.0.0"
+    "description": "Agent AI skill sets — Knowledge (Design Patterns, Refactoring, SOLID, Debugging, Clean Architecture, Testing, API Design, Security), Setup (Agentic Rules Writer), and Frameworks (Symfony)",
+    "version": "6.0.0"
   },
   "plugins": [
     {
       "name": "knowledge-virtuoso",
-      "description": "All knowledge skills — 26 design patterns, 89 refactoring techniques and code smells, 5 SOLID principles, and systematic debugging methodology",
+      "description": "All knowledge skills — design patterns, refactoring, SOLID, debugging, clean architecture, testing, API design, and security",
       "source": "./",
       "strict": false,
       "skills": [
         "./skills/knowledge/design-patterns",
         "./skills/knowledge/refactoring",
         "./skills/knowledge/solid",
-        "./skills/knowledge/debugging"
+        "./skills/knowledge/debugging",
+        "./skills/knowledge/clean-architecture",
+        "./skills/knowledge/testing",
+        "./skills/knowledge/api-design",
+        "./skills/knowledge/security"
       ]
     },
     {
@@ -54,6 +58,42 @@
       "strict": false,
       "skills": [
         "./skills/knowledge/debugging"
+      ]
+    },
+    {
+      "name": "knowledge-clean-architecture",
+      "description": "Clean Architecture, Hexagonal Architecture, and Domain-Driven Design fundamentals — layers, boundaries, DDD patterns, and context mapping",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/knowledge/clean-architecture"
+      ]
+    },
+    {
+      "name": "knowledge-testing",
+      "description": "Testing methodology — testing pyramid, TDD schools (London and Chicago), test doubles, and testing strategies by architectural layer",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/knowledge/testing"
+      ]
+    },
+    {
+      "name": "knowledge-api-design",
+      "description": "REST and GraphQL API design principles — resource modeling, versioning, pagination, error handling, schema design, and API evolution strategies",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/knowledge/api-design"
+      ]
+    },
+    {
+      "name": "knowledge-security",
+      "description": "Application security fundamentals — OWASP Top 10, authentication and authorization patterns, and secure coding practices",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/knowledge/security"
       ]
     },
     {

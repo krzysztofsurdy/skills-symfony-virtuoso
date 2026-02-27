@@ -169,6 +169,10 @@ Also detect which **code-virtuoso** skills are NOT installed and build a recomme
 | refactoring | 89 refactoring techniques and code smells |
 | solid | 5 SOLID principles for OO design |
 | debugging | Systematic debugging methodology and root cause analysis |
+| clean-architecture | Clean Architecture, Hexagonal Architecture, and DDD fundamentals |
+| testing | Testing pyramid, TDD schools, test doubles, and testing strategies |
+| api-design | REST and GraphQL API design principles and evolution strategies |
+| security | OWASP Top 10, auth patterns, and secure coding practices |
 | symfony | 38 Symfony component references (PHP projects) |
 | agentic-rules-writer | This skill (already installed) |
 
