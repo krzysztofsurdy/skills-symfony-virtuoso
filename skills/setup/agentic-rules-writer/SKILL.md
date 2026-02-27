@@ -79,6 +79,7 @@ Which questions to ask depends on the scope:
 | Q7. Autonomy level | Yes | Skip | Yes |
 | Q8. Task tracking | Yes | Skip | Yes |
 | Q9. Self-improvement | Yes | Skip | Yes |
+| Q10. Additional comments | Yes | Yes | Yes |
 
 **Rationale:** Team-shared rules cover technical standards the whole team agrees on (stack, testing, branching, commits, quality). Dev-specific rules cover personal workflow preferences (planning style, autonomy, task tracking, self-improvement). Global includes everything.
 
@@ -139,6 +140,11 @@ Options:
 - Lessons file — maintain a lessons-learned file, update after corrections
 - No formal tracking — learn implicitly from context
 
+**Q10. Additional comments**
+Free-text. Ask: "Any additional rules, preferences, or comments you'd like included?"
+- If the user provides text, include it verbatim in an "## Additional Rules" section at the end of the generated file
+- If the user says "no" or skips, omit the section entirely
+
 ---
 
 ## Phase 4: Skill Scanning
@@ -155,18 +161,32 @@ For each found skill:
 1. Read the YAML frontmatter to extract `name` and `description`
 2. Build a mapping: `When [situation matching description] -> use /skill-name`
 
-Also detect which **code-virtuoso** skills are NOT installed and build a recommendations list. The full code-virtuoso skill catalog:
+Also detect which skills are NOT installed and build a recommendations list. The full skill catalog across both repositories:
+
+**code-virtuoso skills (public)** — `krzysztofsurdy/code-virtuoso`
 
 | Skill | Description |
 |---|---|
 | design-patterns | 26 GoF design patterns with multi-language examples |
 | refactoring | 89 refactoring techniques and code smells |
 | solid | 5 SOLID principles for OO design |
+| debugging | Systematic debugging methodology and root cause analysis |
+| symfony | 38 Symfony component references (PHP projects) |
+
+**dev-virtuoso skills (private)** — `krzysztofsurdy/dev-virtuoso`
+
+| Skill | Description |
+|---|---|
 | ticket-workflow | End-to-end ticket lifecycle from analysis to PR |
 | pr-message-writer | Structured PR messages with technical documentation |
 | report-generator | Polished HTML reports for investigations and changes |
-| symfony | 38 Symfony component references (PHP projects) |
 | agentic-rules-writer | This skill (already installed) |
+| product-manager | Agent team role: requirements, PRD, prioritization |
+| architect | Agent team role: system design, ADRs, tech decisions |
+| backend-dev | Agent team role: backend implementation and testing |
+| frontend-dev | Agent team role: frontend implementation and testing |
+| qa-engineer | Agent team role: test planning, execution, bug reporting |
+| project-manager | Agent team role: PRINCE2 project delivery and controls |
 
 ---
 
@@ -209,8 +229,19 @@ Generate the rules file content from the questionnaire answers. Structure depend
 When [situation] -> use /skill-name
 ...
 
+## Agent Roles
+[If any role skills are installed, list them here]
+When coordinating a multi-agent team:
+- product-manager: owns requirements and PRD
+- architect: owns system design and tech decisions
+- backend-dev: owns backend implementation
+- frontend-dev: owns UI implementation
+- qa-engineer: owns testing and quality sign-off
+- project-manager: owns delivery planning and risk management
+
 ## Recommended (not installed)
 - Install [skill] from krzysztofsurdy/code-virtuoso — [what it helps with]
+- Install [skill] from krzysztofsurdy/dev-virtuoso — [what it helps with]
 ```
 
 ### Project Team-Shared Structure

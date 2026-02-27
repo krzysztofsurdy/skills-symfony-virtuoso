@@ -1,11 +1,11 @@
 # Code Virtuoso
 
-AI agent skill sets for software engineering — built on the [Agent Skills](https://agentskills.io) open standard.
+AI agent skill sets for software engineering — built on the [Agent Skills](https://agentskills.io) open standard. Knowledge, Setup, and Frameworks.
 
-Three categories of plugins, installable independently:
+Three categories of plugins, installable independently or as bundles:
 
-- **Knowledge** — Design Patterns, Refactoring, SOLID Principles. Reference material with progressive disclosure.
-- **Workflows** — Ticket Workflow, PR Message Writer, Report Generator, Agentic Rules Writer. Opinionated workflows that adapt to your environment.
+- **Knowledge** — Design Patterns, Refactoring, SOLID Principles, Debugging. Reference material with progressive disclosure.
+- **Setup** — Agentic Rules Writer. Agent configuration and bootstrapping tools.
 - **Frameworks** — Symfony. Component-level reference for framework-specific development.
 
 ---
@@ -30,33 +30,21 @@ Covers all five SOLID principles — Single Responsibility, Open/Closed, Liskov 
 
 See [skills/knowledge/solid/SKILL.md](skills/knowledge/solid/SKILL.md) for the full principle index.
 
+### Debugging
+
+Systematic debugging methodology — root cause analysis, bug category strategies (logic, data, state, integration, performance, environment, intermittent), evidence-based diagnosis, escalation criteria, and post-mortem templates. Stack-agnostic.
+
+See [skills/knowledge/debugging/SKILL.md](skills/knowledge/debugging/SKILL.md) for the full methodology.
+
 ---
 
-## Workflow Skills
-
-### Ticket Workflow
-
-End-to-end ticket lifecycle — from ticket analysis through investigation, planning, TDD implementation, committing, and PR creation. On first run, creates a supplement file by asking about your environment: ticket system, VCS, error tracking, logging, database, CI/CD hooks, testing framework, architecture, and PR conventions. All subsequent runs adapt automatically.
-
-See [skills/workflows/ticket-workflow/SKILL.md](skills/workflows/ticket-workflow/SKILL.md) for the full workflow phases.
-
-### PR Message Writer
-
-Write comprehensive pull request messages with structured technical documentation, testing instructions, and database verification queries. Framework-agnostic with a customizable template and real examples covering features, bug fixes, and schema changes.
-
-See [skills/workflows/pr-message-writer/SKILL.md](skills/workflows/pr-message-writer/SKILL.md) for usage and templates.
-
-### Report Generator
-
-Generate polished standalone HTML reports summarizing changes, findings, debug investigations, or architectural decisions. Dark theme design system with collapsible sections, copy-to-clipboard code blocks, timeline components, impact grids, and print-friendly output. Single self-contained file with no external dependencies.
-
-See [skills/workflows/report-generator/SKILL.md](skills/workflows/report-generator/SKILL.md) for report types and components.
+## Setup Skills
 
 ### Agentic Rules Writer
 
 Generate a rules file for any AI coding agent at global, project team-shared, or project dev-specific scope. Runs an interactive questionnaire about your workflow preferences, scans installed skills at runtime, and writes a tailored instruction file in the correct format and location for Claude Code, Cursor, Windsurf, GitHub Copilot, Gemini CLI, Roo Code, or Amp.
 
-See [skills/workflows/agentic-rules-writer/SKILL.md](skills/workflows/agentic-rules-writer/SKILL.md) for the full interactive flow.
+See [skills/setup/agentic-rules-writer/SKILL.md](skills/setup/agentic-rules-writer/SKILL.md) for the full interactive flow.
 
 ---
 
@@ -86,19 +74,16 @@ git clone https://github.com/krzysztofsurdy/code-virtuoso.git
 # Add the marketplace
 /plugin marketplace add krzysztofsurdy/code-virtuoso
 
-# Knowledge skills
-/plugin install design-patterns-virtuoso@krzysztofsurdy-code-virtuoso
-/plugin install refactoring-virtuoso@krzysztofsurdy-code-virtuoso
-/plugin install solid-virtuoso@krzysztofsurdy-code-virtuoso
-
-# Workflow skills
-/plugin install ticket-workflow@krzysztofsurdy-code-virtuoso
-/plugin install pr-message-writer@krzysztofsurdy-code-virtuoso
-/plugin install report-generator@krzysztofsurdy-code-virtuoso
-/plugin install agentic-rules-writer@krzysztofsurdy-code-virtuoso
-
-# Framework skills
+# Bundle installs (recommended)
+/plugin install knowledge-virtuoso@krzysztofsurdy-code-virtuoso
+/plugin install setup-rules-writer@krzysztofsurdy-code-virtuoso
 /plugin install symfony-virtuoso@krzysztofsurdy-code-virtuoso
+
+# Or install individually
+/plugin install knowledge-design-patterns@krzysztofsurdy-code-virtuoso
+/plugin install knowledge-refactoring@krzysztofsurdy-code-virtuoso
+/plugin install knowledge-solid@krzysztofsurdy-code-virtuoso
+/plugin install knowledge-debugging@krzysztofsurdy-code-virtuoso
 ```
 
 Or browse interactively: run `/plugin`, go to **Discover**, and install individual plugins.
@@ -108,10 +93,9 @@ Or browse interactively: run `/plugin`, go to **Discover**, and install individu
 ```bash
 # Project-level (committed to your repo)
 cp -r code-virtuoso/skills/knowledge/design-patterns .claude/skills/
-cp -r code-virtuoso/skills/workflows/ticket-workflow .claude/skills/
 
 # User-level (available in all projects)
-cp -r code-virtuoso/skills/workflows/ticket-workflow ~/.claude/skills/
+cp -r code-virtuoso/skills/knowledge/design-patterns ~/.claude/skills/
 ```
 
 Skills are discovered automatically — just mention a component in conversation.
@@ -168,19 +152,13 @@ code-virtuoso/
 │   │   ├── refactoring/
 │   │   │   ├── SKILL.md           # Overview + technique/smell index
 │   │   │   └── references/        # 89 individual technique/smell docs
-│   │   └── solid/
-│   │       ├── SKILL.md           # Overview + principle index
-│   │       └── references/        # 5 individual principle docs
-│   ├── workflows/
-│   │   ├── ticket-workflow/
-│   │   │   ├── SKILL.md           # Full ticket lifecycle workflow
-│   │   │   └── references/        # Supplement question reference
-│   │   ├── pr-message-writer/
-│   │   │   ├── SKILL.md           # PR message creation guide
-│   │   │   └── references/        # Template + example PRs
-│   │   ├── report-generator/
-│   │   │   ├── SKILL.md           # HTML report generation guide
-│   │   │   └── references/        # HTML template
+│   │   ├── solid/
+│   │   │   ├── SKILL.md           # Overview + principle index
+│   │   │   └── references/        # 5 individual principle docs
+│   │   └── debugging/
+│   │       ├── SKILL.md           # Systematic debugging methodology
+│   │       └── references/        # Bug categories + post-mortem template
+│   ├── setup/
 │   │   └── agentic-rules-writer/
 │   │       ├── SKILL.md           # Interactive rules file generator
 │   │       └── references/        # Questionnaire + agent targets

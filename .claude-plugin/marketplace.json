@@ -4,13 +4,25 @@
     "name": "Krzysztof Surdy"
   },
   "metadata": {
-    "description": "Agent AI skill sets — Knowledge (Design Patterns, Refactoring, SOLID), Workflows (Ticket Lifecycle, PR Writing, Report Generation), and Frameworks (Symfony)",
-    "version": "3.0.0"
+    "description": "Agent AI skill sets — Knowledge (Design Patterns, Refactoring, SOLID, Debugging), Setup (Agentic Rules Writer), and Frameworks (Symfony)",
+    "version": "5.0.0"
   },
   "plugins": [
     {
-      "name": "design-patterns-virtuoso",
-      "description": "26 design pattern skills — creational, structural, and behavioral patterns with PHP 8.3+ examples",
+      "name": "knowledge-virtuoso",
+      "description": "All knowledge skills — 26 design patterns, 89 refactoring techniques and code smells, 5 SOLID principles, and systematic debugging methodology",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/knowledge/design-patterns",
+        "./skills/knowledge/refactoring",
+        "./skills/knowledge/solid",
+        "./skills/knowledge/debugging"
+      ]
+    },
+    {
+      "name": "knowledge-design-patterns",
+      "description": "26 design pattern skills — creational, structural, and behavioral patterns with multi-language examples",
       "source": "./",
       "strict": false,
       "skills": [
@@ -18,8 +30,8 @@
       ]
     },
     {
-      "name": "refactoring-virtuoso",
-      "description": "89 refactoring skills — techniques, code smells, and dealing with generalization, all with PHP 8.3+ examples",
+      "name": "knowledge-refactoring",
+      "description": "89 refactoring skills — techniques, code smells, and dealing with generalization with multi-language examples",
       "source": "./",
       "strict": false,
       "skills": [
@@ -27,8 +39,8 @@
       ]
     },
     {
-      "name": "solid-virtuoso",
-      "description": "SOLID principles for object-oriented design — SRP, OCP, LSP, ISP, DIP with multi-language examples (PHP, Java, Python, TypeScript, C++)",
+      "name": "knowledge-solid",
+      "description": "SOLID principles for object-oriented design — SRP, OCP, LSP, ISP, DIP with multi-language examples",
       "source": "./",
       "strict": false,
       "skills": [
@@ -36,39 +48,21 @@
       ]
     },
     {
-      "name": "ticket-workflow",
-      "description": "End-to-end ticket workflow — from ticket analysis through investigation, planning, TDD implementation, committing, and PR creation. Adapts to your environment via a supplement file created on first run.",
+      "name": "knowledge-debugging",
+      "description": "Systematic debugging methodology — root cause analysis, bug category strategies, evidence-based diagnosis, and post-mortem documentation",
       "source": "./",
       "strict": false,
       "skills": [
-        "./skills/workflows/ticket-workflow"
+        "./skills/knowledge/debugging"
       ]
     },
     {
-      "name": "pr-message-writer",
-      "description": "Write comprehensive pull request messages with structured technical documentation, testing instructions, and verification queries. Framework-agnostic with customizable templates.",
+      "name": "setup-rules-writer",
+      "description": "Generate a rules file for any AI coding agent. Interactive setup that scans installed skills, asks about workflow preferences, and writes a tailored instruction file for Claude Code, Cursor, Windsurf, Copilot, Gemini, Roo Code, or Amp",
       "source": "./",
       "strict": false,
       "skills": [
-        "./skills/workflows/pr-message-writer"
-      ]
-    },
-    {
-      "name": "report-generator",
-      "description": "Generate a polished standalone HTML report summarizing changes, findings, debug investigations, or architectural decisions. Opens automatically in the browser.",
-      "source": "./",
-      "strict": false,
-      "skills": [
-        "./skills/workflows/report-generator"
-      ]
-    },
-    {
-      "name": "agentic-rules-writer",
-      "description": "Generate a rules file for any AI coding agent. Interactive setup that scans installed skills, asks about workflow preferences, and writes a tailored instruction file for Claude Code, Cursor, Windsurf, Copilot, Gemini, Roo Code, or Amp. Supports global, project team-shared, and project dev-specific scopes.",
-      "source": "./",
-      "strict": false,
-      "skills": [
-        "./skills/workflows/agentic-rules-writer"
+        "./skills/setup/agentic-rules-writer"
       ]
     },
     {
