@@ -266,6 +266,9 @@ Generate the rules file content from the questionnaire answers. Structure depend
 - Prove it works — never mark done without verification
 
 ## Skills
+
+CRITICAL: Skills are your most valuable resource. When a situation matches an installed skill, you MUST use it — do not rely on general knowledge when a dedicated skill exists. Skills contain curated, battle-tested reference material that is more precise and reliable than generating answers from scratch. Skipping a relevant skill is like ignoring documentation you already have open.
+
 [Auto-generated from Phase 4 scan]
 When [situation] -> use /skill-name
 ...
