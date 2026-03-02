@@ -189,6 +189,26 @@ Detailed reference for each question in the global-agentic-rules-writer workflow
   - Keep subject line under 72 characters
   ```
 
+### Follow-up: Co-authorship
+
+**Question:** Should the agent add itself as co-author on commits?
+
+**Purpose:** Controls whether `Co-Authored-By: Agent Name <noreply@...>` is appended to commit messages.
+
+| Option | Description |
+|---|---|
+| Yes | Agent adds a `Co-Authored-By` trailer to every commit |
+| No | Agent never adds itself as co-author |
+
+**Generated rules by answer:**
+
+- **Yes:** (No rule needed — this is the default behavior for most agents)
+
+- **No:**
+  ```
+  - Do not add the agent as co-author on commits
+  ```
+
 ---
 
 ## Q6. Code Quality Bar
@@ -230,6 +250,41 @@ Detailed reference for each question in the global-agentic-rules-writer workflow
   - Verify the happy path works before moving on
   ```
 
+### Follow-up: Documentation Level
+
+**Question:** What level of code documentation do you expect?
+
+**Purpose:** Controls how much documentation the agent adds to generated code.
+
+| Option | Description |
+|---|---|
+| Docblocks on public APIs | Full docblocks on public methods, classes, and interfaces |
+| Inline comments for non-obvious logic only | Comments only where the logic is not self-evident |
+| Minimal — code should speak for itself | Almost no comments; clean naming is the documentation |
+
+**Generated rules by answer:**
+
+- **Docblocks on public APIs:**
+  ```
+  - Add docblocks to all public methods, classes, and interfaces
+  - Include @param, @return, and @throws annotations
+  - Keep descriptions concise — one sentence per element
+  ```
+
+- **Inline comments for non-obvious logic only:**
+  ```
+  - Add inline comments only where the logic is not self-evident
+  - Do not add docblocks, type annotations, or comments to code you did not change
+  - Prefer self-documenting code over comments
+  ```
+
+- **Minimal:**
+  ```
+  - Do not add comments unless explicitly asked
+  - Use clear naming to make code self-documenting
+  - Only comment on truly surprising or counter-intuitive decisions
+  ```
+
 ---
 
 ## Q7. Autonomy Level
@@ -251,6 +306,7 @@ Detailed reference for each question in the global-agentic-rules-writer workflow
   - Fix lint errors, type errors, and failing tests without asking
   - Fix minor bugs discovered during implementation without asking
   - Only ask for: architectural decisions, scope changes, or ambiguous requirements
+  - Never add new dependencies without asking first
   ```
 
 - **Semi-autonomous:**
@@ -258,6 +314,7 @@ Detailed reference for each question in the global-agentic-rules-writer workflow
   - Fix lint errors, type errors, and failing tests without asking
   - Ask before: force-pushing, deleting branches, modifying CI/CD, running destructive commands
   - Ask before making architectural changes not covered by the current task
+  - Never add new dependencies without asking first
   ```
 
 - **Conservative:**
@@ -265,6 +322,7 @@ Detailed reference for each question in the global-agentic-rules-writer workflow
   - Confirm before modifying any file
   - Confirm before running any command with side effects
   - Present options and wait for explicit approval before proceeding
+  - Never add new dependencies without asking first
   ```
 
 ---
@@ -327,3 +385,209 @@ Detailed reference for each question in the global-agentic-rules-writer workflow
 
 - **No formal tracking:**
   (No rules generated for this section.)
+
+---
+
+## Q10. Agent Parallelization
+
+**Question:** How should the agent handle multi-part tasks?
+
+**Purpose:** Controls whether the agent delegates work to parallel agent teams or works sequentially.
+
+| Option | Description |
+|---|---|
+| Always parallelize | Delegate to agent teams by default for any multi-part task |
+| Parallel for large tasks | Use agent teams when 3+ independent subtasks exist |
+| Sequential only | Work through tasks one at a time, no agent delegation |
+
+**Generated rules by answer:**
+
+- **Always parallelize:**
+  ```
+  - Delegate to agent teams for any task with multiple independent parts
+  - Define clear boundaries per agent to avoid file conflicts
+  - Prefer parallel execution to minimize total time
+  ```
+
+- **Parallel for large tasks:**
+  ```
+  - Use agent teams to parallelize work when 3 or more independent subtasks exist
+  - For smaller tasks, work sequentially
+  - When delegating, define clear boundaries per agent to avoid conflicts
+  ```
+
+- **Sequential only:**
+  ```
+  - Work through tasks one at a time, sequentially
+  - Do not delegate to agent teams or spawn parallel workers
+  ```
+
+---
+
+## Q11. Communication Style
+
+**Question:** How should the agent communicate with you?
+
+**Purpose:** Sets the tone, formatting, and verbosity of agent responses.
+
+| Option | Description |
+|---|---|
+| Direct and minimal | No emojis, terse responses, just the facts |
+| Structured explanations | Sectioned with headings, clear and direct language, no emojis |
+| Conversational | Casual tone, emojis OK, friendly and approachable |
+
+**Generated rules by answer:**
+
+- **Direct and minimal:**
+  ```
+  - Keep responses short and to the point
+  - No emojis, no filler phrases
+  - State what was done, what changed, and what to verify — nothing more
+  ```
+
+- **Structured explanations:**
+  ```
+  - Use clear, direct language with section headings when explaining
+  - No emojis in responses or generated code
+  - Break complex explanations into numbered steps or bullet points
+  ```
+
+- **Conversational:**
+  ```
+  - Use a casual, friendly tone
+  - Emojis are fine where they add clarity or personality
+  - Explain reasoning naturally, as if talking to a colleague
+  ```
+
+---
+
+## Q12. Directory Structure
+
+**Question:** How should the agent handle directory structure decisions?
+
+**Purpose:** Controls whether the agent follows existing project structure or suggests improvements based on best practices.
+
+| Option | Description |
+|---|---|
+| Follow existing | Always match the project's current directory structure and conventions |
+| Follow best practices | Restructure toward industry conventions, suggest improvements |
+| Pragmatic middle | Follow existing structure but suggest improvements when patterns are clearly wrong |
+
+**Generated rules by answer:**
+
+- **Follow existing:**
+  ```
+  - Always match the project's existing directory structure and naming conventions
+  - Do not reorganize or restructure directories unless explicitly asked
+  - Place new files where similar files already exist
+  ```
+
+- **Follow best practices:**
+  ```
+  - Follow industry-standard directory structures and naming conventions
+  - Suggest restructuring when the current layout deviates significantly from conventions
+  - When creating new modules, follow the best-practice layout for the project's framework
+  ```
+
+- **Pragmatic middle:**
+  ```
+  - Follow the project's existing structure by default
+  - Suggest improvements when patterns are clearly wrong or inconsistent
+  - For new modules, prefer the framework's recommended structure
+  - Never reorganize existing code without explicit approval
+  ```
+
+---
+
+## Q13. Error Handling
+
+**Question:** What error handling philosophy should the agent follow?
+
+**Purpose:** Controls how generated code handles unexpected state and errors.
+
+| Option | Description |
+|---|---|
+| Fail fast | Throw early, crash on unexpected state, surface errors immediately |
+| Defensive | Handle gracefully, never crash, always attempt recovery |
+| Balanced | Fail fast in development, handle gracefully in production |
+
+**Generated rules by answer:**
+
+- **Fail fast:**
+  ```
+  - Throw exceptions early on unexpected state — do not silently swallow errors
+  - Validate inputs at system boundaries and fail immediately on invalid data
+  - Prefer explicit error types over generic exceptions
+  - Let unrecoverable errors bubble up rather than catching and hiding them
+  ```
+
+- **Defensive:**
+  ```
+  - Handle errors gracefully — never let the application crash on user-facing paths
+  - Provide meaningful fallbacks for recoverable errors
+  - Log unexpected states for debugging but continue operation where safe
+  - Validate inputs defensively at every layer
+  ```
+
+- **Balanced:**
+  ```
+  - Fail fast during development — strict assertions, no silent failures
+  - Handle gracefully in production — catch at boundaries, log, and recover where possible
+  - Use environment-aware error handling (strict in dev/test, tolerant in prod)
+  - Always log the root cause regardless of environment
+  ```
+
+---
+
+## Q14. Persona / Roleplay
+
+**Question:** Would you like the agent to adopt a persona or character?
+
+**Purpose:** Adds personality and flavor to agent responses while maintaining technical accuracy as the primary concern.
+
+| Option | Description |
+|---|---|
+| Yes | Agent adopts a persona — user describes who |
+| No | Straightforward assistant, no roleplay |
+
+**If "Yes":** Ask the user to describe the persona. Accept any input — real people, fictional characters, archetypes, or invented personalities. If the persona is obscure or unfamiliar, use web search to gather details before generating rules.
+
+**Generated rules when Yes:**
+
+Generate three parts:
+
+1. **Persona description** — A one-paragraph description capturing the character's voice, attitude, and communication style. Grounded enough for the agent to consistently roleplay without ambiguity.
+
+2. **Catchphrases** — 5-8 catchphrases drawn from the character (if well-known) or invented in their style. These should feel natural, not forced.
+
+3. **Hard constraint** — Always include this verbatim:
+  ```
+  IMPORTANT: Precision and correctness always come first. The persona is flavor on top
+  of accurate, well-structured responses — never sacrifice technical quality for character.
+  Use at most one catchphrase per response. Do not repeat the same catchphrase consecutively.
+  Do not force the persona when it would reduce clarity.
+  ```
+
+**Example — persona "a pirate captain":**
+```
+## Persona
+You are a weathered pirate captain who has sailed the seven seas of legacy codebases.
+You speak with nautical metaphors, respect a well-structured ship (codebase), and have
+no patience for landlubber code that'll sink under the first storm of production traffic.
+
+Catchphrases (use at most one per response, do not repeat consecutively):
+- "That code'll make ye walk the plank in production."
+- "Aye, now that's a seaworthy solution."
+- "Batten down the hatches — this refactor's gonna be rough."
+- "Dead code is dead weight. Throw it overboard."
+- "A ship is only as strong as its weakest bulkhead."
+- "Chart your course before ye set sail, mate."
+
+IMPORTANT: Precision and correctness always come first. The persona is flavor on top
+of accurate, well-structured responses — never sacrifice technical quality for character.
+Use at most one catchphrase per response. Do not repeat the same catchphrase consecutively.
+Do not force the persona when it would reduce clarity.
+```
+
+**Generated rules when No:**
+(No rules generated — omit the Persona section entirely.)

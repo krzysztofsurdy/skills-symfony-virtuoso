@@ -79,9 +79,14 @@ Which questions to ask depends on the scope:
 | Q7. Autonomy level | Yes | Skip | Yes |
 | Q8. Task tracking | Yes | Skip | Yes |
 | Q9. Self-improvement | Yes | Skip | Yes |
-| Q10. Additional comments | Yes | Yes | Yes |
+| Q10. Agent parallelization | Yes | Skip | Yes |
+| Q11. Communication style | Yes | Skip | Yes |
+| Q12. Directory structure | Yes | Yes | Skip |
+| Q13. Error handling | Yes | Yes | Skip |
+| Q14. Persona / roleplay | Yes | Skip | Yes |
+| Q15. Additional comments | Yes | Yes | Yes |
 
-**Rationale:** Team-shared rules cover technical standards the whole team agrees on (stack, testing, branching, commits, quality). Dev-specific rules cover personal workflow preferences (planning style, autonomy, task tracking, self-improvement). Global includes everything.
+**Rationale:** Team-shared rules cover technical standards the whole team agrees on (stack, testing, branching, commits, quality, directory structure, error handling). Dev-specific rules cover personal workflow preferences (planning style, autonomy, task tracking, self-improvement, parallelization, communication style). Global includes everything.
 
 See [references/questionnaire.md](references/questionnaire.md) for the full question reference with descriptions, option mappings, and example outputs.
 
@@ -117,17 +122,23 @@ Options:
 - Ticket prefix — `PROJ-123: description`
 - Freeform — no enforced format
 
+Follow-up: "Should the agent add itself as co-author on commits?" (Yes / No)
+
 **Q6. Code quality bar**
 Options:
 - Staff engineer rigor — exhaustive edge cases, defensive coding, thorough documentation
 - Senior pragmatic — solid quality with practical trade-offs
 - Ship fast — working code with minimal ceremony
 
+Follow-up: "Documentation level?" (Docblocks on public APIs / Inline comments for non-obvious logic only / Minimal — code should speak for itself)
+
 **Q7. Autonomy level**
 Options:
 - Autonomous — fix bugs, failing CI, lint errors without asking
 - Semi-autonomous — ask before destructive or risky operations only
 - Conservative — confirm everything before acting
+
+All options also generate: "Never add new dependencies without asking first"
 
 **Q8. Task tracking**
 Options:
@@ -140,7 +151,43 @@ Options:
 - Lessons file — maintain a lessons-learned file, update after corrections
 - No formal tracking — learn implicitly from context
 
-**Q10. Additional comments**
+**Q10. Agent parallelization**
+Options:
+- Always parallelize — delegate to agent teams by default for any multi-part task
+- Parallel for large tasks — use agent teams when 3+ independent subtasks exist
+- Sequential only — work through tasks one at a time, no agent delegation
+
+**Q11. Communication style**
+Options:
+- Direct and minimal — no emojis, terse responses, just the facts
+- Structured explanations — sectioned with headings, clear and direct, no emojis
+- Conversational — casual tone, emojis OK, friendly and approachable
+
+**Q12. Directory structure**
+Options:
+- Follow existing — always match the project's current directory structure and conventions
+- Follow best practices — restructure toward industry conventions, suggest improvements
+- Pragmatic middle — follow existing structure but suggest improvements when patterns are clearly wrong
+
+**Q13. Error handling**
+Options:
+- Fail fast — throw early, crash on unexpected state, surface errors immediately
+- Defensive — handle gracefully, never crash, always recover
+- Balanced — fail fast in development, handle gracefully in production
+
+**Q14. Persona / roleplay**
+Options:
+- Yes — I want the agent to adopt a persona
+- No — just be a straightforward assistant
+
+If "Yes": ask the user to describe the persona (e.g. "a grumpy senior engineer", "Gandalf", "a pirate captain"). Accept any input — if the persona is obscure or fictional, use web search to gather details before generating rules.
+
+Then generate:
+1. A one-paragraph persona description capturing the character's voice and attitude
+2. 5-8 catchphrases the agent can sprinkle into responses (drawn from the character or invented in their style)
+3. A hard constraint: **Precision always comes first. The persona is flavor, not substance.** Technical accuracy, correct code, and clear answers are never sacrificed for character. Use at most one catchphrase per response — do not overdo it or make them repetitive.
+
+**Q15. Additional comments**
 Free-text. Ask: "Any additional rules, preferences, or comments you'd like included?"
 - If the user provides text, include it verbatim in an "## Additional Rules" section at the end of the generated file
 - If the user says "no" or skips, omit the section entirely
@@ -189,18 +236,24 @@ Generate the rules file content from the questionnaire answers. Structure depend
 
 ## Workflow
 [Planning rules from Q2]
-[Autonomy rules from Q7]
+[Autonomy rules from Q7 + dependency rule]
+[Parallelization rules from Q10]
 [Re-plan rule: "If an approach fails or hits unexpected complexity, stop and re-plan immediately"]
 
+## Communication
+[Communication style from Q11]
+
 ## Code Quality
-[Quality bar from Q6]
+[Quality bar from Q6 + documentation follow-up]
 [Testing rules from Q3]
 [Stack conventions from Q1]
+[Directory structure from Q12]
+[Error handling from Q13]
 [Elegance check: "For non-trivial changes, pause and ask: is there a more elegant way?"]
 
 ## Version Control
 [Branch rules from Q4]
-[Commit rules from Q5]
+[Commit rules from Q5 + co-authorship follow-up]
 
 ## Task Management
 [Tracking from Q8]
@@ -220,6 +273,9 @@ When [situation] -> use /skill-name
 ## Agent Roles
 [If any role skills (product-manager, architect, backend-dev, frontend-dev, qa-engineer, project-manager) are detected during Phase 4 scan, list them here with their responsibilities. If no role skills are installed, omit this section entirely.]
 
+## Persona
+[If Q14 = Yes — persona description, catchphrases, and constraint. If No, omit this section entirely.]
+
 ## Recommended (not installed)
 - Install [skill] from krzysztofsurdy/code-virtuoso — [what it helps with]
 ```
@@ -231,14 +287,16 @@ When [situation] -> use /skill-name
 
 ## Stack & Conventions
 [Stack conventions from Q1]
-[Quality bar from Q6]
+[Quality bar from Q6 + documentation follow-up]
+[Directory structure from Q12]
+[Error handling from Q13]
 
 ## Testing
 [Testing rules from Q3]
 
 ## Version Control
 [Branch rules from Q4]
-[Commit rules from Q5]
+[Commit rules from Q5 + co-authorship follow-up]
 
 ## Core Principles
 - Simplicity first — make every change as simple as possible
@@ -254,11 +312,18 @@ When [situation] -> use /skill-name
 
 ## Workflow
 [Planning rules from Q2]
-[Autonomy rules from Q7]
+[Autonomy rules from Q7 + dependency rule]
+[Parallelization rules from Q10]
+
+## Communication
+[Communication style from Q11]
 
 ## Task Management
 [Tracking from Q8]
 [Self-improvement from Q9]
+
+## Persona
+[If Q14 = Yes — persona description, catchphrases, and constraint. If No, omit.]
 ```
 
 ### Agent-Specific Formatting
@@ -318,17 +383,77 @@ These examples show how questionnaire answers map to generated rules.
 - Document non-obvious decisions with brief inline comments
 ```
 
+**Q5 co-authorship = "No"** generates:
+```
+- Do not add the agent as co-author on commits
+```
+
+**Q6 documentation = "Inline comments for non-obvious logic only"** generates:
+```
+- Add inline comments only where the logic is not self-evident
+- Do not add docblocks, type annotations, or comments to code you did not change
+```
+
 **Q7 = "Semi-autonomous"** generates:
 ```
 - Fix lint errors, type errors, and failing tests without asking
 - Ask before: force-pushing, deleting branches, modifying CI/CD, running destructive commands
 - Ask before making architectural changes not covered by the current task
+- Never add new dependencies without asking first
 ```
 
 **Q9 = "Lessons file"** generates:
 ```
 - After any correction or mistake, update the lessons-learned file
 - Review lessons file at the start of each session
+```
+
+**Q10 = "Parallel for large tasks"** generates:
+```
+- Use agent teams to parallelize work when 3 or more independent subtasks exist
+- For smaller tasks, work sequentially
+- When delegating, define clear boundaries per agent to avoid conflicts
+```
+
+**Q11 = "Structured explanations"** generates:
+```
+- Use clear, direct language with section headings
+- No emojis in responses or generated code
+- Break complex explanations into numbered steps or bullet points
+```
+
+**Q12 = "Follow existing"** generates:
+```
+- Always match the project's existing directory structure and naming conventions
+- Do not reorganize or restructure directories unless explicitly asked
+- Place new files where similar files already exist
+```
+
+**Q13 = "Fail fast"** generates:
+```
+- Throw exceptions early on unexpected state — do not silently swallow errors
+- Validate inputs at system boundaries and fail immediately on invalid data
+- Prefer explicit error types over generic exceptions
+```
+
+**Q14 = "Yes" with persona "a grumpy senior engineer"** generates:
+```
+## Persona
+You are a grumpy senior engineer who has seen too many production incidents caused by
+clever code. You're blunt, slightly impatient with over-engineering, and deeply
+practical. You respect simplicity and distrust anything "elegant" that can't survive
+a 3 AM incident.
+
+Catchphrases (use at most one per response, do not repeat consecutively):
+- "I've seen this blow up in prod before."
+- "Clever is the enemy of maintainable."
+- "Ship it or shut up about it."
+- "That's a Tuesday 2 AM pager right there."
+- "YAGNI. Next question."
+- "Who's going to debug this at 3 AM? Not me."
+
+IMPORTANT: Precision and correctness always come first. The persona is flavor on top
+of accurate, well-structured responses — never sacrifice technical quality for character.
 ```
 
 ---
