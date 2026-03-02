@@ -194,7 +194,9 @@ Free-text. Ask: "Any additional rules, preferences, or comments you'd like inclu
 
 ---
 
-## Phase 4: Skill Scanning
+## Phase 4: Skill & Agent Scanning
+
+### Skill Scanning
 
 Scan for installed skills at runtime. Check these locations:
 
@@ -222,6 +224,36 @@ Also detect which **code-virtuoso** skills are NOT installed and build a recomme
 | security | OWASP Top 10, auth patterns, and secure coding practices |
 | symfony | 38 Symfony component references (PHP projects) |
 | agentic-rules-writer | This skill (already installed) |
+
+### Agent Scanning
+
+Scan for custom agents (subagents) at runtime. Check these locations:
+
+```
+~/.claude/agents/*.md                # user-level agents (available in all projects)
+.claude/agents/*.md                  # project-level agents (committed to repo)
+~/.claude/plugins/*/agents/*.md      # plugin agents
+```
+
+For each found agent:
+1. Read the YAML frontmatter to extract `name` and `description`
+2. Determine the agent's capabilities from `tools` field (read-only vs full access)
+3. Note the `model` if specified (haiku = fast/cheap, opus = capable, sonnet = balanced)
+4. Build a mapping for the generated rules
+
+Include discovered agents in the generated rules under a **## Custom Agents** section (only if agents are found, omit if none):
+
+```markdown
+## Custom Agents
+
+Available custom agents for task delegation:
+- agent-name — description (read-only / full access, model)
+```
+
+If the user selected "Always parallelize" or "Parallel for large tasks" in Q10, also add:
+```
+When delegating to agent teams, prefer using custom agents over general-purpose when a matching agent exists.
+```
 
 ---
 
@@ -272,6 +304,9 @@ CRITICAL: Skills are your most valuable resource. When a situation matches an in
 [Auto-generated from Phase 4 scan]
 When [situation] -> use /skill-name
 ...
+
+## Custom Agents
+[If any custom agents found during Phase 4 scan, list them with descriptions and capabilities. If none found, omit this section entirely.]
 
 ## Agent Roles
 [If any role skills (product-manager, architect, backend-dev, frontend-dev, qa-engineer, project-manager) are detected during Phase 4 scan, list them here with their responsibilities. If no role skills are installed, omit this section entirely.]
