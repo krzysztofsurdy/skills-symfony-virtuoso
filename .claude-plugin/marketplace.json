@@ -4,8 +4,8 @@
     "name": "Krzysztof Surdy"
   },
   "metadata": {
-    "description": "Agent AI skill sets — Knowledge (Design Patterns, Refactoring, SOLID, Debugging, Clean Architecture, Testing, API Design, Security), Setup (Agentic Rules Writer), and Frameworks (Symfony)",
-    "version": "6.4.0"
+    "description": "Agent AI skill sets — Knowledge (Design Patterns, Refactoring, SOLID, Debugging, Clean Architecture, Testing, API Design, Security, Scrum), Setup (Agentic Rules Writer), Frameworks (Symfony), and Agents (Scrum Master)",
+    "version": "6.5.0"
   },
   "plugins": [
     {
@@ -21,7 +21,8 @@
         "./skills/knowledge/clean-architecture",
         "./skills/knowledge/testing",
         "./skills/knowledge/api-design",
-        "./skills/knowledge/security"
+        "./skills/knowledge/security",
+        "./skills/knowledge/scrum"
       ]
     },
     {
@@ -112,6 +113,27 @@
       "strict": false,
       "skills": [
         "./skills/frameworks/php/symfony"
+      ]
+    },
+    {
+      "name": "knowledge-scrum",
+      "description": "Scrum framework knowledge — sprint goals, sprint planning, daily scrums, sprint reviews, retrospectives, and goal-writing templates (SMART, FOCUS, Scrum.org)",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/knowledge/scrum"
+      ]
+    },
+    {
+      "name": "scrum-virtuoso",
+      "description": "Scrum framework knowledge, sprint goal writing templates, and Scrum Master agent for facilitating scrum events and crafting effective sprint goals",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/knowledge/scrum"
+      ],
+      "agents": [
+        "./agents/scrum-master.md"
       ]
     }
   ]
