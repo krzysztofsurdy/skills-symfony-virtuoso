@@ -5,7 +5,7 @@
   },
   "metadata": {
     "description": "Agent AI skill sets — Knowledge (Design Patterns, Refactoring, SOLID, Debugging, Clean Architecture, Testing, API Design, Security, Scrum, Performance, Microservices, Git Workflow, CI/CD, Accessibility, Database Design), Tools (Agentic Rules Writer), Frameworks (Symfony Components, Symfony Upgrade), Playbooks (PHP Upgrade, Composer Dependencies), and Agents (Scrum Master)",
-    "version": "7.10.0"
+    "version": "7.10.1"
   },
   "plugins": [
     {

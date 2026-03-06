@@ -392,6 +392,38 @@ Generate the rules file content from the questionnaire answers. Structure depend
 - Minimal blast radius — touch only what's necessary
 - Prove it works — never mark done without verification
 
+## Code Change Hygiene
+- Read before editing — always read and understand existing code before modifying it
+- Minimal diffs — make the smallest change that solves the problem, no drive-by cleanups
+- Follow existing patterns — match the codebase's style, naming, and structure
+- One task at a time — complete the requested task, don't fix unrelated issues or "improve" adjacent code
+- Prefer editing over creating — always prefer modifying an existing file over creating a new one
+- Search before creating — before creating a new file, search for an existing one that serves a similar purpose
+- Never create documentation files unless explicitly asked
+- No premature abstractions — don't introduce interfaces, base classes, or design patterns unless the current task demands them
+- No backwards-compatibility shims — when replacing code, remove the old version entirely
+- Remove dead code — don't leave commented-out code, unused imports, or orphaned functions
+
+## Don't Guess
+- Don't fabricate URLs, file paths, API endpoints, or names — search or ask if unsure
+- Don't assume unstated requirements — implement only what was requested
+- Don't assume project architecture — explore and verify before making decisions
+- Ask when stuck — a clarifying question is cheaper than a wrong implementation
+- If an approach fails or hits unexpected complexity, stop and re-plan immediately
+
+## Safety Baseline
+- Never commit secrets, .env files, API keys, or credentials to version control
+- Never force push to main/master
+- Never delete branches without explicit approval
+- Never modify CI/CD pipelines without explicit approval
+
+## Knowledge Sources
+- When a topic is covered by an installed skill, use the skill first — it contains curated, verified content
+- When a topic is NOT covered by installed skills, search the web for the official documentation of the technology (e.g., symfony.com for Symfony, php.net for PHP, react.dev for React)
+- Prefer official docs over blog posts, Stack Overflow, or AI-generated summaries — official sources are the most accurate and up-to-date
+- When recommending MCPs, skills, or packages to install, always prefer official providers (e.g., Anthropic, Vercel, framework authors) over community alternatives
+- When no official option exists, prefer well-maintained community options with high adoption and recent activity
+
 ## Skills
 
 CRITICAL: Skills are your most valuable resource. When a situation matches an installed skill, you MUST use it — do not rely on general knowledge when a dedicated skill exists. Skills contain curated, battle-tested reference material that is more precise and reliable than generating answers from scratch. Skipping a relevant skill is like ignoring documentation you already have open.
@@ -444,6 +476,37 @@ When [situation] -> use /skill-name
 - Root causes only — no temporary fixes, find and fix the real problem
 - Minimal blast radius — touch only what's necessary
 - Prove it works — never mark done without verification
+
+## Code Change Hygiene
+- Read before editing — always read and understand existing code before modifying it
+- Minimal diffs — make the smallest change that solves the problem, no drive-by cleanups
+- Follow existing patterns — match the codebase's style, naming, and structure
+- One task at a time — complete the requested task, don't fix unrelated issues or "improve" adjacent code
+- Prefer editing over creating — always prefer modifying an existing file over creating a new one
+- Search before creating — before creating a new file, search for an existing one that serves a similar purpose
+- Never create documentation files unless explicitly asked
+- No premature abstractions — don't introduce interfaces, base classes, or design patterns unless the current task demands them
+- No backwards-compatibility shims — when replacing code, remove the old version entirely
+- Remove dead code — don't leave commented-out code, unused imports, or orphaned functions
+
+## Don't Guess
+- Don't fabricate URLs, file paths, API endpoints, or names — search or ask if unsure
+- Don't assume unstated requirements — implement only what was requested
+- Don't assume project architecture — explore and verify before making decisions
+- Ask when stuck — a clarifying question is cheaper than a wrong implementation
+
+## Safety Baseline
+- Never commit secrets, .env files, API keys, or credentials to version control
+- Never force push to main/master
+- Never delete branches without explicit approval
+- Never modify CI/CD pipelines without explicit approval
+
+## Knowledge Sources
+- When a topic is covered by an installed skill, use the skill first — it contains curated, verified content
+- When a topic is NOT covered by installed skills, search the web for the official documentation of the technology
+- Prefer official docs over blog posts, Stack Overflow, or AI-generated summaries
+- When recommending MCPs, skills, or packages to install, always prefer official providers over community alternatives
+- When no official option exists, prefer well-maintained community options with high adoption and recent activity
 ```
 
 ### Project Dev-Specific Structure
