@@ -4,8 +4,8 @@
     "name": "Krzysztof Surdy"
   },
   "metadata": {
-    "description": "Agent AI skill sets — Knowledge (Design Patterns, Refactoring, SOLID, Debugging, Clean Architecture, Testing, API Design, Security, Scrum, Performance, Microservices, Git Workflow, CI/CD, Accessibility, Database Design), Tools (Agentic Rules Writer), Frameworks (Symfony), and Agents (Scrum Master)",
-    "version": "7.9.0"
+    "description": "Agent AI skill sets — Knowledge (Design Patterns, Refactoring, SOLID, Debugging, Clean Architecture, Testing, API Design, Security, Scrum, Performance, Microservices, Git Workflow, CI/CD, Accessibility, Database Design), Tools (Agentic Rules Writer), Frameworks (Symfony Components, Symfony Upgrade), Playbooks (PHP Upgrade, Composer Dependencies), and Agents (Scrum Master)",
+    "version": "7.10.0"
   },
   "plugins": [
     {
@@ -45,11 +45,22 @@
     },
     {
       "name": "symfony-virtuoso",
-      "description": "All 38 Symfony component skills — APIs, code patterns, configuration, and common use cases for PHP 8.3+ and Symfony 7.x",
+      "description": "Symfony framework skills — 38 component references (APIs, patterns, configuration for PHP 8.3+ and Symfony 7.x) and version upgrade guide (deprecation-first approach, recipe updates, bundle compatibility)",
       "source": "./",
       "strict": false,
       "skills": [
-        "./skills/frameworks/symfony"
+        "./skills/frameworks/symfony/symfony-components",
+        "./skills/frameworks/symfony/symfony-upgrade"
+      ]
+    },
+    {
+      "name": "playbooks-virtuoso",
+      "description": "Operational playbooks — PHP version upgrade (Rector, PHPCompatibility, per-version breaking changes) and Composer dependency management (safe update strategies, security auditing, Dependabot/Renovate)",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/playbooks/php-upgrade",
+        "./skills/playbooks/composer-dependencies"
       ]
     }
   ]
