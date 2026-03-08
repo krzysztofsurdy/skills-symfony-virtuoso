@@ -1,14 +1,16 @@
 ![Logo](logo.png)
 # Code Virtuoso
 
-AI agent skill sets for software engineering — built on the [Agent Skills](https://agentskills.io) open standard. Knowledge, Tools, Frameworks, and Playbooks.
+AI agent skill sets for software engineering — built on the [Agent Skills](https://agentskills.io) open standard. Knowledge, Tools, Frameworks, Playbooks, Roles, and Agents.
 
-Four categories of skills, installable independently or as bundles:
+Six categories, installable independently or as bundles:
 
 - **Knowledge** — Design Patterns, Refactoring, SOLID Principles, Debugging, Clean Architecture, Testing, API Design, Security, Scrum, Performance, Microservices, Git Workflow, CI/CD, Accessibility, Database Design. Reference material with progressive disclosure.
 - **Tools** — Agentic Rules Writer. Agent configuration and bootstrapping tools.
-- **Frameworks** — Symfony Components, Symfony Upgrade, Django Components. Component-level reference and version upgrade guides for framework-specific development.
+- **Frameworks** — Symfony Components, Symfony Upgrade, Django Components, LangChain Components. Component-level reference and version upgrade guides for framework-specific development.
 - **Playbooks** — PHP Upgrade, Composer Dependencies. Step-by-step operational procedures for recurring maintenance tasks.
+- **Roles** — Product Manager, Architect, Backend Dev, Frontend Dev, QA Engineer, Project Manager. Reference skills defining responsibilities, workflows, and handoff checklists for each team role.
+- **Agents** — 15 sub-agent definitions (8 specialist + 7 role agents) following the [Claude Code sub-agents](https://code.claude.com/docs/en/sub-agents) standard. Specialist agents handle focused tasks (investigation, TDD, code review, refactoring, auditing, documentation, migration planning, test gap analysis). Role agents embody team positions with persistent memory and skill preloading.
 
 ---
 
@@ -97,6 +99,7 @@ printf '#!/bin/sh\nnpx skills update --yes >/dev/null 2>&1 &\n' > .git/hooks/pos
 | [Symfony Components](skills/frameworks/symfony/symfony-components/SKILL.md) | 38 Symfony components for PHP 8.3+ and Symfony 7.x |
 | [Symfony Upgrade](skills/frameworks/symfony/symfony-upgrade/SKILL.md) | Deprecation-first upgrade guide for minor and major Symfony versions |
 | [Django Components](skills/frameworks/django/django-components/SKILL.md) | 33 Django components for Python 3.10+ and Django 6.0 |
+| [LangChain Components](skills/frameworks/langchain/langchain-components/SKILL.md) | 17 LangChain ecosystem references — models, agents, tools, retrieval, LangGraph, Deep Agents |
 
 ## Playbook Skills
 
@@ -105,11 +108,43 @@ printf '#!/bin/sh\nnpx skills update --yes >/dev/null 2>&1 &\n' > .git/hooks/pos
 | [PHP Upgrade](skills/playbooks/php-upgrade/SKILL.md) | PHP version upgrade process with Rector, PHPCompatibility, and per-version breaking changes |
 | [Composer Dependencies](skills/playbooks/composer-dependencies/SKILL.md) | Safe dependency update strategies, security auditing, and automated update tools |
 
+## Role Skills
+
+| Skill | Summary |
+|-------|---------|
+| [Product Manager](skills/roles/product-manager/SKILL.md) | Requirements gathering, PRD writing, prioritization, acceptance criteria |
+| [Architect](skills/roles/architect/SKILL.md) | System design, component boundaries, API contracts, ADRs |
+| [Backend Dev](skills/roles/backend-dev/SKILL.md) | API implementation, data models, TDD workflows |
+| [Frontend Dev](skills/roles/frontend-dev/SKILL.md) | UI components, accessibility, state management |
+| [QA Engineer](skills/roles/qa-engineer/SKILL.md) | Test planning, test design, bug reporting, release sign-off |
+| [Project Manager](skills/roles/project-manager/SKILL.md) | PRINCE2-based delivery, risk management, progress tracking |
+
 ## Agents
 
-| Agent | Skill | Summary |
-|-------|-------|---------|
-| [Scrum Master](skills/knowledge/scrum/agents/scrum-master.md) | Scrum | Sprint planning, goal crafting, retrospectives, impediment resolution |
+### Specialist Agents
+
+| Agent | Model | Tools | Isolation | Purpose |
+|-------|-------|-------|-----------|---------|
+| [Investigator](agents/investigator.md) | haiku | Read, Grep, Glob, Bash | -- | Deep codebase exploration, dependency mapping |
+| [Implementer](agents/implementer.md) | inherit | All | worktree | TDD red-green-refactor execution |
+| [Reviewer](agents/reviewer.md) | inherit | Read, Grep, Glob, Bash | -- | Structured code review (SOLID, OWASP, smells) |
+| [Refactor Scout](agents/refactor-scout.md) | sonnet | Read, Grep, Glob, Bash | -- | Code smell scanning, complexity hotspots |
+| [Dependency Auditor](agents/dependency-auditor.md) | haiku | Bash, Read, Grep, Glob | -- | CVE checks, outdated packages, license audit |
+| [Doc Writer](agents/doc-writer.md) | sonnet | Read, Grep, Glob, Bash, Write, Edit | -- | Changelogs, API docs, migration guides |
+| [Migration Planner](agents/migration-planner.md) | inherit | Read, Grep, Glob, Bash | -- | Migration safety analysis, rollback paths |
+| [Test Gap Analyzer](agents/test-gap-analyzer.md) | sonnet | Read, Grep, Glob, Bash | -- | Missing test coverage, untested edge cases |
+
+### Role Agents
+
+| Agent | Model | Tools | Isolation | Memory | Purpose |
+|-------|-------|-------|-----------|--------|---------|
+| [Product Manager](agents/product-manager.md) | sonnet | Read, Grep, Glob, Bash | -- | project | Requirements, PRDs, prioritization |
+| [Architect](agents/architect.md) | inherit | Read, Grep, Glob, Bash | -- | project | System design, ADRs, trade-offs |
+| [Backend Dev](agents/backend-dev.md) | inherit | Read, Edit, Write, Bash, Grep, Glob | worktree | -- | API implementation, data models, TDD |
+| [Frontend Dev](agents/frontend-dev.md) | inherit | Read, Edit, Write, Bash, Grep, Glob | worktree | -- | UI components, accessibility, state |
+| [QA Engineer](agents/qa-engineer.md) | sonnet | Read, Grep, Glob, Bash | -- | project | Test plans, bug reports, release sign-off |
+| [Project Manager](agents/project-manager.md) | sonnet | Read, Grep, Glob, Bash | -- | project | PRINCE2 stages, risk, progress tracking |
+| [Scrum Master](agents/scrum-master.md) | sonnet | Read, Grep, Glob, Bash | -- | -- | Sprint planning, goals, retrospectives |
 
 ---
 
@@ -117,6 +152,22 @@ printf '#!/bin/sh\nnpx skills update --yes >/dev/null 2>&1 &\n' > .git/hooks/pos
 
 ```
 code-virtuoso/
+├── agents/                        # Sub-agent definitions (Anthropic standard)
+│   ├── investigator.md            # Specialist: codebase exploration
+│   ├── implementer.md             # Specialist: TDD execution
+│   ├── reviewer.md                # Specialist: code review
+│   ├── refactor-scout.md          # Specialist: code smell scanning
+│   ├── dependency-auditor.md      # Specialist: CVE/license audit
+│   ├── doc-writer.md              # Specialist: documentation generation
+│   ├── migration-planner.md       # Specialist: migration safety
+│   ├── test-gap-analyzer.md       # Specialist: coverage gaps
+│   ├── product-manager.md         # Role: requirements, PRDs
+│   ├── architect.md               # Role: system design, ADRs
+│   ├── backend-dev.md             # Role: API implementation
+│   ├── frontend-dev.md            # Role: UI components
+│   ├── qa-engineer.md             # Role: test planning
+│   ├── project-manager.md         # Role: delivery management
+│   └── scrum-master.md            # Role: sprint facilitation
 ├── skills/
 │   ├── knowledge/
 │   │   ├── api-design/
@@ -131,13 +182,21 @@ code-virtuoso/
 │   │   ├── database-design/
 │   │   ├── performance/
 │   │   ├── scrum/
-│   │   │   └── agents/           # Co-located agents
 │   │   ├── security/
 │   │   ├── solid/
 │   │   └── testing/
+│   ├── roles/
+│   │   ├── product-manager/
+│   │   ├── architect/
+│   │   ├── backend-dev/
+│   │   ├── frontend-dev/
+│   │   ├── qa-engineer/
+│   │   └── project-manager/
 │   ├── frameworks/
 │   │   ├── django/
 │   │   │   └── django-components/
+│   │   ├── langchain/
+│   │   │   └── langchain-components/
 │   │   └── symfony/
 │   │       ├── symfony-components/
 │   │       └── symfony-upgrade/

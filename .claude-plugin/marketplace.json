@@ -4,13 +4,13 @@
     "name": "Krzysztof Surdy"
   },
   "metadata": {
-    "description": "Agent AI skill sets — Knowledge (Design Patterns, Refactoring, SOLID, Debugging, Clean Architecture, Testing, API Design, Security, Scrum, Performance, Microservices, Git Workflow, CI/CD, Accessibility, Database Design), Tools (Agentic Rules Writer), Frameworks (Symfony Components, Symfony Upgrade, Django Components), Playbooks (PHP Upgrade, Composer Dependencies), and Agents (Scrum Master)",
-    "version": "7.11.0"
+    "description": "Agent AI skill sets — Knowledge (Design Patterns, Refactoring, SOLID, Debugging, Clean Architecture, Testing, API Design, Security, Scrum, Performance, Microservices, Git Workflow, CI/CD, Accessibility, Database Design), Tools (Agentic Rules Writer), Frameworks (Symfony Components, Symfony Upgrade, Django Components, LangChain Components), Playbooks (PHP Upgrade, Composer Dependencies), Roles (Product Manager, Architect, Backend Dev, Frontend Dev, QA Engineer, Project Manager), and Agents (15 specialist and role agents)",
+    "version": "7.13.0"
   },
   "plugins": [
     {
       "name": "knowledge-virtuoso",
-      "description": "All knowledge skills — design patterns, refactoring, SOLID, debugging, clean architecture, testing, API design, security, scrum, performance, microservices, git workflow, CI/CD, accessibility, and database design. Includes Scrum Master agent.",
+      "description": "All knowledge skills — design patterns, refactoring, SOLID, debugging, clean architecture, testing, API design, security, scrum, performance, microservices, git workflow, CI/CD, accessibility, and database design",
       "source": "./",
       "strict": false,
       "skills": [
@@ -29,9 +29,6 @@
         "./skills/knowledge/cicd",
         "./skills/knowledge/accessibility",
         "./skills/knowledge/database-design"
-      ],
-      "agents": [
-        "./skills/knowledge/scrum/agents/scrum-master.md"
       ]
     },
     {
@@ -63,6 +60,15 @@
       ]
     },
     {
+      "name": "langchain-virtuoso",
+      "description": "LangChain ecosystem skills — 17 component references (models, agents, tools, retrieval, memory, middleware, streaming, multi-agent, LangGraph, Deep Agents, and integrations for Python 3.10+)",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/frameworks/langchain/langchain-components"
+      ]
+    },
+    {
       "name": "playbooks-virtuoso",
       "description": "Operational playbooks — PHP version upgrade (Rector, PHPCompatibility, per-version breaking changes) and Composer dependency management (safe update strategies, security auditing, Dependabot/Renovate)",
       "source": "./",
@@ -70,6 +76,123 @@
       "skills": [
         "./skills/playbooks/php-upgrade",
         "./skills/playbooks/composer-dependencies"
+      ]
+    },
+    {
+      "name": "roles-virtuoso",
+      "description": "All role skills and role agents — product manager, architect, backend developer, frontend developer, QA engineer, and project manager. Each role includes reference material (skill) and a specialized agent definition.",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/roles/product-manager",
+        "./skills/roles/architect",
+        "./skills/roles/backend-dev",
+        "./skills/roles/frontend-dev",
+        "./skills/roles/qa-engineer",
+        "./skills/roles/project-manager"
+      ],
+      "agents": [
+        "./agents/product-manager.md",
+        "./agents/architect.md",
+        "./agents/backend-dev.md",
+        "./agents/frontend-dev.md",
+        "./agents/qa-engineer.md",
+        "./agents/project-manager.md"
+      ]
+    },
+    {
+      "name": "agents-virtuoso",
+      "description": "All 15 agent definitions — 8 specialist agents (investigator, implementer, reviewer, refactor-scout, dependency-auditor, doc-writer, migration-planner, test-gap-analyzer) and 7 role agents (product-manager, architect, backend-dev, frontend-dev, qa-engineer, project-manager, scrum-master)",
+      "source": "./",
+      "strict": false,
+      "agents": [
+        "./agents/investigator.md",
+        "./agents/implementer.md",
+        "./agents/reviewer.md",
+        "./agents/refactor-scout.md",
+        "./agents/dependency-auditor.md",
+        "./agents/doc-writer.md",
+        "./agents/migration-planner.md",
+        "./agents/test-gap-analyzer.md",
+        "./agents/product-manager.md",
+        "./agents/architect.md",
+        "./agents/backend-dev.md",
+        "./agents/frontend-dev.md",
+        "./agents/qa-engineer.md",
+        "./agents/project-manager.md",
+        "./agents/scrum-master.md"
+      ]
+    },
+    {
+      "name": "role-product-manager",
+      "description": "Product manager role — requirements gathering, PRD writing, prioritization, and acceptance criteria",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/roles/product-manager"
+      ],
+      "agents": [
+        "./agents/product-manager.md"
+      ]
+    },
+    {
+      "name": "role-architect",
+      "description": "Architect role — system design, component boundaries, API contracts, and ADRs",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/roles/architect"
+      ],
+      "agents": [
+        "./agents/architect.md"
+      ]
+    },
+    {
+      "name": "role-backend-dev",
+      "description": "Backend developer role — API implementation, data models, and TDD",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/roles/backend-dev"
+      ],
+      "agents": [
+        "./agents/backend-dev.md"
+      ]
+    },
+    {
+      "name": "role-frontend-dev",
+      "description": "Frontend developer role — UI components, accessibility, and state management",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/roles/frontend-dev"
+      ],
+      "agents": [
+        "./agents/frontend-dev.md"
+      ]
+    },
+    {
+      "name": "role-qa-engineer",
+      "description": "QA engineer role — test planning, test design, bug reporting, and release sign-off",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/roles/qa-engineer"
+      ],
+      "agents": [
+        "./agents/qa-engineer.md"
+      ]
+    },
+    {
+      "name": "role-project-manager",
+      "description": "Project manager role — PRINCE2-based delivery planning, risk management, and progress tracking",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/roles/project-manager"
+      ],
+      "agents": [
+        "./agents/project-manager.md"
       ]
     }
   ]
