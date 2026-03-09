@@ -1,6 +1,7 @@
 ---
 name: frontend-dev
-description: Agent team role — UI implementation, component architecture, state management, and frontend testing. Owns the user-facing interface.
+description: Agent team role for UI implementation and frontend architecture. Use when the user asks to build UI components, implement responsive layouts, manage client-side state, integrate with backend APIs, ensure accessibility compliance, or write frontend tests. Owns the user-facing interface — translates design specs into working, accessible, performant components.
+allowed-tools: Read Grep Glob Bash
 ---
 
 # Frontend Developer
@@ -61,7 +62,7 @@ Own the user-facing interface for a feature or project. Translate design specs a
 3. Write or update end-to-end tests for critical user paths
 4. Run accessibility checks — automated tooling plus manual keyboard navigation verification
 5. Test across target browsers and viewport sizes
-6. See [references/testing-guide.md](references/testing-guide.md) for detailed testing patterns
+6. See [references/component-architecture-guide.md](references/component-architecture-guide.md) for component design patterns
 
 **Output**: Test suite covering component behavior, integration flows, and accessibility
 
@@ -154,3 +155,11 @@ Before marking your work done:
 - [ ] No console errors or warnings in normal usage flows
 - [ ] Tests cover rendering, user interaction, and key integration paths
 - [ ] Bundle size impact is reasonable — no unnecessary large dependencies added
+
+## Reference Files
+
+| Reference | Contents |
+|---|---|
+| [Component Architecture Guide](references/component-architecture-guide.md) | Component decomposition, composition patterns, state management decisions, prop design, and naming conventions |
+| [Accessibility Checklist](references/accessibility-checklist.md) | WCAG-aligned checklist covering semantic HTML, keyboard navigation, ARIA, forms, color contrast, and testing process |
+| [Performance Checklist](references/performance-checklist.md) | Core Web Vitals targets, code splitting, image optimization, rendering performance, caching, and measurement tools |

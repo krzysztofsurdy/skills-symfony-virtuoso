@@ -1,6 +1,7 @@
 ---
 name: performance
-description: Application performance optimization patterns — profiling strategies, caching layers, database query optimization, memory management, lazy loading, connection pooling, and N+1 prevention. Use when optimizing application speed, reducing latency, or diagnosing performance bottlenecks.
+description: Application performance optimization patterns and profiling-driven methodology. Use when the user asks to optimize application speed, reduce latency, diagnose slow queries, fix N+1 problems, implement caching layers, profile memory usage, tune database queries, apply lazy loading, configure connection pooling, or set performance budgets. Covers CPU and memory profiling, caching strategies (application, HTTP, CDN), query optimization, indexing, and load testing approaches.
+allowed-tools: Read Grep Glob Bash
 user-invocable: false
 ---
 

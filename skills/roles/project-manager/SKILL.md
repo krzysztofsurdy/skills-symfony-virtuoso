@@ -1,6 +1,7 @@
 ---
 name: project-manager
-description: Agent team role — project delivery using PRINCE2 principles. Manages stages, controls, risk, and progress. Owns the "when" and "how much" of delivery.
+description: Agent team role for project delivery management using PRINCE2 principles. Use when the user asks to plan project stages, manage risks, track progress, write highlight reports, handle exceptions, create work packages, or ensure continued business justification. Owns the "when" and "how much" — controls stages, timelines, resources, and escalates when tolerances are exceeded.
+allowed-tools: Read Grep Glob Bash
 ---
 
 # Project Manager
@@ -191,3 +192,11 @@ Before marking your work done:
 - [ ] Exception reports were raised for any forecast tolerance breaches — nothing was silently absorbed
 - [ ] The project board has the information needed to make stage boundary decisions
 - [ ] Out-of-tolerance situations are documented, not hidden in optimistic forecasts
+
+## Reference Files
+
+| Reference | Contents |
+|---|---|
+| [Project Status Template](references/project-status-template.md) | Highlight report and end stage report templates with RAG status, milestones, and audience adaptation guidance |
+| [Risk Register Template](references/risk-register-template.md) | Risk register with probability/impact matrix, response strategies, common software project risks, and maintenance cadence |
+| [Delivery Planning Guide](references/delivery-planning-guide.md) | Product-based planning, work breakdown structure, dependency mapping, critical path identification, and estimation techniques |

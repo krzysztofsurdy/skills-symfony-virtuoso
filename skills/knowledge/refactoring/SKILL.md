@@ -1,6 +1,7 @@
 ---
 name: refactoring
-description: Comprehensive skill for 89 refactoring techniques and code smells with PHP 8.3+ examples. Covers composing methods, moving features, organizing data, simplifying conditionals, simplifying method calls, dealing with generalization, and detecting 22 code smells across bloaters, OO abusers, change preventers, dispensables, and couplers.
+description: Comprehensive skill for 89 refactoring techniques and 22 code smells with practical examples. Use when the user asks to refactor code, detect code smells, improve code quality, reduce complexity, or clean up technical debt. Covers composing methods, moving features between objects, organizing data, simplifying conditionals and method calls, dealing with generalization, and detecting smells across bloaters, OO abusers, change preventers, dispensables, and couplers with before/after comparisons and step-by-step mechanics.
+allowed-tools: Read Grep Glob Bash
 user-invocable: false
 ---
 

@@ -1,6 +1,7 @@
 ---
 name: git-workflow
-description: Git workflow patterns and version control best practices — branching strategies, commit conventions, PR workflows, release management, and monorepo patterns. Use when establishing team git conventions, reviewing branching strategies, or improving version control practices.
+description: Git workflow patterns and version control best practices for teams of any size. Use when the user asks to choose a branching strategy (trunk-based, GitHub Flow, Git Flow, GitLab Flow), define commit conventions, set up PR workflows, plan release management, structure a monorepo, or establish team git standards. Covers branch naming, merge vs rebase, conventional commits, semantic versioning, changelog generation, and protected branch policies.
+allowed-tools: Read Grep Glob Bash
 user-invocable: false
 ---
 

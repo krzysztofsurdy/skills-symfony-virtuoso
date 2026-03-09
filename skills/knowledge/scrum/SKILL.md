@@ -1,6 +1,7 @@
 ---
 name: scrum
-description: Scrum framework fundamentals and sprint goal writing. Covers sprint planning, sprint goals, daily scrums, sprint reviews, retrospectives, scrum roles, artifacts, and goal-writing templates (SMART, FOCUS, FAB). Use when planning sprints, writing sprint goals, or facilitating scrum events.
+description: Scrum framework fundamentals, sprint goal writing, and agile ceremony facilitation. Use when the user asks to plan a sprint, write sprint goals, facilitate daily scrums, run sprint reviews or retrospectives, define scrum roles, manage the product backlog, or apply agile estimation techniques. Covers the three pillars (transparency, inspection, adaptation), scrum artifacts, goal-writing templates (SMART, FOCUS, FAB), and team velocity tracking.
+allowed-tools: Read Grep Glob Bash
 user-invocable: false
 ---
 

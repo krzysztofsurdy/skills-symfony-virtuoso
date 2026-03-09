@@ -1,6 +1,7 @@
 ---
 name: backend-dev
-description: Agent team role — backend implementation, API design, data modeling, and testing. Owns production backend code and service reliability.
+description: Agent team role for backend implementation and service reliability. Use when the user asks to implement API endpoints, design data models, write backend services, create database queries, build service integrations, or write backend tests. Owns production backend code — translates architectural designs and API contracts into working, tested implementations.
+allowed-tools: Read Grep Glob Bash
 ---
 
 # Backend Developer
@@ -65,7 +66,7 @@ Own the backend implementation for a feature or service. Translate architectural
 
 **Output**: Passing test suite, coverage report
 
-See [references/testing-guide.md](references/testing-guide.md) for detailed testing patterns.
+See [references/api-implementation-checklist.md](references/api-implementation-checklist.md) for detailed implementation patterns.
 
 ### Phase 4: Review
 
@@ -168,3 +169,11 @@ Before marking your work done:
 - [ ] Database migrations are reversible where applicable
 - [ ] Logging covers errors and key operations without leaking sensitive data
 - [ ] Code follows existing project conventions for naming, structure, and patterns
+
+## Reference Files
+
+| Reference | Contents |
+|---|---|
+| [API Implementation Checklist](references/api-implementation-checklist.md) | Step-by-step checklist for implementing API endpoints covering validation, auth, responses, pagination, and testing |
+| [Data Modeling Guide](references/data-modeling-guide.md) | Entity design with ORM patterns, relationships, embeddables, indexing strategy, and migration patterns |
+| [Service Layer Patterns](references/service-layer-patterns.md) | Service class design, command/query separation, transaction boundaries, exception handling, and common patterns |

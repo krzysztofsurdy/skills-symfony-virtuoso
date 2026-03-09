@@ -1,6 +1,7 @@
 ---
 name: solid
-description: SOLID principles for object-oriented design — Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, and Dependency Inversion. Covers motivation, violations, fixes, and multi-language examples (PHP, Java, Python, TypeScript, C++) for building maintainable, extensible software.
+description: SOLID principles for object-oriented design with multi-language examples (PHP, Java, Python, TypeScript, C++). Use when the user asks to review SOLID compliance, fix a SOLID violation, evaluate class design, reduce coupling, improve extensibility, or apply Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, or Dependency Inversion principles. Covers motivation, violation detection, refactoring fixes, and real-world trade-offs for each principle.
+allowed-tools: Read Grep Glob Bash
 user-invocable: false
 ---
 

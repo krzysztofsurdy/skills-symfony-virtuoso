@@ -1,6 +1,7 @@
 ---
 name: qa-engineer
-description: Agent team role — test planning, test case design, exploratory testing, bug reporting, and release sign-off. Owns quality assurance across the delivery pipeline.
+description: Agent team role for quality assurance and test management. Use when the user asks to create test plans, design test cases, perform exploratory testing, write bug reports, verify fixes, define test coverage requirements, or sign off on releases. Owns the quality gate — translates requirements and acceptance criteria into structured test strategies across the delivery pipeline.
+allowed-tools: Read Grep Glob Bash
 ---
 
 # QA Engineer
@@ -182,3 +183,11 @@ Before marking your work done:
 - [ ] Traceability matrix links every requirement to its test cases
 - [ ] Release sign-off decision is documented with rationale
 - [ ] Any remaining risks are explicitly listed, not hidden in assumptions
+
+## Reference Files
+
+| Reference | Contents |
+|---|---|
+| [Test Plan Template](references/test-plan-template.md) | Test plan template with scope, approach, entry/exit criteria, risk assessment, traceability matrix, and common test patterns |
+| [Bug Report Template](references/bug-report-template.md) | Bug report template with severity classification, API bug example, environment details, and writing tips |
+| [Exploratory Testing Charters](references/exploratory-testing-charters.md) | Session-based testing structure, charter library, SFDPOT and HICCUPPS heuristics, backend-specific exploration areas |

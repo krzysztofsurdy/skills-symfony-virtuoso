@@ -1,6 +1,7 @@
 ---
 name: accessibility
-description: Web accessibility patterns and WCAG compliance — semantic HTML, ARIA attributes, keyboard navigation, color contrast, screen reader support, accessible forms, and testing strategies. Use when building accessible interfaces, auditing existing UIs, or establishing a11y standards.
+description: Web accessibility patterns and WCAG 2.1/2.2 compliance for inclusive user interfaces. Use when the user asks to build accessible components, audit a UI for a11y issues, fix screen reader problems, implement keyboard navigation, check color contrast ratios, add ARIA attributes, create accessible forms, or establish accessibility standards for a team. Covers the POUR principles (Perceivable, Operable, Understandable, Robust), semantic HTML, focus management, and automated/manual a11y testing strategies.
+allowed-tools: Read Grep Glob Bash
 user-invocable: false
 ---
 

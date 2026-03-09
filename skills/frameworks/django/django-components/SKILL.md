@@ -1,6 +1,7 @@
 ---
 name: django-components
-description: Comprehensive skill for all Django framework components. Covers models, views, templates, forms, admin, authentication, caching, testing, middleware, signals, deployment, async, and utility components. Use when working with any Django component.
+description: Comprehensive reference for all 33 Django framework components with Python 3.10+ and Django 6.0 patterns. Use when the user asks to implement, configure, or troubleshoot any Django component including Models, QuerySets, Views, Templates, Forms, Admin, Authentication, Caching, Testing, Middleware, Signals, or Deployment. Covers ORM patterns, class-based views, template tags, form validation, admin customization, async support, and Django best practices.
+allowed-tools: Read Grep Glob Bash
 user-invocable: false
 ---
 

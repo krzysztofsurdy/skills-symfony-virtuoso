@@ -1,6 +1,7 @@
 ---
 name: cicd
-description: CI/CD pipeline patterns and deployment strategies — pipeline design, deployment models (blue-green, canary, rolling), environment promotion, artifact management, and zero-downtime deployment. Use when designing build pipelines, choosing deployment strategies, or improving delivery workflows.
+description: CI/CD pipeline patterns and deployment strategies for automated, reliable software delivery. Use when the user asks to design a build pipeline, choose a deployment model (blue-green, canary, rolling), configure environment promotion, manage build artifacts, implement zero-downtime deployments, set up quality gates, or improve delivery workflow speed and reliability. Covers pipeline stage ordering, test parallelization, caching, secrets in CI, and rollback strategies.
+allowed-tools: Read Grep Glob Bash
 user-invocable: false
 ---
 

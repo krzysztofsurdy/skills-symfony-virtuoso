@@ -1,6 +1,7 @@
 ---
 name: clean-architecture
-description: Clean Architecture, Hexagonal Architecture (Ports & Adapters), and Domain-Driven Design fundamentals. Layer boundaries, dependency rules, and tactical patterns for maintainable systems.
+description: Clean Architecture, Hexagonal Architecture (Ports and Adapters), and Domain-Driven Design fundamentals. Use when the user asks to design system architecture, define layer boundaries, apply DDD tactical patterns (entities, value objects, aggregates, repositories), structure a hexagonal application, enforce dependency rules, or evaluate whether a codebase needs architectural refactoring. Covers bounded contexts, use cases, domain services, and framework-independent design.
+allowed-tools: Read Grep Glob Bash
 user-invocable: false
 ---
 

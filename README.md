@@ -121,6 +121,8 @@ printf '#!/bin/sh\nnpx skills update --yes >/dev/null 2>&1 &\n' > .git/hooks/pos
 
 ## Agents
 
+See [AGENTS.md](AGENTS.md) for detailed agent specifications, delegation patterns, and usage examples.
+
 ### Specialist Agents
 
 | Agent | Model | Tools | Isolation | Purpose |
@@ -212,6 +214,7 @@ code-virtuoso/
 ├── template/                      # Starter templates
 │   ├── SKILL.md
 │   └── agent.md
+├── AGENTS.md
 ├── CONTRIBUTING.md
 ├── LICENSE
 └── README.md

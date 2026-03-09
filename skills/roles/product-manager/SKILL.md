@@ -1,6 +1,7 @@
 ---
 name: product-manager
-description: Agent team role — requirements gathering, PRD writing, prioritization, and acceptance criteria. Owns the "what" and "why" of a product.
+description: Agent team role for product ownership and requirements definition. Use when the user asks to write a PRD, gather requirements, define acceptance criteria, prioritize features, scope an MVP, write user stories, or make product trade-off decisions. Owns the "what" and "why" — translates business goals and user needs into clear, prioritized requirements for the engineering team.
+allowed-tools: Read Grep Glob Bash
 ---
 
 # Product Manager
@@ -53,7 +54,7 @@ Own the product direction for a feature or project. Translate business goals and
 **Input**: Full list of requirements
 
 1. Classify each requirement: P0 (must-have), P1 (should-have), P2 (nice-to-have)
-2. Apply a prioritization framework — see [references/prioritization.md](references/prioritization.md)
+2. Apply a prioritization framework — see [references/prioritization-frameworks.md](references/prioritization-frameworks.md)
 3. Define MVP scope — the smallest set of P0 items that delivers value
 4. Identify dependencies between requirements
 5. Flag items that need technical feasibility input from the architect
@@ -109,7 +110,7 @@ Before handing off to the architect:
 - Use **MoSCoW** for initial classification (Must/Should/Could/Won't)
 - Use **RICE** when comparing items quantitatively (Reach, Impact, Confidence, Effort)
 - Use **Impact/Effort matrix** for quick visual sorting
-- See [references/prioritization.md](references/prioritization.md) for details
+- See [references/prioritization-frameworks.md](references/prioritization-frameworks.md) for details
 
 ### Scope Decisions
 - Always define MVP as the smallest P0 set that delivers user value
@@ -134,3 +135,11 @@ Before marking your work done:
 - [ ] PRD has been reviewed by at least one other role
 - [ ] Prioritization rationale is documented, not just the priority labels
 - [ ] Success metrics are specific and measurable
+
+## Reference Files
+
+| Reference | Contents |
+|---|---|
+| [PRD Template](references/prd-template.md) | Product Requirements Document template with sections, examples, and writing tips |
+| [Prioritization Frameworks](references/prioritization-frameworks.md) | MoSCoW, RICE, Kano model, Impact/Effort matrix, and weighted scoring with worked examples |
+| [Acceptance Criteria Guide](references/acceptance-criteria-guide.md) | How to write testable acceptance criteria, Given/When/Then format, edge case coverage, API and data model patterns |

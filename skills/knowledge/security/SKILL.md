@@ -1,6 +1,7 @@
 ---
 name: security
-description: Application security principles and OWASP Top 10. Covers injection prevention, authentication, authorization, data protection, secrets management, and security review practices.
+description: Application security principles and OWASP Top 10 for building secure web applications. Use when the user asks to review code for security vulnerabilities, implement authentication or authorization, handle secrets or API keys, configure security headers, prevent injection attacks (SQL, XSS, CSRF), prepare for a security audit, or respond to a vulnerability report. Covers input validation, data protection, secrets management, session handling, and common security antipatterns.
+allowed-tools: Read Grep Glob Bash
 user-invocable: false
 ---
 

@@ -1,6 +1,7 @@
 ---
 name: database-design
-description: Database design patterns and data modeling — normalization, indexing strategies, schema evolution, migration patterns, temporal data, audit trails, and partitioning. Use when designing schemas, planning migrations, or optimizing data access patterns.
+description: Database design patterns and data modeling for relational and NoSQL databases. Use when the user asks to design a database schema, normalize or denormalize tables, create indexing strategies, plan schema migrations, model temporal data, implement audit trails, set up table partitioning, or optimize data access patterns. Covers entity relationships, naming conventions, constraint design, migration safety, and performance-oriented schema decisions.
+allowed-tools: Read Grep Glob Bash
 user-invocable: false
 ---
 

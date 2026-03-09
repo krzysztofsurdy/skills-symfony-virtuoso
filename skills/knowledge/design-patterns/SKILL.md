@@ -1,6 +1,7 @@
 ---
 name: design-patterns
-description: Comprehensive skill for all 26 Gang of Four design patterns with PHP 8.3+ implementations. Covers creational (Abstract Factory, Builder, Factory Method, Prototype, Singleton), structural (Adapter, Bridge, Composite, Decorator, Facade, Flyweight, Proxy), and behavioral patterns (Chain of Responsibility, Command, Interpreter, Iterator, Mediator, Memento, Observer, State, Strategy, Template Method, Visitor) plus Null Object, Object Pool, and Private Class Data.
+description: Comprehensive skill for all 26 Gang of Four design patterns with practical implementations and real-world examples. Use when the user asks to apply a design pattern, refactor code using patterns, choose between competing patterns, or review existing pattern usage. Covers creational (Abstract Factory, Builder, Factory Method, Prototype, Singleton, Object Pool), structural (Adapter, Bridge, Composite, Decorator, Facade, Flyweight, Proxy, Private Class Data), and behavioral patterns (Chain of Responsibility, Command, Interpreter, Iterator, Mediator, Memento, Observer, State, Strategy, Template Method, Visitor, Null Object) with real-world examples, trade-offs, and anti-patterns.
+allowed-tools: Read Grep Glob Bash
 user-invocable: false
 ---
 

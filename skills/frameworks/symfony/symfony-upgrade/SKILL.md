@@ -1,6 +1,7 @@
 ---
 name: symfony-upgrade
-description: Symfony framework version upgrade guide -- deprecation-first approach for minor and major upgrades, recipe updates, bundle compatibility, PHPUnit Bridge deprecation tracking, LTS strategy, and version-specific changes. Use when planning or executing a Symfony framework upgrade.
+description: Symfony framework version upgrade guide using the deprecation-first approach. Use when the user asks to upgrade Symfony to a new minor or major version, fix deprecation warnings, update Symfony recipes, check bundle compatibility, migrate between LTS versions, or plan a Symfony version migration strategy. Covers PHPUnit Bridge deprecation tracking, recipe updates, bundle compatibility checks, version-specific breaking changes, and the changelog-first upgrade workflow.
+allowed-tools: Read Grep Glob Bash
 user-invocable: false
 ---
 

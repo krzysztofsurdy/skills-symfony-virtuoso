@@ -1,6 +1,7 @@
 ---
 name: debugging
-description: Systematic debugging workflow — reproduce, investigate, hypothesize, fix, and prevent. Covers root cause analysis, bug category strategies, evidence-based diagnosis, and post-mortem documentation.
+description: Systematic debugging methodology for finding and fixing bugs through root cause analysis. Use when the user encounters a bug, test failure, flaky behavior, production error, performance degradation, or integration failure. Covers the reproduce-investigate-hypothesize-fix-prevent workflow, evidence-based diagnosis, bug category strategies (logic errors, race conditions, memory leaks, integration failures), and post-mortem documentation.
+allowed-tools: Read Grep Glob Bash
 user-invocable: false
 ---
 

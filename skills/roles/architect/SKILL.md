@@ -1,6 +1,7 @@
 ---
 name: architect
-description: Agent team role — system design, technology decisions, component boundaries, and Architecture Decision Records. Owns the "how" of the system.
+description: Agent team role for system design and technical decision-making. Use when the user asks to design system architecture, define component boundaries, write Architecture Decision Records (ADRs), select technologies, define API contracts, or evaluate architectural trade-offs. Owns the "how" — translates product requirements into components, data flows, and technology choices.
+allowed-tools: Read Grep Glob Bash
 ---
 
 # Architect
@@ -64,7 +65,7 @@ Own the technical design for a feature or system. Translate product requirements
 
 **Input**: Complete design and ADRs
 
-1. Validate against the review checklist — see [references/review-checklist.md](references/review-checklist.md)
+1. Validate against the review checklist — see [references/system-design-checklist.md](references/system-design-checklist.md)
 2. Check for single points of failure
 3. Verify that security surface area is minimized
 4. Confirm that the design supports the stated non-functional requirements
@@ -143,3 +144,11 @@ Before marking your work done:
 - [ ] Non-functional requirements have specific targets (latency, throughput, etc.)
 - [ ] Security surface area is documented and minimized
 - [ ] The design supports incremental delivery where possible
+
+## Reference Files
+
+| Reference | Contents |
+|---|---|
+| [ADR Template](references/adr-template.md) | Architecture Decision Record template with status lifecycle, message queue example, and review checklist |
+| [System Design Checklist](references/system-design-checklist.md) | Comprehensive checklist for system design reviews covering requirements, APIs, data, scalability, security, and observability |
+| [Technology Evaluation Matrix](references/technology-evaluation-matrix.md) | Framework for evaluating technology choices with scoring, PoC guidance, and worked search engine example |

@@ -1,6 +1,6 @@
 ---
 name: php-upgrade
-description: PHP version upgrade guide -- step-by-step process for upgrading PHP versions (8.0 through 8.4+), automated refactoring with Rector, compatibility checking with PHPCompatibility, breaking changes per version, and testing strategies. Use when planning or executing a PHP version upgrade in any PHP application.
+description: Step-by-step PHP version upgrade playbook for PHP 8.0 through 8.4+ with automated tooling. Use when the user asks to upgrade PHP to a new version, check PHP compatibility, fix deprecation warnings, run Rector for automated refactoring, audit code with PHPCompatibility, or plan a PHP migration strategy. Covers breaking changes per version, php.ini configuration updates, extension compatibility, Rector rule sets, testing strategies, and the changelog-first upgrade workflow.
 user-invocable: false
 ---
 

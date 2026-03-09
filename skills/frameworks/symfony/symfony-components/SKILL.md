@@ -1,6 +1,7 @@
 ---
 name: symfony-components
-description: Comprehensive skill for all Symfony framework components. Covers HTTP handling, dependency injection, forms, validation, caching, messaging, console commands, event dispatching, workflows, serialization, testing, filesystem operations, configuration, and utility components. Use when working with any Symfony component.
+description: Comprehensive reference for all 38 Symfony framework components with PHP 8.3+ and Symfony 7.x patterns. Use when the user asks to implement, configure, or troubleshoot any Symfony component including HttpFoundation, HttpKernel, DependencyInjection, Form, Validator, Cache, Messenger, Console, EventDispatcher, Workflow, Serializer, Security, Routing, Twig, Doctrine integration, or any other Symfony component. Covers APIs, configuration, best practices, and common pitfalls.
+allowed-tools: Read Grep Glob Bash
 user-invocable: false
 ---
 

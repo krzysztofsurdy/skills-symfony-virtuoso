@@ -1,6 +1,7 @@
 ---
 name: microservices
-description: Microservices and distributed systems patterns — service decomposition, saga orchestration, CQRS, event sourcing, circuit breakers, API gateways, eventual consistency, and resilience patterns. Use when designing, building, or refactoring distributed systems.
+description: Microservices and distributed systems architecture patterns for scalable, resilient services. Use when the user asks to decompose a monolith, design service boundaries, implement saga orchestration, apply CQRS or event sourcing, configure circuit breakers, set up API gateways, handle eventual consistency, or evaluate monolith vs microservices trade-offs. Covers service decomposition strategies, inter-service communication (sync and async), data isolation, resilience patterns, and observability.
+allowed-tools: Read Grep Glob Bash
 user-invocable: false
 ---
 
