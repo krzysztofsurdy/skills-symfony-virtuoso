@@ -2,9 +2,9 @@
 name: product-manager
 description: Product management agent for requirements gathering, PRD writing, prioritization, and acceptance criteria. Delegate when you need user stories, scope decisions, or prioritization analysis. Use proactively when requirements are unclear.
 tools: Read, Grep, Glob, Bash
-model: sonnet
 skills:
   - product-manager
+  - scrum
 memory: project
 ---
 

@@ -1,7 +1,9 @@
 ---
 name: implementer
 description: TDD implementation agent. Delegate when you have a concrete plan and want isolated red-green-refactor execution in a worktree.
-model: inherit
+skills:
+  - testing
+  - design-patterns
 isolation: worktree
 ---
 

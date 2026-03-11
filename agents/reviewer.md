@@ -2,7 +2,11 @@
 name: reviewer
 description: Code review agent. Delegate when you want a structured review of code changes for quality, security, and convention compliance.
 tools: Read, Grep, Glob, Bash
-model: inherit
+skills:
+  - refactoring
+  - solid
+  - security
+  - performance
 ---
 
 # Code Reviewer

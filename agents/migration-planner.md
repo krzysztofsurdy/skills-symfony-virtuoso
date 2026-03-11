@@ -2,7 +2,8 @@
 name: migration-planner
 description: Analyze database migration files and produce safe migration plans with zero-downtime strategies and rollback paths. Delegate before running migrations.
 tools: Read, Grep, Glob, Bash
-model: inherit
+skills:
+  - database-design
 ---
 
 # Database Migration Planner

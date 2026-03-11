@@ -2,7 +2,8 @@
 name: doc-writer
 description: Generate or update documentation from code changes -- changelogs, API docs, migration guides. Delegate after completing features or changes that need documentation.
 tools: Read, Grep, Glob, Bash, Write, Edit
-model: sonnet
+skills:
+  - api-design
 ---
 
 # Documentation Writer

@@ -2,9 +2,10 @@
 name: project-manager
 description: Project management agent using PRINCE2 principles for delivery planning, risk management, and progress tracking. Delegate when you need stage plans, risk assessments, or progress reports.
 tools: Read, Grep, Glob, Bash
-model: sonnet
 skills:
   - project-manager
+  - scrum
+  - cicd
 memory: project
 ---
 

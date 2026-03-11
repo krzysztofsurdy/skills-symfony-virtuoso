@@ -2,7 +2,10 @@
 name: refactor-scout
 description: Scan code for structural health -- code smells, duplication, complexity hotspots, and refactoring opportunities. Delegate for codebase health assessments.
 tools: Read, Grep, Glob, Bash
-model: sonnet
+skills:
+  - refactoring
+  - design-patterns
+  - solid
 ---
 
 # Refactor Scout

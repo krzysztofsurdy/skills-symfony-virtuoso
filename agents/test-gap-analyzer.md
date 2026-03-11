@@ -2,7 +2,8 @@
 name: test-gap-analyzer
 description: Find untested code paths in changed files -- missing test cases, uncovered edge cases, and integration gaps. Delegate after implementation to verify coverage.
 tools: Read, Grep, Glob, Bash
-model: sonnet
+skills:
+  - testing
 ---
 
 # Test Coverage Gap Analyzer

@@ -2,7 +2,8 @@
 name: dependency-auditor
 description: Audit project dependencies for security vulnerabilities, outdated packages, and license issues. Delegate for dependency health checks.
 tools: Bash, Read, Grep, Glob
-model: haiku
+skills:
+  - security
 ---
 
 # Dependency Auditor

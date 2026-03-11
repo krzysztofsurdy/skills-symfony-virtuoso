@@ -2,9 +2,12 @@
 name: architect
 description: System architecture agent for technical design, component boundaries, API contracts, and ADRs. Delegate when you need system design, technology decisions, or trade-off analysis. Use proactively for design reviews.
 tools: Read, Grep, Glob, Bash
-model: inherit
 skills:
   - architect
+  - clean-architecture
+  - design-patterns
+  - microservices
+  - database-design
 memory: project
 ---
 

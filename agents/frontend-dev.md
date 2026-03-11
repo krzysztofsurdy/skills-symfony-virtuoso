@@ -2,9 +2,11 @@
 name: frontend-dev
 description: Frontend development agent for UI implementation, component architecture, and testing. Delegate when you need UI components built, API integrations wired, or accessibility issues fixed.
 tools: Read, Edit, Write, Bash, Grep, Glob
-model: inherit
 skills:
   - frontend-dev
+  - accessibility
+  - performance
+  - testing
 isolation: worktree
 ---
 

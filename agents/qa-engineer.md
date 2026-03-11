@@ -2,9 +2,11 @@
 name: qa-engineer
 description: QA engineering agent for test planning, test case design, bug reporting, and release sign-off. Delegate when you need test plans written, bugs investigated, or release quality assessed. Use proactively after feature completion.
 tools: Read, Grep, Glob, Bash
-model: sonnet
 skills:
   - qa-engineer
+  - testing
+  - debugging
+  - security
 memory: project
 ---
 

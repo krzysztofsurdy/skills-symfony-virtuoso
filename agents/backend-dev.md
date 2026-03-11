@@ -2,9 +2,12 @@
 name: backend-dev
 description: Backend development agent for API implementation, data modeling, and testing. Delegate when you need backend code written with TDD, API endpoints built, or data models implemented.
 tools: Read, Edit, Write, Bash, Grep, Glob
-model: inherit
 skills:
   - backend-dev
+  - design-patterns
+  - clean-architecture
+  - testing
+  - api-design
 isolation: worktree
 ---
 

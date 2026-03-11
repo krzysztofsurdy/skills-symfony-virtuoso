@@ -1,7 +1,7 @@
 ---
 name: composer-dependencies
 description: Composer dependency management playbook for safe, systematic package updates. Use when the user asks to update Composer dependencies, audit packages for security vulnerabilities, manage composer.lock, configure Dependabot or Renovate for automated updates, replace abandoned packages, or resolve version conflicts. Covers patch/minor/major update strategies, composer audit, semantic versioning constraints, lock file hygiene, and the changelog-first update workflow.
-user-invocable: false
+user-invocable: true
 ---
 
 # Composer Dependencies Update

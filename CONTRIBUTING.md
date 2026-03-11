@@ -70,6 +70,24 @@ The `description` field is the most important field for discoverability. It cont
 
 **Note on platform-specific frontmatter:** The `name`, `description`, and `user-invocable` fields are part of the [Agent Skills](https://agentskills.io) open standard and work across platforms. The `allowed-tools` field is a platform-specific extension (e.g., Claude Code uses tool names like `Read`, `Grep`, `Glob`, `Bash`; other platforms may use different names or not support tool restrictions). If your skill needs tool restrictions, document them and adapt to your platform.
 
+#### user-invocable Guidelines
+
+The `user-invocable` field controls whether a skill appears as a runnable command (e.g., `/skill-name` or `@skill-name` depending on platform). Set it based on the skill category:
+
+| Category | `user-invocable` | Reason |
+|---|---|---|
+| `knowledge/` | `false` | Background reference, auto-loaded by context or agents |
+| `frameworks/` | `false` | Background reference, auto-loaded |
+| `roles/` | `false` | Background reference, loaded by agents |
+| `playbooks/` | `true` | User runs these as step-by-step procedures |
+| `tools/` | `true` | User runs these directly to generate output |
+
+Every SKILL.md **must** include this field. If omitted, behavior varies by platform.
+
+#### No Provider-Specific Models
+
+Do not include a `model` field in skill or agent definitions. Model selection is a user/platform decision, not a content decision. Hardcoding provider-specific model names (e.g., `sonnet`, `gpt-4o`, `gemini-pro`) makes skills and agents non-portable. Users configure model preferences in their own platform settings.
+
 #### Description Guidelines
 
 Descriptions should be 1-3 sentences that pack in relevant keywords and trigger conditions. The pattern is: what it covers + when to use it.
@@ -179,7 +197,7 @@ agents/your-agent-name.md
 name: your-agent-name           # Kebab-case identifier
 description: What this agent does. Delegate when {trigger condition}.
 tools: Read, Grep, Glob, Bash   # Comma-separated list of allowed tools (platform-specific)
-model: sonnet                   # Model tier: fast, balanced, or advanced (platform-specific)
+                                 # Do NOT specify a model -- let users choose based on their platform
 isolation: worktree              # Optional: worktree for agents that modify files
 memory: project                  # Optional: project-level persistent memory
 skills:
@@ -187,14 +205,14 @@ skills:
 ---
 ```
 
-**Note on platform-specific fields:** The `name`, `description`, and `skills` fields are portable across agent platforms. The `tools`, `model`, `isolation`, and `memory` fields are platform-specific extensions. Adapt tool names and model identifiers to your platform (e.g., Claude Code uses `sonnet`/`haiku`; other platforms may use `gpt-4o`, `gemini-pro`, etc.).
+**Note on platform-specific fields:** The `name`, `description`, and `skills` fields are portable across agent platforms. The `tools`, `isolation`, and `memory` fields are platform-specific extensions. Adapt tool names to your platform. The same [no provider-specific models](#no-provider-specific-models) rule applies to agents.
 
 | Field | Required | Portable | Notes |
 |---|---|---|---|
 | `name` | Yes | Yes | Matches the filename without `.md` |
 | `description` | Yes | Yes | Keyword-rich, explains when to delegate to this agent |
 | `tools` | Yes | No | Limit to minimum needed. Read-only agents should not have write/edit access |
-| `model` | Yes | No | Use a fast model for simple analysis, a capable model for nuanced work |
+| `model` | No | No | **Do not include.** Let users choose models via their platform settings |
 | `isolation` | No | No | Set to `worktree` if the agent creates or modifies files |
 | `memory` | No | No | Set to `project` for role agents that need context across sessions |
 | `skills` | No | Yes | List skill names to preload when the agent starts |

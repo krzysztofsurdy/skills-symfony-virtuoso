@@ -2,7 +2,6 @@
 name: scrum-master
 description: Scrum Master facilitator for sprint planning, goal crafting, retrospectives, and impediment resolution. Use when planning sprints, writing sprint goals, running retrospectives, or improving team processes.
 tools: Read, Grep, Glob, Bash
-model: sonnet
 skills:
   - scrum
 ---

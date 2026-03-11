@@ -1,6 +1,7 @@
 ---
 name: qa-engineer
 description: Agent team role for quality assurance and test management. Use when the user asks to create test plans, design test cases, perform exploratory testing, write bug reports, verify fixes, define test coverage requirements, or sign off on releases. Owns the quality gate — translates requirements and acceptance criteria into structured test strategies across the delivery pipeline.
+user-invocable: false
 allowed-tools: Read Grep Glob Bash
 ---
 

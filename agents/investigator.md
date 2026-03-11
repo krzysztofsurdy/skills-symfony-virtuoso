@@ -2,7 +2,8 @@
 name: investigator
 description: Read-only deep exploration of a specific codebase area. Delegate when you need structured investigation of how something works, where something is used, or what a subsystem does.
 tools: Read, Grep, Glob, Bash
-model: haiku
+skills:
+  - debugging
 ---
 
 # Codebase Investigator
