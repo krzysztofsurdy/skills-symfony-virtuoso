@@ -1,4 +1,4 @@
-name: Validate Skills and Agents
+name: Validate Markdown
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  validate:
+  validate-markdown:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -16,5 +16,5 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Run validation
-        run: python3 scripts/validate.py
+      - name: Run markdown validation
+        run: python3 scripts/validate-markdown.py

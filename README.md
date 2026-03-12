@@ -1,7 +1,10 @@
 ![Logo](logo.png)
 # Code Virtuoso
 
-[![Validate Skills and Agents](https://github.com/krzysztofsurdy/code-virtuoso/actions/workflows/validate.yml/badge.svg)](https://github.com/krzysztofsurdy/code-virtuoso/actions/workflows/validate.yml)
+[![Validate Marketplace](https://github.com/krzysztofsurdy/code-virtuoso/actions/workflows/validate-marketplace.yml/badge.svg)](https://github.com/krzysztofsurdy/code-virtuoso/actions/workflows/validate-marketplace.yml)
+[![Validate Skills](https://github.com/krzysztofsurdy/code-virtuoso/actions/workflows/validate-skills.yml/badge.svg)](https://github.com/krzysztofsurdy/code-virtuoso/actions/workflows/validate-skills.yml)
+[![Validate Agents](https://github.com/krzysztofsurdy/code-virtuoso/actions/workflows/validate-agents.yml/badge.svg)](https://github.com/krzysztofsurdy/code-virtuoso/actions/workflows/validate-agents.yml)
+[![Validate Markdown](https://github.com/krzysztofsurdy/code-virtuoso/actions/workflows/validate-markdown.yml/badge.svg)](https://github.com/krzysztofsurdy/code-virtuoso/actions/workflows/validate-markdown.yml)
 
 AI agent skill sets for software engineering — built on the [Agent Skills](https://agentskills.io) open standard. Knowledge, Tools, Frameworks, Playbooks, Roles, and Agents.
 
