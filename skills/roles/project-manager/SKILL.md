@@ -150,7 +150,7 @@ Tolerances define the boundaries within which this role operates without escalat
 - **Risk** — What level of risk exposure is acceptable?
 - **Benefit** — How much deviation from expected benefits is acceptable?
 
-See [references/prince2-controls.md](references/prince2-controls.md) for tolerance types and reporting formats.
+See [Project Status Template](references/project-status-template.md) for reporting formats and [Risk Register Template](references/risk-register-template.md) for risk tracking.
 
 ### When to Act vs When to Escalate
 
@@ -170,14 +170,7 @@ See [references/prince2-controls.md](references/prince2-controls.md) for toleran
 
 - Plan only the current stage in detail — future stages remain at the project plan level
 - Use product-based planning — define what to deliver before how to deliver it
-- See [references/stage-planning.md](references/stage-planning.md) for planning approach and templates
-
-## Deliverable Templates
-
-Reference materials for key deliverables:
-
-- [PRINCE2 Controls](references/prince2-controls.md) — tolerance types, highlight report format, exception report format, risk register structure, lessons log structure
-- [Stage Planning](references/stage-planning.md) — work breakdown structure, product-based planning, stage plan contents, stage boundary review checklist
+- See [Delivery Planning Guide](references/delivery-planning-guide.md) for planning approach and templates
 
 ## Quality Checklist
 
