@@ -260,6 +260,43 @@ The file `.claude-plugin/marketplace.json` defines how skills and agents are pac
 - Create a new plugin when you are adding a new framework, a new tool category, or a standalone bundle that users would install independently
 - Individual role plugins (e.g., `role-backend-dev`) exist so users can install a single role with its agent -- follow this pattern for new roles
 
+### Plugin Naming Convention
+
+| Type | Pattern | Example |
+|---|---|---|
+| Category bundle | `{category}-virtuoso` | `knowledge-virtuoso`, `agents-virtuoso` |
+| Individual role | `role-{name}` | `role-architect` |
+| Individual agent | `agent-{name}` | `agent-reviewer` |
+| Individual tool | `tool-{name}` | `tool-agentic-rules-writer` |
+| Framework bundle | `{framework}-virtuoso` | `symfony-virtuoso`, `django-virtuoso` |
+
+### Plugin Distribution Tiers
+
+The marketplace uses a tiered model for maximum installation flexibility:
+
+| Tier | Pattern | Example | Contains | Use case |
+|---|---|---|---|---|
+| Individual | `role-{name}` or `agent-{name}` | `role-architect`, `agent-reviewer` | 1 skill + 1 agent (roles) or 1 agent (specialists) | Install a single role or agent |
+| Category bundle | `{category}-virtuoso` | `knowledge-virtuoso`, `playbooks-virtuoso` | All skills in a category | Install all skills in a category |
+| Agents bundle | `agents-virtuoso` | `agents-virtuoso` | All 15 agents + all 7 role skills | Full agent team with role context |
+
+**Key design decisions:**
+- `agents-virtuoso` is the complete package -- all agents plus all role skills
+- Individual `role-{name}` plugins contain both the skill and agent for that role
+- Individual `agent-{name}` plugins contain a single specialist agent
+- Knowledge, playbooks, and frameworks have their own category bundles (skills only, no agents)
+
+When adding a new role:
+- Create the role skill in `skills/roles/{name}/`
+- Create the agent in `agents/{name}.md`
+- Add to `agents-virtuoso` (skill + agent)
+- Create an individual `role-{name}` plugin (skill + agent)
+
+When adding a new specialist agent:
+- Create the agent in `agents/{name}.md`
+- Add to `agents-virtuoso`
+- Create an individual `agent-{name}` plugin
+
 ## Version Bumping Rules
 
 The version field lives in `metadata.version` inside `marketplace.json`.
@@ -292,10 +329,22 @@ Skills should be production-grade reference material, not tutorials. They are co
 | Principles table | Required in every SKILL.md -- sets the mindset before details |
 | Frontmatter | Only in SKILL.md and agent files, never in reference files |
 
+### Language and Provider Agnosticism
+
+All content must be **language-agnostic** and **LLM provider-agnostic** by default. Do not assume a specific programming language, framework, or AI provider unless the skill explicitly targets one.
+
+| Content type | Rule |
+|---|---|
+| Knowledge skills | Fully language-agnostic. Use pseudocode or multi-language examples. |
+| Role skills | Fully agnostic. No language-specific code. |
+| Agent definitions | No provider-specific model names. No platform-specific tool names in the body. |
+| Framework skills (`frameworks/`) | Language/framework-specific by definition. Target latest stable version. |
+| Playbooks | May be language-specific if the procedure is (e.g., PHP upgrade). State the scope clearly. |
+
+**The only exceptions** are skills that explicitly exist for a specific language, framework, or LLM provider (e.g., `symfony-components`, `django-components`, `php-upgrade`). These should state their scope in the description.
+
 ### Content Guidelines
 
-- Skills should be stack-agnostic unless they live under `frameworks/`
-- Framework-specific skills should target the latest stable versions
 - Show realistic, production-quality examples -- not toy code
 - Include both the "happy path" and error handling where relevant
 - Keep instructions actionable -- tell the agent what to do, not just what exists

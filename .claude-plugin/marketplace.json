@@ -4,8 +4,8 @@
     "name": "Krzysztof Surdy"
   },
   "metadata": {
-    "description": "Agent AI skill sets — Knowledge (Design Patterns, Refactoring, SOLID, Debugging, Clean Architecture, Testing, API Design, Security, Scrum, Performance, Microservices, Git Workflow, CI/CD, Accessibility, Database Design), Tools (Agentic Rules Writer), Frameworks (Symfony Components, Symfony Upgrade, Django Components, LangChain Components), Playbooks (PHP Upgrade, Composer Dependencies), Roles (Product Manager, Architect, Backend Dev, Frontend Dev, QA Engineer, Project Manager), and Agents (15 specialist and role agents)",
-    "version": "7.14.0"
+    "description": "Agent AI skill sets — Knowledge (Design Patterns, Refactoring, SOLID, Debugging, Clean Architecture, Testing, API Design, Security, Scrum, Performance, Microservices, Git Workflow, CI/CD, Accessibility, Database Design), Tools (Agentic Rules Writer), Frameworks (Symfony Components, Symfony Upgrade, Django Components, LangChain Components), Playbooks (PHP Upgrade, Composer Dependencies), Roles (Product Manager, Architect, Backend Dev, Frontend Dev, QA Engineer, Project Manager, Scrum Master), and Agents (15 specialist and role agents)",
+    "version": "8.0.0"
   },
   "plugins": [
     {
@@ -32,7 +32,7 @@
       ]
     },
     {
-      "name": "setup-rules-writer",
+      "name": "tool-agentic-rules-writer",
       "description": "Generate a rules file for any AI coding agent. Interactive setup that scans installed skills, asks about workflow preferences, and writes a tailored instruction file for Claude Code, Cursor, Windsurf, Copilot, Gemini, Codex, Cline, OpenCode, Continue, Trae, Roo Code, Amp, and more",
       "source": "./",
       "strict": false,
@@ -79,8 +79,8 @@
       ]
     },
     {
-      "name": "roles-virtuoso",
-      "description": "All role skills and role agents — product manager, architect, backend developer, frontend developer, QA engineer, and project manager. Each role includes reference material (skill) and a specialized agent definition.",
+      "name": "agents-virtuoso",
+      "description": "All 15 agents with their role skills — 8 specialist agents (investigator, implementer, reviewer, refactor-scout, dependency-auditor, doc-writer, migration-planner, test-gap-analyzer) and 7 role agents with matching role skills (product-manager, architect, backend-dev, frontend-dev, qa-engineer, project-manager, scrum-master)",
       "source": "./",
       "strict": false,
       "skills": [
@@ -89,22 +89,9 @@
         "./skills/roles/backend-dev",
         "./skills/roles/frontend-dev",
         "./skills/roles/qa-engineer",
-        "./skills/roles/project-manager"
+        "./skills/roles/project-manager",
+        "./skills/roles/scrum-master"
       ],
-      "agents": [
-        "./agents/product-manager.md",
-        "./agents/architect.md",
-        "./agents/backend-dev.md",
-        "./agents/frontend-dev.md",
-        "./agents/qa-engineer.md",
-        "./agents/project-manager.md"
-      ]
-    },
-    {
-      "name": "agents-virtuoso",
-      "description": "All 15 agent definitions — 8 specialist agents (investigator, implementer, reviewer, refactor-scout, dependency-auditor, doc-writer, migration-planner, test-gap-analyzer) and 7 role agents (product-manager, architect, backend-dev, frontend-dev, qa-engineer, project-manager, scrum-master)",
-      "source": "./",
-      "strict": false,
       "agents": [
         "./agents/investigator.md",
         "./agents/implementer.md",
@@ -193,6 +180,90 @@
       ],
       "agents": [
         "./agents/project-manager.md"
+      ]
+    },
+    {
+      "name": "role-scrum-master",
+      "description": "Scrum Master role skill and agent -- sprint facilitation, coaching, impediment resolution, and retrospective techniques",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/roles/scrum-master"
+      ],
+      "agents": [
+        "./agents/scrum-master.md"
+      ]
+    },
+    {
+      "name": "agent-investigator",
+      "description": "Investigator agent -- deep-dives into codebases to trace bugs, map dependencies, and surface root causes",
+      "source": "./",
+      "strict": false,
+      "agents": [
+        "./agents/investigator.md"
+      ]
+    },
+    {
+      "name": "agent-implementer",
+      "description": "Implementer agent -- writes production code following TDD, clean architecture, and project conventions",
+      "source": "./",
+      "strict": false,
+      "agents": [
+        "./agents/implementer.md"
+      ]
+    },
+    {
+      "name": "agent-reviewer",
+      "description": "Reviewer agent -- performs thorough code reviews checking correctness, style, security, and test coverage",
+      "source": "./",
+      "strict": false,
+      "agents": [
+        "./agents/reviewer.md"
+      ]
+    },
+    {
+      "name": "agent-refactor-scout",
+      "description": "Refactor scout agent -- identifies code smells, duplication, and structural improvements across the codebase",
+      "source": "./",
+      "strict": false,
+      "agents": [
+        "./agents/refactor-scout.md"
+      ]
+    },
+    {
+      "name": "agent-dependency-auditor",
+      "description": "Dependency auditor agent -- analyzes project dependencies for security vulnerabilities, outdated packages, and upgrade paths",
+      "source": "./",
+      "strict": false,
+      "agents": [
+        "./agents/dependency-auditor.md"
+      ]
+    },
+    {
+      "name": "agent-doc-writer",
+      "description": "Doc writer agent -- generates and maintains technical documentation, API docs, and architecture decision records",
+      "source": "./",
+      "strict": false,
+      "agents": [
+        "./agents/doc-writer.md"
+      ]
+    },
+    {
+      "name": "agent-migration-planner",
+      "description": "Migration planner agent -- plans and sequences database migrations, framework upgrades, and data transformations",
+      "source": "./",
+      "strict": false,
+      "agents": [
+        "./agents/migration-planner.md"
+      ]
+    },
+    {
+      "name": "agent-test-gap-analyzer",
+      "description": "Test gap analyzer agent -- identifies untested code paths, missing edge cases, and test coverage improvements",
+      "source": "./",
+      "strict": false,
+      "agents": [
+        "./agents/test-gap-analyzer.md"
       ]
     }
   ]
