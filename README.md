@@ -11,7 +11,7 @@ AI agent skill sets for software engineering — built on the [Agent Skills](htt
 Six categories, installable independently or as bundles:
 
 - **Knowledge** — Design Patterns, Refactoring, SOLID Principles, Debugging, Clean Architecture, Testing, API Design, Security, Scrum, Performance, Microservices, Git Workflow, CI/CD, Accessibility, Database Design. Reference material with progressive disclosure.
-- **Tools** — Agentic Rules Writer. Agent configuration and bootstrapping tools.
+- **Tools** — Agentic Rules Writer, Ticket Writer. Agent configuration, bootstrapping, and backlog authoring tools.
 - **Frameworks** — Symfony Components, Symfony Upgrade, Django Components, LangChain Components. Component-level reference and version upgrade guides for framework-specific development.
 - **Playbooks** — PHP Upgrade, Composer Dependencies. Step-by-step operational procedures for recurring maintenance tasks.
 - **Roles** — Product Manager, Architect, Backend Dev, Frontend Dev, QA Engineer, Project Manager. Reference skills defining responsibilities, workflows, and handoff checklists for each team role.
@@ -96,6 +96,7 @@ printf '#!/bin/sh\nnpx skills update --yes >/dev/null 2>&1 &\n' > .git/hooks/pos
 | Skill | Summary |
 |-------|---------|
 | [Agentic Rules Writer](skills/tools/agentic-rules-writer/SKILL.md) | Generate rules files for Claude Code, Cursor, Windsurf, Copilot, Gemini, Roo Code, or Amp |
+| [Ticket Writer](skills/tools/ticket-writer/SKILL.md) | Interactive tool to write tickets of the right type -- story, subtask, issue, bug, epic, or initiative -- each with its own structure and quality checks |
 
 ## Framework Skills
 
@@ -211,7 +212,8 @@ code-virtuoso/
 │   │   ├── php-upgrade/
 │   │   └── composer-dependencies/
 │   └── tools/
-│       └── agentic-rules-writer/
+│       ├── agentic-rules-writer/
+│       └── ticket-writer/
 ├── spec/                          # Format specifications
 │   ├── agent-skills-spec.md
 │   ├── skill-spec.md
