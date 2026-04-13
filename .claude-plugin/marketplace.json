@@ -4,13 +4,13 @@
     "name": "Krzysztof Surdy"
   },
   "metadata": {
-    "description": "Agent AI skill sets — Knowledge (Design Patterns, Refactoring, SOLID, Debugging, Clean Architecture, Testing, API Design, Security, Scrum, Performance, Microservices, Git Workflow, CI/CD, Accessibility, Database Design), Tools (Agentic Rules Writer, Ticket Writer, Agent Creator, Plugin Creator), Frameworks (Symfony Components, Symfony Upgrade, Django Components, LangChain Components), Playbooks (PHP Upgrade, Composer Dependencies), Roles (Product Manager, Architect, Backend Dev, Frontend Dev, QA Engineer, Project Manager, Scrum Master), and Agents (15 specialist and role agents)",
-    "version": "8.2.0"
+    "description": "Agent AI skill sets — Knowledge (Design Patterns, Refactoring, SOLID, Debugging, Clean Architecture, Testing, API Design, Security, Scrum, Performance, Microservices, Git Workflow, CI/CD, Accessibility, Database Design, Verification Before Completion, Dispatching Parallel Agents, Subagent-Driven Development), Tools (Agentic Rules Writer, Ticket Writer, Agent Creator, Plugin Creator, Brainstorming, Using Virtuoso), Frameworks (Symfony Components, Symfony Upgrade, Django Components, LangChain Components), Playbooks (PHP Upgrade, Composer Dependencies, Finishing Branch), Roles (Product Manager, Architect, Backend Dev, Frontend Dev, QA Engineer, Project Manager, Scrum Master), and Agents (15 specialist and role agents)",
+    "version": "8.3.0"
   },
   "plugins": [
     {
       "name": "knowledge-virtuoso",
-      "description": "All knowledge skills — design patterns, refactoring, SOLID, debugging, clean architecture, testing, API design, security, scrum, performance, microservices, git workflow, CI/CD, accessibility, and database design",
+      "description": "All knowledge skills — design patterns, refactoring, SOLID, debugging, clean architecture, testing, API design, security, scrum, performance, microservices, git workflow, CI/CD, accessibility, database design, verification before completion, dispatching parallel agents, and subagent-driven development",
       "source": "./",
       "strict": false,
       "skills": [
@@ -28,7 +28,10 @@
         "./skills/knowledge/git-workflow",
         "./skills/knowledge/cicd",
         "./skills/knowledge/accessibility",
-        "./skills/knowledge/database-design"
+        "./skills/knowledge/database-design",
+        "./skills/knowledge/verification-before-completion",
+        "./skills/knowledge/dispatching-parallel-agents",
+        "./skills/knowledge/subagent-driven-development"
       ]
     },
     {
@@ -68,6 +71,24 @@
       ]
     },
     {
+      "name": "tool-brainstorming",
+      "description": "Interactive pre-implementation design exploration. Turns a vague idea or feature request into a written spec with problem statement, goals, non-goals, constraints, acceptance criteria, and risks. Asks focused questions one at a time, challenges assumptions, and hard-gates implementation until the spec is approved",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/tools/brainstorming"
+      ]
+    },
+    {
+      "name": "tool-using-virtuoso",
+      "description": "Guided tour and discovery advisor for the code-virtuoso ecosystem. Matches situations to the right skill, agent, or chaining pattern. Covers the six skill categories, the two agent tiers, canonical multi-step chains, and plugin distribution tiers. Use when onboarding to the ecosystem or deciding which skill or agent fits a task",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/tools/using-virtuoso"
+      ]
+    },
+    {
       "name": "symfony-virtuoso",
       "description": "Symfony framework skills — 38 component references (APIs, patterns, configuration for PHP 8.3+ and Symfony 7.x) and version upgrade guide (deprecation-first approach, recipe updates, bundle compatibility)",
       "source": "./",
@@ -97,12 +118,13 @@
     },
     {
       "name": "playbooks-virtuoso",
-      "description": "Operational playbooks — PHP version upgrade (Rector, PHPCompatibility, per-version breaking changes) and Composer dependency management (safe update strategies, security auditing, Dependabot/Renovate)",
+      "description": "Operational playbooks — PHP version upgrade (Rector, PHPCompatibility, per-version breaking changes), Composer dependency management (safe update strategies, security auditing, Dependabot/Renovate), and finishing a development branch (pre-push verification, integration strategies, PR messages, cleanup, and recovery)",
       "source": "./",
       "strict": false,
       "skills": [
         "./skills/playbooks/php-upgrade",
-        "./skills/playbooks/composer-dependencies"
+        "./skills/playbooks/composer-dependencies",
+        "./skills/playbooks/finishing-branch"
       ]
     },
     {

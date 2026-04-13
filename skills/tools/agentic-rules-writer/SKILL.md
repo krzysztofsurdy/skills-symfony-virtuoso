@@ -1,13 +1,13 @@
 ---
 name: agentic-rules-writer
-description: Interactive tool to generate tailored rules and instruction files for any AI coding agent. Use when the user asks to set up agent rules, configure Claude Code instructions, create Cursor rules, write Windsurf rules, generate Copilot instructions, or establish consistent AI coding standards for a team. Supports 13+ agents (Claude Code, Cursor, Windsurf, Copilot, Gemini, Codex, Cline, OpenCode, Continue, Trae, Roo Code, Amp) with global, team-shared, and dev-specific scopes. Scans installed skills and runs an interactive questionnaire.
+description: Interactive tool to generate tailored rules and instruction files for any AI coding agent. Use when the user asks to set up agent rules, configure Claude Code instructions, create Cursor rules, write Windsurf rules, generate Copilot instructions, or establish consistent AI coding standards for a team. Supports 13+ agents (Claude Code, Cursor, Windsurf, Copilot, Gemini, Codex, Cline, OpenCode, Continue, Trae, Roo Code, Amp) with global, team-shared, and dev-specific scopes. Defers to the `using-virtuoso` meta-skill for ecosystem discovery (skills, agents, recommendations) and runs an interactive questionnaire for workflow preferences.
 user-invocable: true
 argument-hint: "[optional: agent-name e.g. claude, cursor, windsurf, codex]"
 ---
 
 # Agentic Rules Writer
 
-Generate a tailored rules/instruction file for any AI coding agent. Runs an interactive questionnaire, scans installed skills at runtime, and writes the output in the correct format and location for the chosen agent and scope.
+Generate a tailored rules/instruction file for any AI coding agent. Runs an interactive questionnaire, pulls the installed-skill and agent inventory from the `using-virtuoso` meta-skill, and writes the output in the correct format and location for the chosen agent and scope.
 
 ## When to Use
 
@@ -279,63 +279,43 @@ Free-text. Ask: "Any additional rules, preferences, or comments you'd like inclu
 
 ---
 
-## Phase 4: Skill & Agent Scanning
+## Phase 4: Ecosystem Discovery
 
-### Skill Scanning
+Defer all skill and agent enumeration to the `using-virtuoso` meta-skill. This keeps the ecosystem inventory in a single source of truth and prevents this skill from drifting as new skills or agents are added.
 
-Scan for installed skills at runtime. Check these locations:
+### If `using-virtuoso` is installed
 
-```
-~/.claude/skills/*/SKILL.md          # user-level skills
-.claude/skills/*/SKILL.md            # project-level skills
-~/.claude/plugins/*/skills/*/SKILL.md  # marketplace plugins
-```
+Read its reference files to build the Skills, Custom Agents, Agent Roles, and Recommended sections of the generated rules file:
 
-For each found skill:
-1. Read the YAML frontmatter to extract `name` and `description`
-2. Build a mapping: `When [situation matching description] -> use /skill-name`
-
-Also detect which **code-virtuoso** skills are NOT installed and build a recommendations list. The full code-virtuoso skill catalog:
-
-| Skill | Description |
+| Reference | Use for |
 |---|---|
-| design-patterns | 26 GoF design patterns with multi-language examples |
-| refactoring | 89 refactoring techniques and code smells |
-| solid | 5 SOLID principles for OO design |
-| debugging | Systematic debugging methodology and root cause analysis |
-| clean-architecture | Clean Architecture, Hexagonal Architecture, and DDD fundamentals |
-| testing | Testing pyramid, TDD schools, test doubles, and testing strategies |
-| api-design | REST and GraphQL API design principles and evolution strategies |
-| security | OWASP Top 10, auth patterns, and secure coding practices |
-| symfony | 38 Symfony component references (PHP projects) |
-| agentic-rules-writer | This skill (already installed) |
+| `skills/tools/using-virtuoso/references/ecosystem-map.md` | Canonical inventory of knowledge skills, tool skills, playbooks, framework skills, specialist agents, and role agents |
+| `skills/tools/using-virtuoso/references/decision-matrix.md` | Situation-to-skill and situation-to-agent mappings for the `Skills` section |
+| `skills/tools/using-virtuoso/references/plugin-tiers.md` | Install recommendations for the "Recommended (not installed)" section |
 
-### Agent Scanning
+From the ecosystem map, build:
 
-Scan for custom agents (subagents) at runtime. Check these locations:
+1. **Skills section entries** — one bullet per installed skill: `When [situation from decision matrix] -> use /skill-name`
+2. **Custom Agents section** — specialist agents with capability and scope (read-only vs worktree, specialist vs role)
+3. **Agent Roles section** — role agents with their domain of responsibility
+4. **Recommended (not installed)** — skills and plugins the user does not yet have, with install hints
 
-```
-~/.claude/agents/*.md                # user-level agents (available in all projects)
-.claude/agents/*.md                  # project-level agents (committed to repo)
-~/.claude/plugins/*/agents/*.md      # plugin agents
-```
+To determine what is actually installed, ask the user:
 
-For each found agent:
-1. Read the YAML frontmatter to extract `name` and `description`
-2. Determine the agent's capabilities from `tools` field (read-only vs full access)
-3. Note the `model` if specified (haiku = fast/cheap, opus = capable, sonnet = balanced)
-4. Build a mapping for the generated rules
+> "Which code-virtuoso plugins do you have installed? (e.g., knowledge-virtuoso, agents-virtuoso, symfony-virtuoso, individual role-/agent-/tool- plugins, or 'none')"
 
-Include discovered agents in the generated rules under a **## Custom Agents** section (only if agents are found, omit if none):
+Treat their answer as the installed set. Do not scan the filesystem.
 
-```markdown
-## Custom Agents
+### If `using-virtuoso` is NOT installed
 
-Available custom agents for task delegation:
-- agent-name — description (read-only / full access, model)
-```
+1. Recommend installing `tool-using-virtuoso` from `krzysztofsurdy/code-virtuoso` first — it is the source of truth for the ecosystem.
+2. Ask the user to list any skills or agents they want referenced in the rules file (by name).
+3. Skip the "Recommended (not installed)" section, or include a single line: `Install tool-using-virtuoso from krzysztofsurdy/code-virtuoso to unlock ecosystem-aware rule generation.`
 
-If the user selected "Always parallelize" or "Parallel for large tasks" in Q15, also add:
+### Parallelization add-on
+
+If the user selected "Always parallelize" or "Parallel for large tasks" in Q15, add this line to the Custom Agents section:
+
 ```
 When delegating to agent teams, prefer using custom agents over general-purpose when a matching agent exists.
 ```
@@ -429,15 +409,15 @@ Generate the rules file content from the questionnaire answers. Structure depend
 
 CRITICAL: Skills are your most valuable resource. When a situation matches an installed skill, you MUST use it — do not rely on general knowledge when a dedicated skill exists. Skills contain curated, battle-tested reference material that is more precise and reliable than generating answers from scratch. Skipping a relevant skill is like ignoring documentation you already have open.
 
-[Auto-generated from Phase 4 scan]
+[Auto-generated from using-virtuoso's ecosystem-map and decision-matrix, filtered by what the user reported as installed in Phase 4]
 When [situation] -> use /skill-name
 ...
 
 ## Custom Agents
-[If any custom agents found during Phase 4 scan, list them with descriptions and capabilities. If none found, omit this section entirely.]
+[If specialist agents are installed (per Phase 4), list them with descriptions and capabilities drawn from using-virtuoso's ecosystem-map. If none, omit this section entirely.]
 
 ## Agent Roles
-[If any role skills (product-manager, architect, backend-dev, frontend-dev, qa-engineer, project-manager) are detected during Phase 4 scan, list them here with their responsibilities. If no role skills are installed, omit this section entirely.]
+[If role agents are installed (per Phase 4), list them here with the domain they own. If none, omit this section entirely.]
 
 ## Persona
 [If Q19 = Yes — persona description, catchphrases, and constraint. If No, omit this section entirely.]
@@ -752,5 +732,6 @@ After writing the file:
 
 - If a target directory doesn't exist, create it
 - If the user aborts during the questionnaire, discard all progress — don't write a partial file
-- If skill scanning finds no skills, skip the Skills section entirely and include the full recommendations list
+- If the user reports no installed code-virtuoso plugins in Phase 4, skip the Skills, Custom Agents, and Agent Roles sections entirely and include a short "Recommended (not installed)" list pointing to `tool-using-virtuoso` and `agents-virtuoso` as starting installs
+- If `using-virtuoso` is not installed, do not attempt to fabricate the ecosystem inventory — ask the user what they have
 - For project scopes, verify you are inside a git repository before writing

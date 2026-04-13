@@ -10,10 +10,10 @@ AI agent skill sets for software engineering — built on the [Agent Skills](htt
 
 Six categories, installable independently or as bundles:
 
-- **Knowledge** — Design Patterns, Refactoring, SOLID Principles, Debugging, Clean Architecture, Testing, API Design, Security, Scrum, Performance, Microservices, Git Workflow, CI/CD, Accessibility, Database Design. Reference material with progressive disclosure.
-- **Tools** — Agentic Rules Writer, Ticket Writer, Agent Creator, Plugin Creator. Agent configuration, bootstrapping, backlog authoring, sub-agent design, and Claude Code plugin scaffolding tools.
+- **Knowledge** — Design Patterns, Refactoring, SOLID Principles, Debugging, Clean Architecture, Testing, API Design, Security, Scrum, Performance, Microservices, Git Workflow, CI/CD, Accessibility, Database Design, Verification Before Completion, Dispatching Parallel Agents, Subagent-Driven Development. Reference material with progressive disclosure.
+- **Tools** — Agentic Rules Writer, Ticket Writer, Agent Creator, Plugin Creator, Brainstorming, Using Virtuoso. Agent configuration, backlog authoring, sub-agent design, plugin scaffolding, pre-implementation design exploration, and ecosystem discovery tools.
 - **Frameworks** — Symfony Components, Symfony Upgrade, Django Components, LangChain Components. Component-level reference and version upgrade guides for framework-specific development.
-- **Playbooks** — PHP Upgrade, Composer Dependencies. Step-by-step operational procedures for recurring maintenance tasks.
+- **Playbooks** — PHP Upgrade, Composer Dependencies, Finishing Branch. Step-by-step operational procedures for recurring maintenance and delivery tasks.
 - **Roles** — Product Manager, Architect, Backend Dev, Frontend Dev, QA Engineer, Project Manager. Reference skills defining responsibilities, workflows, and handoff checklists for each team role.
 - **Agents** — 15 sub-agent definitions (8 specialist + 7 role agents) following the [Claude Code sub-agents](https://code.claude.com/docs/en/sub-agents) standard. Specialist agents handle focused tasks (investigation, TDD, code review, refactoring, auditing, documentation, migration planning, test gap analysis). Role agents embody team positions with persistent memory and skill preloading.
 
@@ -90,6 +90,9 @@ printf '#!/bin/sh\nnpx skills update --yes >/dev/null 2>&1 &\n' > .git/hooks/pos
 | [CI/CD](skills/knowledge/cicd/SKILL.md) | Pipeline design, deployment strategies, environment promotion |
 | [Accessibility](skills/knowledge/accessibility/SKILL.md) | WCAG compliance, ARIA patterns, keyboard navigation, a11y testing |
 | [Database Design](skills/knowledge/database-design/SKILL.md) | Schema modeling, indexing strategies, migration patterns, temporal data |
+| [Verification Before Completion](skills/knowledge/verification-before-completion/SKILL.md) | Evidence-based completion discipline, tiered definition of done, fake-completion failure modes |
+| [Dispatching Parallel Agents](skills/knowledge/dispatching-parallel-agents/SKILL.md) | Fan-out/fan-in patterns, subagent briefing, context isolation, result synthesis |
+| [Subagent-Driven Development](skills/knowledge/subagent-driven-development/SKILL.md) | One-fresh-agent-per-task execution with two-stage review gates and structured hand-offs |
 
 ## Tool Skills
 
@@ -99,6 +102,8 @@ printf '#!/bin/sh\nnpx skills update --yes >/dev/null 2>&1 &\n' > .git/hooks/pos
 | [Ticket Writer](skills/tools/ticket-writer/SKILL.md) | Interactive tool to write tickets of the right type -- story, subtask, issue, bug, epic, or initiative -- each with its own structure and quality checks |
 | [Agent Creator](skills/tools/agent-creator/SKILL.md) | Interactive tool to design a well-scoped sub-agent definition -- specialist, role, or team-lead -- with the right frontmatter, tool permissions, isolation, memory, and system prompt |
 | [Plugin Creator](skills/tools/plugin-creator/SKILL.md) | Interactive tool to scaffold a complete Claude Code plugin -- `plugin.json` manifest, skills, agents, hooks, MCP/LSP servers, and optional marketplace.json catalog entry |
+| [Brainstorming](skills/tools/brainstorming/SKILL.md) | Interactive pre-implementation design exploration — turns a vague idea into a written spec and hard-gates implementation until approved |
+| [Using Virtuoso](skills/tools/using-virtuoso/SKILL.md) | Guided tour and discovery advisor — matches situations to the right skill, agent, or chaining pattern in the ecosystem |
 
 ## Framework Skills
 
@@ -115,6 +120,7 @@ printf '#!/bin/sh\nnpx skills update --yes >/dev/null 2>&1 &\n' > .git/hooks/pos
 |-------|---------|
 | [PHP Upgrade](skills/playbooks/php-upgrade/SKILL.md) | PHP version upgrade process with Rector, PHPCompatibility, and per-version breaking changes |
 | [Composer Dependencies](skills/playbooks/composer-dependencies/SKILL.md) | Safe dependency update strategies, security auditing, and automated update tools |
+| [Finishing Branch](skills/playbooks/finishing-branch/SKILL.md) | End-to-end branch finishing — pre-push verification, integration strategies, PR messages, cleanup, and recovery |
 
 ## Role Skills
 
@@ -194,7 +200,10 @@ code-virtuoso/
 │   │   ├── scrum/
 │   │   ├── security/
 │   │   ├── solid/
-│   │   └── testing/
+│   │   ├── testing/
+│   │   ├── verification-before-completion/
+│   │   ├── dispatching-parallel-agents/
+│   │   └── subagent-driven-development/
 │   ├── roles/
 │   │   ├── product-manager/
 │   │   ├── architect/
@@ -212,12 +221,15 @@ code-virtuoso/
 │   │       └── symfony-upgrade/
 │   ├── playbooks/
 │   │   ├── php-upgrade/
-│   │   └── composer-dependencies/
+│   │   ├── composer-dependencies/
+│   │   └── finishing-branch/
 │   └── tools/
 │       ├── agentic-rules-writer/
 │       ├── ticket-writer/
 │       ├── agent-creator/
-│       └── plugin-creator/
+│       ├── plugin-creator/
+│       ├── brainstorming/
+│       └── using-virtuoso/
 ├── spec/                          # Format specifications
 │   ├── agent-skills-spec.md
 │   ├── skill-spec.md
