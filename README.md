@@ -11,7 +11,7 @@ AI agent skill sets for software engineering — built on the [Agent Skills](htt
 Six categories, installable independently or as bundles:
 
 - **Knowledge** — Design Patterns, Refactoring, SOLID Principles, Debugging, Clean Architecture, Testing, API Design, Security, Scrum, Performance, Microservices, Git Workflow, CI/CD, Accessibility, Database Design. Reference material with progressive disclosure.
-- **Tools** — Agentic Rules Writer, Ticket Writer. Agent configuration, bootstrapping, and backlog authoring tools.
+- **Tools** — Agentic Rules Writer, Ticket Writer, Agent Creator, Plugin Creator. Agent configuration, bootstrapping, backlog authoring, sub-agent design, and Claude Code plugin scaffolding tools.
 - **Frameworks** — Symfony Components, Symfony Upgrade, Django Components, LangChain Components. Component-level reference and version upgrade guides for framework-specific development.
 - **Playbooks** — PHP Upgrade, Composer Dependencies. Step-by-step operational procedures for recurring maintenance tasks.
 - **Roles** — Product Manager, Architect, Backend Dev, Frontend Dev, QA Engineer, Project Manager. Reference skills defining responsibilities, workflows, and handoff checklists for each team role.
@@ -97,6 +97,8 @@ printf '#!/bin/sh\nnpx skills update --yes >/dev/null 2>&1 &\n' > .git/hooks/pos
 |-------|---------|
 | [Agentic Rules Writer](skills/tools/agentic-rules-writer/SKILL.md) | Generate rules files for Claude Code, Cursor, Windsurf, Copilot, Gemini, Roo Code, or Amp |
 | [Ticket Writer](skills/tools/ticket-writer/SKILL.md) | Interactive tool to write tickets of the right type -- story, subtask, issue, bug, epic, or initiative -- each with its own structure and quality checks |
+| [Agent Creator](skills/tools/agent-creator/SKILL.md) | Interactive tool to design a well-scoped sub-agent definition -- specialist, role, or team-lead -- with the right frontmatter, tool permissions, isolation, memory, and system prompt |
+| [Plugin Creator](skills/tools/plugin-creator/SKILL.md) | Interactive tool to scaffold a complete Claude Code plugin -- `plugin.json` manifest, skills, agents, hooks, MCP/LSP servers, and optional marketplace.json catalog entry |
 
 ## Framework Skills
 
@@ -213,11 +215,14 @@ code-virtuoso/
 │   │   └── composer-dependencies/
 │   └── tools/
 │       ├── agentic-rules-writer/
-│       └── ticket-writer/
+│       ├── ticket-writer/
+│       ├── agent-creator/
+│       └── plugin-creator/
 ├── spec/                          # Format specifications
 │   ├── agent-skills-spec.md
 │   ├── skill-spec.md
-│   └── agent-spec.md
+│   ├── agent-spec.md
+│   └── plugin-spec.md
 ├── template/                      # Starter templates
 │   ├── SKILL.md
 │   └── agent.md

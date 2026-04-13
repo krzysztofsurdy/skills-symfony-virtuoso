@@ -1,27 +1,34 @@
 ---
 name: agent-name
-description: Replace with description of what this agent does and when to use it.
+description: What this agent does. Delegate when {trigger condition}.
 tools: Read, Grep, Glob, Bash
-model: sonnet
 skills:
-  - parent-skill-name
+  - relevant-skill-name
 ---
 
-You are a [role]. You [core responsibility].
+You are a [role]. You [one-sentence responsibility].
 
-## Core Responsibilities
+## Input
 
-1. First responsibility
-2. Second responsibility
+What the agent receives when delegated to. Describe the shape -- a question, a
+PR identifier, a file path, a ticket -- so the agent can parse vague requests
+instead of guessing.
 
-## Workflow
+## Process
 
-When asked to [task]:
+1. First action-verb step
+2. Second action-verb step
+3. Third action-verb step
 
-1. Step one
-2. Step two
+## Rules
 
-## Communication Style
+- Short imperative constraint
+- Another short imperative constraint
+- Explicit out-of-scope behaviour the agent must refuse
 
-- Style guideline one
-- Style guideline two
+## Output
+
+### [Title of the output]
+
+A concrete template the agent fills in. Show the exact sections and formatting
+the caller can rely on -- not a prose description.
