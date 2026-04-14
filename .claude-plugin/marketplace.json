@@ -10,7 +10,7 @@
   "plugins": [
     {
       "name": "knowledge-virtuoso",
-      "description": "18 knowledge skills — design patterns, refactoring, SOLID, debugging, clean architecture, testing, API design, security, scrum, performance, microservices, git workflow, CI/CD, accessibility, database design, verification, parallel agents, and subagent-driven development",
+      "description": "15 knowledge skills — design patterns, refactoring, SOLID, debugging, clean architecture, testing, API design, security, scrum, performance, microservices, git workflow, CI/CD, accessibility, and database design",
       "source": "./",
       "strict": false,
       "skills": [
@@ -28,10 +28,7 @@
         "./skills/knowledge/git-workflow",
         "./skills/knowledge/cicd",
         "./skills/knowledge/accessibility",
-        "./skills/knowledge/database-design",
-        "./skills/knowledge/verification-before-completion",
-        "./skills/knowledge/dispatching-parallel-agents",
-        "./skills/knowledge/subagent-driven-development"
+        "./skills/knowledge/database-design"
       ]
     },
     {
@@ -78,7 +75,7 @@
     },
     {
       "name": "agents-virtuoso",
-      "description": "15 agents and 7 role skills — investigator, implementer, reviewer, refactor-scout, dependency-auditor, doc-writer, migration-planner, test-gap-analyzer, product-manager, architect, backend-dev, frontend-dev, qa-engineer, project-manager, scrum-master",
+      "description": "15 agents, 7 role skills, and 3 agent workflow skills — delegation patterns, subagent-driven development, verification discipline, plus all specialist and role agents",
       "source": "./",
       "strict": false,
       "skills": [
@@ -88,7 +85,10 @@
         "./skills/roles/frontend-dev",
         "./skills/roles/qa-engineer",
         "./skills/roles/project-manager",
-        "./skills/roles/scrum-master"
+        "./skills/roles/scrum-master",
+        "./skills/knowledge/dispatching-parallel-agents",
+        "./skills/knowledge/subagent-driven-development",
+        "./skills/knowledge/verification-before-completion"
       ],
       "agents": [
         "./agents/investigator.md",
