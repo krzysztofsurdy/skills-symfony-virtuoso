@@ -83,6 +83,7 @@ That is the whole tour. For fine-grained install modes (per-skill, global, offli
 | [Playbooks](#playbook-skills) | 5 | Step-by-step procedures for recurring operational tasks |
 | [Roles](#role-skills) | 6 | Team-role reference skills used by role agents |
 | [Agents](#agents) | 15 | 8 specialist + 7 role sub-agents with tool, isolation, and memory metadata |
+| [Teams](#teams) | 1 | Pre-composed agent teams with bundled skills and coordination protocols |
 
 ---
 
@@ -141,7 +142,7 @@ Interactive generators. Each is user-invocable via `/skill-name`.
 | [Agent Creator](skills/tools/agent-creator/SKILL.md) | Design a sub-agent with proper frontmatter, tool permissions, isolation, and system prompt |
 | [Plugin Creator](skills/tools/plugin-creator/SKILL.md) | Scaffold a complete Claude Code plugin -- manifest, skills, agents, hooks, MCP/LSP servers |
 | [Brainstorming](skills/tools/brainstorming/SKILL.md) | Pre-implementation design exploration -- turn a vague idea into an approved spec |
-| [Using Virtuoso](skills/tools/using-virtuoso/SKILL.md) | Guided tour and discovery advisor for the ecosystem |
+| [Using Ecosystem](skills/tools/using-ecosystem/SKILL.md) | Guided tour and discovery advisor for the ecosystem |
 | [PR Message Writer](skills/tools/pr-message-writer/SKILL.md) | Write structured pull request messages with technical documentation and testing instructions |
 | [Report Writer](skills/tools/report-writer/SKILL.md) | Generate standalone HTML reports summarizing changes, investigations, or architectural decisions |
 | [Stakeholder Update Writer](skills/tools/stakeholder-update-writer/SKILL.md) | Draft stakeholder Slack or email updates about project status, blockers, and decisions |
@@ -205,6 +206,16 @@ Sub-agents follow the [Claude Code sub-agents](https://code.claude.com/docs/en/s
 | Role | [QA Engineer](agents/qa-engineer.md) | Read, Grep, Glob, Bash | -- | project | Test plans, bug reports, release sign-off |
 | Role | [Project Manager](agents/project-manager.md) | Read, Grep, Glob, Bash | -- | project | PRINCE2 stages, risk, progress tracking |
 | Role | [Scrum Master](agents/scrum-master.md) | Read, Grep, Glob, Bash | -- | -- | Sprint planning, goals, retrospectives |
+
+---
+
+## Teams
+
+Pre-composed agent teams with bundled skills and coordination protocols. Pick a team instead of assembling agents manually. See [spec/team-spec.md](spec/team-spec.md) for the format.
+
+| Team | Lead | Agents | Workflow | Use case |
+|------|------|--------|----------|----------|
+| [Development Team](teams/development-team.md) | Product Manager | PM, Architect, Backend Dev, Frontend Dev, QA | Hybrid | Full feature delivery from requirements to merged PR |
 
 ---
 
@@ -402,18 +413,21 @@ code-virtuoso/
 │       ├── agent-creator/
 │       ├── plugin-creator/
 │       ├── brainstorming/
-│       ├── using-virtuoso/
+│       ├── using-ecosystem/
 │       ├── pr-message-writer/
 │       ├── report-writer/
 │       └── stakeholder-update-writer/
 ├── spec/                          # Format specifications
-│   ├── agent-skills-spec.md
 │   ├── skill-spec.md
 │   ├── agent-spec.md
-│   └── plugin-spec.md
+│   ├── plugin-spec.md
+│   └── team-spec.md
+├── teams/                         # Pre-composed agent teams
+│   └── development-team.md
 ├── template/                      # Starter templates
-│   ├── SKILL.md
-│   └── agent.md
+│   ├── skill-template.md
+│   ├── agent-template.md
+│   └── team-template.md
 ├── AGENTS.md
 ├── CHANGELOG.md
 ├── CONTRIBUTING.md

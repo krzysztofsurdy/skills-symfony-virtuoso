@@ -42,7 +42,7 @@
         "./skills/tools/agent-creator",
         "./skills/tools/plugin-creator",
         "./skills/tools/brainstorming",
-        "./skills/tools/using-virtuoso",
+        "./skills/tools/using-ecosystem",
         "./skills/tools/pr-message-writer",
         "./skills/tools/report-writer",
         "./skills/tools/stakeholder-update-writer"
@@ -89,6 +89,9 @@
         "./skills/knowledge/dispatching-parallel-agents",
         "./skills/knowledge/subagent-driven-development",
         "./skills/knowledge/verification-before-completion"
+      ],
+      "teams": [
+        "./teams/development-team.md"
       ],
       "agents": [
         "./agents/investigator.md",

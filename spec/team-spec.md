@@ -1,0 +1,115 @@
+# Team Specification
+
+A team is a pre-composed recipe that bundles agents, skills, and a coordination protocol into a ready-to-use unit. Pick a team, invoke it, and the who-does-what is already defined.
+
+## File Location
+
+Team files live at the repository root in `teams/`:
+
+```
+teams/
+  development-team.md
+  code-review-team.md
+  investigation-team.md
+```
+
+Each team is a single Markdown file with YAML frontmatter and a Markdown body.
+
+## Frontmatter Fields
+
+| Field | Required | Type | Purpose |
+|---|---|---|---|
+| `name` | Yes | string | Kebab-case identifier matching the filename without `.md` |
+| `description` | Yes | string | When to use this team. Include trigger phrases. Must be YAML-safe (wrap in double quotes if it contains colons) |
+| `lead` | Yes | string | Agent `name` that coordinates the team. Must reference an existing agent in `agents/` |
+| `agents` | Yes | list of strings | Agent `name` values participating in this team. Each must reference an existing agent in `agents/` |
+| `skills` | No | list of strings | Skill `name` values the team should preload. Each must reference an existing skill |
+| `workflow` | Yes | enum | `sequential`, `parallel`, or `hybrid` |
+
+### Workflow Types
+
+| Type | When to use |
+|---|---|
+| `sequential` | Each phase depends on the previous. One agent works at a time. |
+| `parallel` | Multiple agents work simultaneously on independent tasks. A lead dispatches and synthesizes. |
+| `hybrid` | Some phases are sequential (requirements before design), some are parallel (frontend and backend implement simultaneously). |
+
+### Field Rules
+
+- `lead` must also appear in the `agents` list
+- Agent names reference the `name` field in agent frontmatter, not the filename
+- Skill names reference the `name` field in skill frontmatter
+- Do not include provider-specific model names
+- Descriptions must not contain unquoted colons followed by spaces (wrap in double quotes)
+
+## Body Sections
+
+The body is the team's operational protocol -- the instructions a lead agent follows to coordinate the team.
+
+### Required Sections
+
+| Section | Purpose |
+|---|---|
+| **Purpose** | One paragraph describing what this team delivers and when to use it |
+| **Workflow** | Numbered phases. Each phase names the agent, the input it receives, and the output it produces |
+| **Entry Criteria** | Conditions that must be true before the team starts work |
+| **Exit Criteria** | Conditions that must be true before the team is done |
+| **Coordination Rules** | Hard constraints: who blocks whom, isolation requirements, handoff protocols |
+
+### Optional Sections
+
+| Section | Purpose |
+|---|---|
+| **Skill Usage** | Which skills each agent should consult and when |
+| **Spawning** | How to instantiate the team based on platform capabilities (see below) |
+| **Escalation** | What to do when an agent is blocked or a phase fails |
+| **Variants** | Lighter or heavier configurations (e.g., skip frontend for backend-only work) |
+
+### Spawning Section
+
+Every team file should include a Spawning section that describes how to instantiate the team. Platform capabilities vary -- the spawning section covers both modes:
+
+**Peer mode** (platforms with agent-to-agent messaging, e.g. experimental agent teams):
+1. Create a team with the agents listed in the frontmatter
+2. Assign the lead as coordinator
+3. Create shared tasks matching the workflow phases with dependencies
+4. Teammates claim tasks, message each other, and coordinate through the shared task list
+
+**Sequential mode** (all other platforms):
+1. Lead executes each workflow phase in order
+2. Spawn one sub-agent per phase with the phase-specific brief
+3. Collect the output and pass it as input to the next phase
+4. Lead synthesises the final result
+
+The team file should describe both modes so it works everywhere but is better on platforms that support peer communication.
+
+## Body Guidelines
+
+- Keep under 150 lines
+- Use imperative mood for workflow steps
+- Name concrete inputs and outputs for each phase (not vague "do the work")
+- Specify which agents run in parallel vs sequentially
+- Include at least one decision point (e.g., "if no API contract changes are needed, skip the Architect phase")
+- Do not reference specific programming languages, frameworks, or platforms unless the team is framework-specific
+- Do not reference specific AI coding tools or platform features
+- Include a Spawning section describing peer and sequential instantiation modes
+
+## Naming Conventions
+
+- Lowercase letters, digits, and hyphens only
+- Must end with `-team` (e.g., `development-team`, `code-review-team`)
+- Describe the team's domain, not a specific task (`release-team`, not `release-v2-team`)
+
+## Validation Checklist
+
+Before committing a team file:
+
+- [ ] Filename matches the `name` frontmatter field plus `.md`
+- [ ] `lead` agent exists in `agents/` and appears in the `agents` list
+- [ ] Every agent in `agents` list has a matching `.md` file in `agents/`
+- [ ] Every skill in `skills` list has a matching `SKILL.md` in `skills/`
+- [ ] `workflow` is one of: `sequential`, `parallel`, `hybrid`
+- [ ] Body has all required sections: Purpose, Workflow, Entry Criteria, Exit Criteria, Coordination Rules
+- [ ] No provider-specific model names or platform-specific tool references
+- [ ] Description is YAML-safe (no unquoted colons followed by spaces)
+- [ ] Team file is under 150 lines

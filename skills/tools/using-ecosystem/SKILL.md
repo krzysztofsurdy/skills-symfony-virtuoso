@@ -1,0 +1,162 @@
+---
+name: using-ecosystem
+description: "Ecosystem discovery advisor. Use when the user asks 'what skill should I use', 'what agent should I delegate to', 'which team fits this task', or when onboarding to available skills, agents, and teams. Scans ALL installed skills at runtime -- not limited to any single plugin or vendor. Triggers: 'which skill', 'which agent', 'what do I use for', 'orient me', 'what tools do I have'."
+user-invocable: true
+argument-hint: "[optional: situation or topic]"
+---
+
+# Using Ecosystem
+
+Discover the right skill, agent, or team for the situation at hand. This skill teaches a discovery PROCESS -- it does not maintain a hardcoded inventory. Every recommendation comes from scanning what is actually installed.
+
+## Core Principles
+
+| Principle | Meaning |
+|---|---|
+| **Scan, don't guess** | Always scan installed skills/agents/teams before recommending. Never assume something is available. |
+| **Match situation, not topic** | Pick the skill whose description triggers match what the user is doing, not the skill whose title loosely matches. |
+| **Agents act, skills inform** | Skills are reference material. Agents are actors. Delegate work to an agent; consult a skill. |
+| **Teams for multi-role work** | If the work needs 3+ agents coordinating, check for a pre-composed team before assembling ad-hoc. |
+| **Narrower wins** | If two skills overlap, pick the one with the tighter trigger match. |
+| **Chain when work crosses domains** | Multi-step tasks often need two or three agents in sequence. |
+
+---
+
+## Step 1: Scan What Is Installed
+
+Run the discovery commands from [discovery-commands](references/discovery-commands.md) to build a live index of installed skills, agents, and teams. Read each frontmatter `name` and `description` field.
+
+Do NOT skip this step. Do NOT recommend from memory. The installed set varies per user and per project.
+
+---
+
+## Step 2: Classify the User's Situation
+
+Determine what the user needs:
+
+| Signal | Category |
+|---|---|
+| Needs reference material, patterns, or principles | **Knowledge skill** |
+| Needs to generate a specific output (ticket, PR message, report, rules file) | **Tool skill** |
+| Needs to follow a step-by-step operational procedure | **Playbook skill** |
+| Needs framework-specific component reference | **Framework skill** |
+| Needs a single focused task done (investigate, review, implement) | **Specialist agent** |
+| Needs ongoing domain ownership (requirements, architecture, QA) | **Role agent** |
+| Needs coordinated multi-agent delivery (feature, release, review cycle) | **Team** |
+
+---
+
+## Step 3: Match and Recommend
+
+### Decision Tree
+
+```
+User request
+   |
+   v
+Does it need multiple agents coordinating?
+   +-- Yes --> Scan teams/ for a matching team
+   |            +-- Found --> Recommend the team
+   |            +-- None  --> Assemble ad-hoc from agents (see chaining below)
+   |
+   +-- No --> Is it a well-scoped actionable task?
+               +-- Yes --> Scan agents/ for a matching specialist or role
+               +-- No  --> Scan skills/ for a matching skill
+                            Use the category signals from Step 2
+```
+
+### Matching Rules
+
+1. **Read the `description` field** of each candidate. Match on trigger phrases, not the name.
+2. **Prefer the narrower skill.** `database-design` beats `clean-architecture` for a schema question.
+3. **Check `user-invocable`** -- if the user wants to run something interactively, only recommend user-invocable skills.
+4. **Skills stack.** You can recommend multiple knowledge skills for one task (e.g., `security` + `solid` for a security review).
+5. **Never recommend what is not installed.** If a skill would fit but is not present, suggest installing it with `npx skills add`.
+
+---
+
+## Step 4: Chain When Needed
+
+When a single skill or agent is not enough, chain them. Common patterns:
+
+| Pattern | Shape |
+|---|---|
+| **Investigation flow** | Read-only agent --> Design agent --> Implementation agent --> Review agent |
+| **Feature flow** | Requirements role --> Architecture role --> Dev roles (parallel) --> QA role |
+| **Review flow** | Smell scanner --> Reviewer --> (optional) Implementer for fixes |
+| **Coverage flow** | Test gap analyzer --> Implementer --> Reviewer |
+
+These are guidelines, not rituals. Skip steps that do not apply. Add steps that do. If a pre-composed team matches the chain, use the team instead.
+
+---
+
+## Ecosystem Structure
+
+The ecosystem has five layers. The structure is stable -- it does not change when skills are added.
+
+| Layer | Location | Format | Purpose |
+|---|---|---|---|
+| **Skills** | `skills/{category}/{name}/SKILL.md` | Markdown + YAML frontmatter | Reference material, tools, playbooks, roles, frameworks |
+| **Agents** | `agents/{name}.md` | Markdown + YAML frontmatter | Specialist and role sub-agents |
+| **Teams** | `teams/{name}.md` | Markdown + YAML frontmatter | Pre-composed agent teams with coordination protocols |
+| **Specs** | `spec/*.md` | Markdown | Format specifications for skills, agents, teams, plugins |
+| **Plugins** | `.claude-plugin/marketplace.json` | JSON | Distribution bundles grouping skills and agents |
+
+### Skill Categories
+
+| Category | Path | Invocation |
+|---|---|---|
+| Knowledge | `skills/knowledge/` | Auto-loaded when relevant |
+| Tools | `skills/tools/` | User-invocable slash commands |
+| Playbooks | `skills/playbooks/` | User-invocable slash commands |
+| Roles | `skills/roles/` | Auto-loaded by matching role agents |
+| Frameworks | `skills/frameworks/{name}/` | Loaded when the framework is in play |
+
+### Agent Tiers
+
+| Tier | Scope | Examples |
+|---|---|---|
+| Specialist | Single repeatable task (stateless) | investigator, reviewer, refactor-scout |
+| Role | Domain of responsibility (some carry memory) | architect, backend-dev, qa-engineer |
+
+### Team Spawning Modes
+
+| Mode | When | How |
+|---|---|---|
+| Peer | Platform supports agent-to-agent messaging | Lead creates team, teammates claim tasks and message each other |
+| Sequential | All other platforms | Lead dispatches one sub-agent per phase, passes outputs forward |
+
+---
+
+## Quality Checklist
+
+Before answering a "which skill/agent/team" question:
+
+- [ ] Did I scan installed skills/agents/teams rather than recommending from memory?
+- [ ] Did I match on the description's trigger phrases, not just the name?
+- [ ] Did I consider whether a narrower, more specific skill exists?
+- [ ] Did I recommend an agent when the work is actionable, not just reference material?
+- [ ] Did I check for a pre-composed team when the work needs 3+ agents?
+- [ ] Did I mention chaining when the work crosses domains?
+- [ ] Did I avoid recommending something that is not installed?
+
+---
+
+## Critical Rules
+
+1. **Scan first.** Every recommendation starts with a live scan of what is installed. No hardcoded lists.
+2. **Situation over title.** Match what the user is doing, not what the skill is called.
+3. **Specialist for scoped tasks, role for domain work, team for multi-role delivery.**
+4. **Chain over stretch.** If a single skill does not cover the work, combine two. Do not force one skill beyond its fit.
+5. **Never recommend uninstalled skills as available.** Suggest installing with a hint, not as a next step.
+6. **Respect agent boundaries.** Read-only agents do not edit files. Dev agents run in worktrees.
+7. **Category is a signal.** Tools for interactive output, playbooks for procedures, knowledge for reference.
+
+---
+
+## Reference Files
+
+| Reference | Contents |
+|---|---|
+| [discovery-commands](references/discovery-commands.md) | Shell commands to scan installed skills, agents, and teams at runtime |
+| [chaining-patterns](references/chaining-patterns.md) | Multi-agent chain templates with when-to-use guidance |
