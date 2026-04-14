@@ -118,22 +118,35 @@ def check_plugin_naming(data: dict) -> None:
 def check_orphans(data: dict) -> None:
     print("\n=== Orphan Detection ===")
 
-    skill_files = sorted(SKILLS_DIR.rglob("SKILL.md"))
-    agent_files = sorted(AGENTS_DIR.glob("*.md")) if AGENTS_DIR.is_dir() else []
-
-    # Collect all skill paths referenced in any plugin
+    # Collect all skill and agent paths referenced in any plugin
     referenced_skill_dirs: set[Path] = set()
+    referenced_agent_paths: set[Path] = set()
+    uses_auto_discovery = False
+
     for plugin in data.get("plugins", []):
-        for spath in plugin.get("skills", []):
+        skills_list = plugin.get("skills", [])
+        agents_list = plugin.get("agents", [])
+
+        # If a plugin has source but no explicit skills/agents, it uses auto-discovery
+        if plugin.get("source") and not skills_list and not agents_list:
+            uses_auto_discovery = True
+
+        for spath in skills_list:
             resolved = (REPO_ROOT / spath.lstrip("./")).resolve()
             referenced_skill_dirs.add(resolved)
 
-    # Collect all agent paths referenced in any plugin
-    referenced_agent_paths: set[Path] = set()
-    for plugin in data.get("plugins", []):
-        for apath in plugin.get("agents", []):
+        for apath in agents_list:
             resolved = (REPO_ROOT / apath.lstrip("./")).resolve()
             referenced_agent_paths.add(resolved)
+
+    if uses_auto_discovery:
+        skill_files = sorted(SKILLS_DIR.rglob("SKILL.md"))
+        agent_files = sorted(AGENTS_DIR.glob("*.md")) if AGENTS_DIR.is_dir() else []
+        ok(f"Auto-discovery mode: found {len(skill_files)} skill(s) and {len(agent_files)} agent(s)")
+        return
+
+    skill_files = sorted(SKILLS_DIR.rglob("SKILL.md"))
+    agent_files = sorted(AGENTS_DIR.glob("*.md")) if AGENTS_DIR.is_dir() else []
 
     # Check skill orphans
     for path in skill_files:
