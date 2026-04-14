@@ -31,7 +31,7 @@ from validate_common import (
 )
 
 PLUGIN_NAME_RE = re.compile(
-    r"^([\w-]+-virtuoso|role-[\w-]+|agent-[\w-]+|tool-[\w-]+)$"
+    r"^([\w-]+-virtuoso|role-[\w-]+|agent-[\w-]+|tool-[\w-]+|code-virtuoso)$"
 )
 
 
@@ -128,13 +128,12 @@ def check_orphans(data: dict) -> None:
             resolved = (REPO_ROOT / spath.lstrip("./")).resolve()
             referenced_skill_dirs.add(resolved)
 
-    # Collect all agent paths referenced in the agents-virtuoso plugin
+    # Collect all agent paths referenced in any plugin
     referenced_agent_paths: set[Path] = set()
     for plugin in data.get("plugins", []):
-        if plugin.get("name") == "agents-virtuoso":
-            for apath in plugin.get("agents", []):
-                resolved = (REPO_ROOT / apath.lstrip("./")).resolve()
-                referenced_agent_paths.add(resolved)
+        for apath in plugin.get("agents", []):
+            resolved = (REPO_ROOT / apath.lstrip("./")).resolve()
+            referenced_agent_paths.add(resolved)
 
     # Check skill orphans
     for path in skill_files:
@@ -148,7 +147,7 @@ def check_orphans(data: dict) -> None:
     for path in agent_files:
         resolved = path.resolve()
         if resolved not in referenced_agent_paths:
-            error(f"{rel(path)}: agent not referenced in agents-virtuoso plugin")
+            error(f"{rel(path)}: agent not referenced in any plugin in marketplace.json")
         else:
             ok(f"{rel(path)}: registered in agents-virtuoso")
 
