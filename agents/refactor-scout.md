@@ -6,6 +6,8 @@ skills:
   - refactoring
   - design-patterns
   - solid
+produces:
+  - smell-report
 ---
 
 # Refactor Scout

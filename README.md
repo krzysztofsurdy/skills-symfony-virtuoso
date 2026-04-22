@@ -22,7 +22,7 @@
   <a href="https://github.com/krzysztofsurdy/code-virtuoso/actions/workflows/validate-markdown.yml"><img src="https://github.com/krzysztofsurdy/code-virtuoso/actions/workflows/validate-markdown.yml/badge.svg" alt="Validate Markdown"></a>
 </p>
 
-> **What you get:** 30+ curated skills, 15 sub-agents, 7 team role personas, and operational playbooks -- all installable individually or as bundles, based on the open [Agent Skills](https://agentskills.io) standard. Turn your AI coding assistant from a generalist into a domain specialist.
+> **What you get:** 30+ curated skills, 17 sub-agents, 7 team role personas, and operational playbooks -- all installable individually or as bundles, based on the open [Agent Skills](https://agentskills.io) standard. Turn your AI coding assistant from a generalist into a domain specialist.
 
 See [CHANGELOG.md](CHANGELOG.md) for release notes.
 
@@ -82,8 +82,8 @@ That is the whole tour. For fine-grained install modes (per-skill, global, offli
 | [Frameworks](#framework-skills) | 4 | Symfony, Django, LangChain component libraries and upgrade guides |
 | [Playbooks](#playbook-skills) | 5 | Step-by-step procedures for recurring operational tasks |
 | [Roles](#role-skills) | 6 | Team-role reference skills used by role agents |
-| [Agents](#agents) | 15 | 8 specialist + 7 role sub-agents with tool, isolation, and memory metadata |
-| [Teams](#teams) | 1 | Pre-composed agent teams with bundled skills and coordination protocols |
+| [Agents](#agents) | 17 | 10 specialist + 7 role sub-agents with tool, isolation, and memory metadata |
+| [Teams](#teams) | 3 | Pre-composed agent teams with bundled skills and coordination protocols |
 
 ---
 
@@ -199,6 +199,8 @@ Sub-agents follow the [Claude Code sub-agents](https://code.claude.com/docs/en/s
 | Specialist | [Doc Writer](agents/doc-writer.md) | Read, Grep, Glob, Bash, Write, Edit | -- | -- | Changelogs, API docs, migration guides |
 | Specialist | [Migration Planner](agents/migration-planner.md) | Read, Grep, Glob, Bash | -- | -- | Migration safety analysis, rollback paths |
 | Specialist | [Test Gap Analyzer](agents/test-gap-analyzer.md) | Read, Grep, Glob, Bash | -- | -- | Missing test coverage, untested edge cases |
+| Specialist | [Cold Reviewer](agents/cold-reviewer.md) | Read, Grep, Glob, Bash | -- | -- | Zero-context code review, fresh-eyes findings |
+| Specialist | [Acceptance Verifier](agents/acceptance-verifier.md) | Read, Grep, Glob, Bash | -- | -- | Spec compliance checking, criteria coverage matrix |
 | Role | [Product Manager](agents/product-manager.md) | Read, Grep, Glob, Bash | -- | project | Requirements, PRDs, prioritization |
 | Role | [Architect](agents/architect.md) | Read, Grep, Glob, Bash | -- | project | System design, ADRs, trade-offs |
 | Role | [Backend Dev](agents/backend-dev.md) | Read, Edit, Write, Bash, Grep, Glob | worktree | -- | API implementation, data models, TDD |
@@ -216,6 +218,8 @@ Pre-composed agent teams with bundled skills and coordination protocols. Pick a 
 | Team | Lead | Agents | Workflow | Use case |
 |------|------|--------|----------|----------|
 | [Development Team](teams/development-team.md) | Product Manager | PM, Architect, Backend Dev, Frontend Dev, QA | Hybrid | Full feature delivery from requirements to merged PR |
+| [Review Squad](teams/review-squad.md) | Reviewer | Reviewer, Cold Reviewer, Acceptance Verifier | Parallel | Multi-perspective code review with triaged findings |
+| [War Room](teams/war-room.md) | Architect | Architect, PM, Backend Dev, QA | War Room | Structured debate for high-stakes technical decisions |
 
 ---
 
@@ -359,6 +363,8 @@ code-virtuoso/
 │   ├── doc-writer.md              # Specialist: documentation generation
 │   ├── migration-planner.md       # Specialist: migration safety
 │   ├── test-gap-analyzer.md       # Specialist: coverage gaps
+│   ├── cold-reviewer.md           # Specialist: zero-context review
+│   ├── acceptance-verifier.md     # Specialist: criteria compliance
 │   ├── product-manager.md         # Role: requirements, PRDs
 │   ├── architect.md               # Role: system design, ADRs
 │   ├── backend-dev.md             # Role: API implementation
@@ -411,6 +417,7 @@ code-virtuoso/
 │       ├── agentic-rules-writer/
 │       ├── ticket-writer/
 │       ├── agent-creator/
+│       │   └── phases/            # Guided phase files
 │       ├── plugin-creator/
 │       ├── brainstorming/
 │       ├── using-ecosystem/
@@ -423,7 +430,9 @@ code-virtuoso/
 │   ├── plugin-spec.md
 │   └── team-spec.md
 ├── teams/                         # Pre-composed agent teams
-│   └── development-team.md
+│   ├── development-team.md
+│   ├── review-squad.md
+│   └── war-room.md
 ├── template/                      # Starter templates
 │   ├── skill-template.md
 │   ├── agent-template.md

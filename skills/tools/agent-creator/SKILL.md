@@ -61,113 +61,18 @@ See [references/archetypes.md](references/archetypes.md) for worked examples of 
 
 ## Workflow
 
-### Phase 1: Purpose and Trigger
+This skill uses **guided phases** -- each phase is a separate file loaded one at a time. Every phase ends with a gate where you must wait for user confirmation before proceeding. Do not skip phases or merge them.
 
-Ask the user, in a single batched `AskUserQuestion` call (or platform equivalent), up to four of these:
-
-1. **What task does this agent perform?** (one sentence, imperative form)
-2. **When should the orchestrator delegate to it?** (the trigger condition -- list phrases or situations)
-3. **What should the agent NOT do?** (explicit out-of-scope items)
-4. **What does success look like?** (the shape of the output it returns)
-
-Write these answers down verbatim -- they feed both the `description` field and the system prompt.
-
-If the user's answer to Q1 contains "and" joining two different actions, push back: "That looks like two agents. Pick the primary responsibility first; a second agent can be created after." Split or narrow before continuing.
-
-### Phase 2: Name and Identity
-
-Derive a kebab-case name that describes the role, not the task:
-
-- Good: `investigator`, `reviewer`, `migration-planner`, `backend-dev`
-- Bad: `agent1`, `helper`, `do-stuff`, `claude-assistant`
-
-If the name collides with an existing agent in the scope (see Phase 5), append a qualifier (`reviewer-security`, `reviewer-frontend`) rather than overwriting.
-
-Confirm the name with the user before proceeding.
-
-### Phase 3: Capabilities
-
-Decide four things. Present them as one batched question set.
-
-**3.1 Tool permissions.** Start from read-only and add only what the workflow requires. See [references/tool-selection.md](references/tool-selection.md) for the full decision tree.
-
-| Needs | Typical tool allowlist |
-|---|---|
-| Investigation only | Read, Grep, Glob, Bash (for running analysis commands) |
-| Review / audit | Read, Grep, Glob, Bash |
-| Documentation | Read, Grep, Glob, Bash, Edit, Write (docs only) |
-| Implementation | Read, Grep, Glob, Bash, Edit, Write |
-| Coordination | Read, Grep, Glob, Bash, plus ability to spawn sub-agents |
-
-**3.2 Isolation.** If the agent writes source code, set `isolation: worktree` so changes land in a temporary branch the orchestrator reviews before merging. Read-only agents never need isolation.
-
-**3.3 Memory.** Most specialist agents are stateless. Role agents that accumulate cross-session context (requirements history, ADRs, risk register) use project-level memory. Skip memory for specialists; offer it for role and team-lead archetypes.
-
-**3.4 Preloaded skills.** List any skills whose reference content the agent needs in its context at startup. One to four is typical; more and you are loading context it will never read. Reference skills by their `name` field, not path.
-
-### Phase 4: System Prompt
-
-The body of the agent file is its system prompt. Structure it as a contract with five sections:
-
-```
-You are a [role]. You [one-sentence responsibility].
-
-## Input
-What the agent receives when delegated to.
-
-## Process
-Numbered steps the agent runs through.
-
-## Rules
-Constraints and guardrails. What the agent must never do.
-
-## Output
-The exact shape of what the agent returns. Include a template.
-```
-
-See [references/system-prompts.md](references/system-prompts.md) for full patterns, worked examples per archetype, and common mistakes (persona bloat, missing output contract, process without guardrails).
-
-Do not include:
-
-- Filler preamble ("You are a helpful AI assistant...") -- the caller already knows
-- Model-specific phrasing ("As Claude...") -- the body should be portable
-- Tool instructions that contradict the frontmatter allowlist
-- A second responsibility "while you're at it" -- that is a different agent
-
-### Phase 5: Placement and Scope
-
-Ask the user where the agent file should live. Scope determines priority when multiple agents share a name.
-
-| Scope | Location (platform-neutral) | Use when |
+| Phase | File | What it covers |
 |---|---|---|
-| **Project** | `.claude/agents/<name>.md` or the project's agent directory | Agent is specific to this codebase and should be committed |
-| **User / personal** | `~/.claude/agents/<name>.md` (or platform-equivalent user dir) | Agent is personal and reused across all your projects |
-| **Plugin / marketplace** | Inside the plugin's `agents/` directory | Agent ships as part of a distributable bundle |
-| **Session-only** | Passed via CLI flag as inline JSON | One-off testing or automation scripts |
+| 1 | [Purpose and Trigger](phases/01-purpose-and-trigger.md) | What the agent does, when to delegate, out-of-scope, output shape, archetype |
+| 2 | [Name and Identity](phases/02-name-and-identity.md) | Kebab-case name, collision check, user confirmation |
+| 3 | [Capabilities](phases/03-capabilities.md) | Tool permissions, isolation, memory, preloaded skills |
+| 4 | [System Prompt](phases/04-system-prompt.md) | Five-section contract: Input, Process, Rules, Output |
+| 5 | [Placement and Scope](phases/05-placement-and-scope.md) | Where the file lives: project, personal, plugin, session |
+| 6 | [Validate and Write](phases/06-validate-and-write.md) | Checklist, file creation, marketplace registration |
 
-Project scope is the safest default for team-shared work. Personal scope is for individual preferences. Plugin scope is for redistribution.
-
-See [references/platforms.md](references/platforms.md) for the exact path on each supported platform and for frontmatter fields that are platform-specific versus portable.
-
-### Phase 6: Validate and Write
-
-Before writing, run the checklist in [references/validation.md](references/validation.md). The essentials:
-
-- [ ] Description contains both "what it does" and "when to delegate"
-- [ ] Tool allowlist is the minimum needed
-- [ ] `isolation: worktree` is set if and only if the agent modifies files
-- [ ] System prompt has Role, Input, Process, Rules, and Output sections
-- [ ] Output section contains a concrete template, not a vague description
-- [ ] Body contains no persona bloat or filler
-- [ ] Name matches the file name and is kebab-case
-
-Then write the file:
-
-1. Create the agent markdown file at the chosen path
-2. If the target is a marketplace-style project, register the agent in the appropriate plugin entry of `marketplace.json` (or the platform's plugin manifest)
-3. If a README or agent index exists in the project, add the agent row
-4. Echo the final path and line count to the user
-5. Offer: "Do you want to test-invoke this agent now?"
+**Start by loading Phase 1.** After the user confirms each phase, load the next. Never load multiple phases at once. Never skip a phase.
 
 ---
 

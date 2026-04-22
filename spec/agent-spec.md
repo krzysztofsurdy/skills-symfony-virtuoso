@@ -58,6 +58,8 @@ skills:
 | `permissionMode` | Override for how the agent handles permission prompts. Use sparingly. |
 | `hooks` | Lifecycle hooks scoped to this agent. |
 | `maxTurns` | Cap on the number of agentic turns before the agent stops. |
+| `expects` | List of artifact type names this agent requires as input. See [artifacts.md](artifacts.md) for the catalog. |
+| `produces` | List of artifact type names this agent outputs. See [artifacts.md](artifacts.md) for the catalog. |
 
 #### Fields intentionally omitted
 
@@ -65,7 +67,7 @@ skills:
 
 #### Portability
 
-Only `name`, `description`, and `skills` are portable across agent platforms. Other fields are platform-specific extensions (see [platforms reference](../skills/tools/agent-creator/references/platforms.md)). When authoring an agent for cross-platform use, keep the body portable and adapt frontmatter when porting.
+Only `name`, `description`, `skills`, `expects`, and `produces` are portable across agent platforms. Other fields are platform-specific extensions (see [platforms reference](../skills/tools/agent-creator/references/platforms.md)). When authoring an agent for cross-platform use, keep the body portable and adapt frontmatter when porting.
 
 ### Body Content
 
@@ -109,6 +111,19 @@ Agents fall into three archetypes. The archetype determines tool permissions, is
 
 See [archetypes reference](../skills/tools/agent-creator/references/archetypes.md) for worked examples and anti-patterns.
 
+## Handoff Contracts
+
+Agents can declare what artifacts they expect as input and what artifacts they produce as output. These declarations help orchestrators and teams verify that workflows chain correctly.
+
+```yaml
+expects:
+  - investigation-report
+produces:
+  - architecture-decision
+```
+
+Both fields are optional. When present, they reference artifact types defined in [artifacts.md](artifacts.md). Agents should handle missing artifacts gracefully -- the contract is a signal, not a hard gate. See the artifact spec for the full catalog and guidelines.
+
 ## Conventions
 
 - One agent file per role
@@ -118,6 +133,34 @@ See [archetypes reference](../skills/tools/agent-creator/references/archetypes.m
 - Use an output template, not prose
 - Trim tool allowlists to the minimum that lets the workflow finish
 - Read-only by default -- add write tools only when the agent legitimately modifies files
+
+## Tuning (Optional)
+
+Agents whose behavior meaningfully varies by team preference can include a `## Tuning` section in their body. This follows the supplement pattern: on first activation, the agent asks the user a short questionnaire (3-5 questions) about their preferences, saves the answers alongside the agent file as a `.tune.md` supplement, and reuses them on subsequent activations.
+
+### When to include tuning
+
+- The agent has 3+ behavioral knobs that vary by team (e.g., review depth, output format, framework context)
+- Different teams would reasonably want different defaults
+- The settings are stable enough to reuse across sessions
+
+Do not add tuning for agents where behavior is fixed by design (e.g., investigator, cold-reviewer).
+
+### Tune file convention
+
+- File name: `.{agent-name}.tune.md` (dot-prefixed to stay out of agent discovery scans)
+- Location: alongside the agent file in the same directory
+- Format: simple `KEY: value` pairs, one per line, with a header comment
+- Created by the agent on first activation via interactive questions
+- Editable by the user at any time; deletable to re-run setup
+
+### How to add tuning to an agent
+
+1. Add a `## Tuning` section to the agent body listing available knobs with defaults
+2. In the Process, add a first step: "Check for `.{agent-name}.tune.md` alongside this file. If missing, ask the team preference questions and save. If present, load silently."
+3. Reference knobs as `$VARIABLE_NAME` throughout the process and rules
+
+See the [tuning reference](../skills/tools/agent-creator/references/tuning.md) for the full pattern and examples.
 
 ## Naming Conventions
 

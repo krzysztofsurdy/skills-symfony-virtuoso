@@ -34,6 +34,8 @@ Agents follow a two-tier model:
 | [Doc Writer](agents/doc-writer.md) | File reading, code search, shell, file editing | -- | Changelogs, API docs, migration guides |
 | [Migration Planner](agents/migration-planner.md) | File reading, code search, shell | -- | Migration safety analysis, rollback paths |
 | [Test Gap Analyzer](agents/test-gap-analyzer.md) | File reading, code search, shell | -- | Missing test coverage, untested edge cases |
+| [Cold Reviewer](agents/cold-reviewer.md) | File reading, code search, shell | -- | Zero-context code review, fresh-eyes findings |
+| [Acceptance Verifier](agents/acceptance-verifier.md) | File reading, code search, shell | -- | Spec compliance checking, criteria coverage matrix |
 
 **Investigator** -- Delegate when you need to understand how something works before changing it. It traces code paths, maps dependencies, and returns structured findings with file paths and line numbers.
 
@@ -50,6 +52,10 @@ Agents follow a two-tier model:
 **Migration Planner** -- Delegate before running database migrations. It classifies operations by risk (safe, caution, dangerous), evaluates zero-downtime compatibility, verifies rollback paths, and produces a step-by-step execution plan with pre-checks.
 
 **Test Gap Analyzer** -- Delegate after implementation to find what the tests missed. It maps source files to their test files, inventories public interfaces, and identifies missing unit tests, edge cases, integration tests, and error path tests by priority.
+
+**Cold Reviewer** -- Delegate when you want a fresh-eyes pass on code changes. It reviews diffs with zero project context -- no spec, no documentation, no domain knowledge. Catches issues that familiarity blinds you to. Best used as part of the Review Squad team or alongside the standard Reviewer for a two-perspective review.
+
+**Acceptance Verifier** -- Delegate when you need to verify that code changes satisfy their acceptance criteria. It maps every criterion to a PASS/FAIL/PARTIAL/UNTESTED status with file-level evidence. Also flags changes not required by any criterion (scope creep detection).
 
 ## Role Agents
 
@@ -121,6 +127,22 @@ Test Gap Analyzer -> Implementer -> Reviewer
 
 The Test Gap Analyzer identifies missing test cases by priority. The Implementer writes the missing tests using TDD cycles. The Reviewer verifies the new tests are meaningful and correctly structured.
 
+### Multi-Perspective Review
+
+```
+Cold Reviewer + Acceptance Verifier (parallel) -> Reviewer (triage)
+```
+
+The Cold Reviewer and Acceptance Verifier examine changes simultaneously from independent angles -- zero context and spec-only context respectively. The Reviewer reads both reports, adds its own full-context review, deduplicates, and triages findings. Use the pre-composed [Review Squad](teams/review-squad.md) team for this pattern.
+
+### War Room
+
+```
+Architect (lead) + Product Manager + Backend Dev + QA Engineer -> User decides
+```
+
+A structured debate for technical decisions. Each agent takes a position from their domain, challenges one other position, then the lead synthesizes the landscape. The user makes the final call. Unlike delivery chains, the war room produces a decision rather than code. Use the pre-composed [War Room](teams/war-room.md) team for this pattern.
+
 ## Conventions
 
 ### Tool Permission Philosophy
@@ -134,6 +156,10 @@ Agents that create or modify source code operate in isolated git worktrees. This
 ### Memory Usage
 
 Role agents that need cross-session context (Product Manager, Architect, QA Engineer, Project Manager) use persistent project-level memory. This allows them to accumulate project knowledge -- requirements decisions, architectural context, risk registers -- across multiple conversations. Specialist agents are stateless by design.
+
+### Handoff Contracts
+
+Agents declare what they expect as input (`expects`) and what they produce (`produces`) using artifact type names from [spec/artifacts.md](spec/artifacts.md). These declarations enable orchestrators and teams to verify that the output of one agent matches the input of the next. Contracts are documentation -- not runtime enforcement. Agents handle missing artifacts gracefully.
 
 ### Skill Preloading
 

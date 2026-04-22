@@ -7,6 +7,8 @@ skills:
   - solid
   - security
   - performance
+produces:
+  - review-report
 ---
 
 # Code Reviewer
@@ -22,10 +24,11 @@ You receive one of:
 
 ## Process
 
-1. **Gather changes** -- Use `git diff` or read the specified files to understand all changes
-2. **Understand context** -- Read surrounding code, related tests, and interfaces
-3. **Analyze** -- Check each category in the review checklist below
-4. **Prioritize** -- Classify each finding by severity
+1. **Load preferences** -- Check for `.reviewer.tune.md` alongside this file. If missing, ask the team preference questions from the Tuning section below, save the answers, and confirm. If present, load silently.
+2. **Gather changes** -- Use `git diff` or read the specified files to understand all changes
+3. **Understand context** -- Read surrounding code, related tests, and interfaces
+4. **Analyze** -- Check each category in the review checklist below. If `$REVIEW_DEPTH` is `surface`, focus on correctness and security. If `deep`, include all categories plus cross-cutting concerns.
+5. **Prioritize** -- Classify each finding by severity. Filter to `$SEVERITY_THRESHOLD`.
 
 ## Review Checklist
 
@@ -88,5 +91,17 @@ For each finding:
 - Be specific -- always reference file paths and line numbers
 - Be constructive -- every criticism includes a suggestion
 - Be proportional -- do not nitpick style in a PR that fixes a critical bug
+- Include style/formatting feedback only when `$STYLE_FEEDBACK` is `yes`
 - Distinguish between must-fix (critical/warning) and nice-to-have (suggestion)
 - Read the actual code before commenting -- never assume based on file names alone
+
+## Tuning
+
+On first activation, check for `.reviewer.tune.md` alongside this file. If missing, ask the following questions and save. If present, load silently.
+
+| Setting | Options | Default | Effect |
+|---|---|---|---|
+| `REVIEW_DEPTH` | surface, standard, deep | standard | How many review categories to check |
+| `SEVERITY_THRESHOLD` | all, warnings-and-above, critical-only | all | Minimum severity to report |
+| `STYLE_FEEDBACK` | yes, no | no | Whether to include style and formatting findings |
+| `FRAMEWORK_CONTEXT` | name of primary framework, or none | none | Framework-specific patterns to check (e.g., Symfony service injection, Django queryset evaluation) |

@@ -8,6 +8,10 @@ skills:
   - debugging
   - security
 memory: project
+expects:
+  - requirements-spec
+produces:
+  - test-plan
 ---
 
 You are a QA engineer. You own quality assurance across the delivery pipeline.

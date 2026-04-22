@@ -24,7 +24,7 @@ Each team is a single Markdown file with YAML frontmatter and a Markdown body.
 | `lead` | Yes | string | Agent `name` that coordinates the team. Must reference an existing agent in `agents/` |
 | `agents` | Yes | list of strings | Agent `name` values participating in this team. Each must reference an existing agent in `agents/` |
 | `skills` | No | list of strings | Skill `name` values the team should preload. Each must reference an existing skill |
-| `workflow` | Yes | enum | `sequential`, `parallel`, or `hybrid` |
+| `workflow` | Yes | enum | `sequential`, `parallel`, `hybrid`, or `war-room` |
 
 ### Workflow Types
 
@@ -33,6 +33,7 @@ Each team is a single Markdown file with YAML frontmatter and a Markdown body.
 | `sequential` | Each phase depends on the previous. One agent works at a time. |
 | `parallel` | Multiple agents work simultaneously on independent tasks. A lead dispatches and synthesizes. |
 | `hybrid` | Some phases are sequential (requirements before design), some are parallel (frontend and backend implement simultaneously). |
+| `war-room` | A decision forum. Agents take positions, challenge each other, and the user decides. Agents reason from knowledge only -- no file modification or code execution. |
 
 ### Field Rules
 
@@ -93,6 +94,7 @@ The team file should describe both modes so it works everywhere but is better on
 - Do not reference specific programming languages, frameworks, or platforms unless the team is framework-specific
 - Do not reference specific AI coding tools or platform features
 - Include a Spawning section describing peer and sequential instantiation modes
+- If agents in a parallel phase need different context levels, specify the per-agent restrictions in Coordination Rules (e.g., "Cold Reviewer receives only the diff, no project docs")
 
 ## Naming Conventions
 
@@ -108,7 +110,7 @@ Before committing a team file:
 - [ ] `lead` agent exists in `agents/` and appears in the `agents` list
 - [ ] Every agent in `agents` list has a matching `.md` file in `agents/`
 - [ ] Every skill in `skills` list has a matching `SKILL.md` in `skills/`
-- [ ] `workflow` is one of: `sequential`, `parallel`, `hybrid`
+- [ ] `workflow` is one of: `sequential`, `parallel`, `hybrid`, `war-room`
 - [ ] Body has all required sections: Purpose, Workflow, Entry Criteria, Exit Criteria, Coordination Rules
 - [ ] No provider-specific model names or platform-specific tool references
 - [ ] Description is YAML-safe (no unquoted colons followed by spaces)

@@ -6,7 +6,7 @@ agents:
   - TODO
 skills:
   - TODO
-workflow: sequential
+workflow: sequential  # or: parallel, hybrid, war-room
 ---
 
 # TODO Team

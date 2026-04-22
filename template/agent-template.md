@@ -4,6 +4,10 @@ description: What this agent does. Delegate when {trigger condition}.
 tools: Read, Grep, Glob, Bash
 skills:
   - relevant-skill-name
+# expects:
+#   - artifact-type-name
+# produces:
+#   - artifact-type-name
 ---
 
 You are a [role]. You [one-sentence responsibility].

@@ -4,8 +4,8 @@
     "name": "Krzysztof Surdy"
   },
   "metadata": {
-    "description": "43 skills and 15 agents for software engineering — knowledge, tools, frameworks, playbooks, roles, and agents",
-    "version": "8.7.0"
+    "description": "43 skills and 17 agents for software engineering — knowledge, tools, frameworks, playbooks, roles, and agents",
+    "version": "9.0.0"
   },
   "plugins": [
     {
@@ -45,7 +45,8 @@
         "./skills/tools/using-ecosystem",
         "./skills/tools/pr-message-writer",
         "./skills/tools/report-writer",
-        "./skills/tools/stakeholder-update-writer"
+        "./skills/tools/stakeholder-update-writer",
+        "./skills/tools/dispatching-agent-teams"
       ]
     },
     {
@@ -75,7 +76,7 @@
     },
     {
       "name": "agents-virtuoso",
-      "description": "15 agents, 7 role skills, and 3 agent workflow skills — delegation patterns, subagent-driven development, verification discipline, plus all specialist and role agents",
+      "description": "17 agents, 7 role skills, and 3 agent workflow skills — delegation patterns, subagent-driven development, verification discipline, plus all specialist and role agents",
       "source": "./",
       "strict": false,
       "skills": [
@@ -89,9 +90,6 @@
         "./skills/knowledge/dispatching-parallel-agents",
         "./skills/knowledge/subagent-driven-development",
         "./skills/knowledge/verification-before-completion"
-      ],
-      "teams": [
-        "./teams/development-team.md"
       ],
       "agents": [
         "./agents/investigator.md",
@@ -108,7 +106,9 @@
         "./agents/frontend-dev.md",
         "./agents/qa-engineer.md",
         "./agents/project-manager.md",
-        "./agents/scrum-master.md"
+        "./agents/scrum-master.md",
+        "./agents/cold-reviewer.md",
+        "./agents/acceptance-verifier.md"
       ]
     }
   ]

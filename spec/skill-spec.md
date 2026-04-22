@@ -67,6 +67,47 @@ Skills load in three levels:
 2. **Instructions** (<5000 tokens) - Full SKILL.md body loaded when skill is activated
 3. **Resources** (as needed) - Files in references/, scripts/, assets/ loaded only when required
 
+## Guided Phases
+
+Interactive skills with 3+ phases where LLMs tend to rush through steps can use a **guided phase** structure. This is an internal pattern -- users experience better-paced interactions without knowing about the underlying file organization.
+
+### When to use
+
+- The skill has 3+ distinct phases that each need user input before proceeding
+- LLMs tend to merge, skip, or rush through the phases when they are inline
+- Each phase has a natural checkpoint where the user should confirm before continuing
+
+Skills with phases that share heavy context or where inline flow works well should keep phases inline in SKILL.md. Guided phases add value when phase separation prevents rushing, not when it just reorganizes.
+
+### Directory structure
+
+```
+skill-name/
+  SKILL.md              # Shared rules, principles, phase listing
+  phases/               # One file per phase
+    01-phase-name.md
+    02-phase-name.md
+    03-phase-name.md
+  references/           # Deep-dive material (unchanged)
+```
+
+### SKILL.md role
+
+In a guided-phase skill, SKILL.md holds shared rules, principles, and context ONCE. It does NOT duplicate phase instructions. It lists phases with one-line descriptions and links. On activation, the agent loads SKILL.md first, then enters phases sequentially.
+
+### Phase file structure
+
+Each phase file is lean (40-80 lines). It contains:
+
+1. **Header** with phase number, name, and progress indicator
+2. **Purpose** -- one sentence describing what this phase accomplishes
+3. **Steps** -- numbered execution instructions
+4. **Gate** -- conditions for advancing, and the question to ask the user
+
+The gate is the key mechanism. Every phase file ends with a gate that forces the agent to stop and wait for user confirmation before loading the next phase.
+
+See `template/phase-template.md` for the starter template.
+
 ## Content Guidelines
 
 - Write original content. External sources serve as inspiration only.

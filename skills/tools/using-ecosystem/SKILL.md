@@ -90,6 +90,21 @@ These are guidelines, not rituals. Skip steps that do not apply. Add steps that 
 
 ---
 
+## Step 5: Compass -- What Next?
+
+When the user has just finished work with an agent, skill, or team and asks "what next?" or "where do I go from here?":
+
+1. Ask what they just completed (which agent/skill/team, what output they have)
+2. Consult [compass](references/compass.md) for the recommended next step
+3. Verify the recommended agent/skill/team is installed (scan first -- do not recommend from memory)
+4. Present the recommendation with one-line reasoning
+5. If multiple paths exist, present 2-3 options and let the user choose
+6. If nothing chains naturally, say so -- not every task needs a follow-up
+
+Compass mode is conversational. Ask the user, do not scan the filesystem to infer what happened.
+
+---
+
 ## Ecosystem Structure
 
 The ecosystem has five layers. The structure is stable -- it does not change when skills are added.
@@ -160,3 +175,4 @@ Before answering a "which skill/agent/team" question:
 |---|---|
 | [discovery-commands](references/discovery-commands.md) | Shell commands to scan installed skills, agents, and teams at runtime |
 | [chaining-patterns](references/chaining-patterns.md) | Multi-agent chain templates with when-to-use guidance |
+| [compass](references/compass.md) | "What next?" recommendation map for post-task navigation |

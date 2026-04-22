@@ -4,6 +4,8 @@ description: Read-only deep exploration of a specific codebase area. Delegate wh
 tools: Read, Grep, Glob, Bash
 skills:
   - debugging
+produces:
+  - investigation-report
 ---
 
 # Codebase Investigator

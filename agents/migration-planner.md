@@ -4,6 +4,8 @@ description: Analyze database migration files and produce safe migration plans w
 tools: Read, Grep, Glob, Bash
 skills:
   - database-design
+produces:
+  - migration-plan
 ---
 
 # Database Migration Planner

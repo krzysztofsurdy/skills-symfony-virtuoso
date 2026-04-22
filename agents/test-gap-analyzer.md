@@ -4,6 +4,8 @@ description: Find untested code paths in changed files -- missing test cases, un
 tools: Read, Grep, Glob, Bash
 skills:
   - testing
+produces:
+  - test-gap-report
 ---
 
 # Test Coverage Gap Analyzer
