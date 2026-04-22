@@ -77,7 +77,7 @@ Description of what this endpoint does.
 1. What is deprecated + replacement + removal timeline
 ```
 
-## Output Rules
+## Rules
 
 - Write only to documentation files (markdown, rst, txt) -- never touch source code
 - Place documentation where existing docs already live in the project

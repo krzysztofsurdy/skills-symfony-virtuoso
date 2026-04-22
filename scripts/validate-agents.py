@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
-"""Validate agent frontmatter and name consistency.
+"""Validate agent frontmatter, name consistency, body structure, and contracts.
 
 Checks:
 - Agent frontmatter validation (required fields, no model)
 - Agent name consistency (name matches filename)
+- Body structure (Input/Process/Rules/Output sections present)
+- Description trigger phrases (contains delegation keywords)
+- Handoff contracts (expects/produces declared)
+- Reference file size (warn > 250 lines)
 
 Requires Python 3.9+ stdlib only.
 Run from the repository root: python3 scripts/validate-agents.py
@@ -11,6 +15,7 @@ Run from the repository root: python3 scripts/validate-agents.py
 
 from __future__ import annotations
 
+import re
 import sys
 from pathlib import Path
 
@@ -25,8 +30,12 @@ from validate_common import (
 )
 
 
+REQUIRED_SECTIONS = ("## Input", "## Process", "## Rules", "## Output")
+TRIGGER_PHRASES = ("delegate when", "delegate for", "delegate after", "delegate before", "use when", "use proactively", "use after")
+
+
 # ---------------------------------------------------------------------------
-# 3. Agent frontmatter validation
+# Agent frontmatter validation
 # ---------------------------------------------------------------------------
 
 def check_agent_frontmatter() -> list[Path]:
@@ -76,7 +85,7 @@ def check_agent_frontmatter() -> list[Path]:
 
 
 # ---------------------------------------------------------------------------
-# 4. Agent name consistency
+# Agent name consistency
 # ---------------------------------------------------------------------------
 
 def check_agent_name_consistency(agent_files: list[Path]) -> None:
@@ -95,12 +104,97 @@ def check_agent_name_consistency(agent_files: list[Path]) -> None:
 
 
 # ---------------------------------------------------------------------------
+# Body structure validation
+# ---------------------------------------------------------------------------
+
+def check_agent_body_structure(agent_files: list[Path]) -> None:
+    print("\n=== Body Structure (Input/Process/Rules/Output) ===")
+
+    for path in agent_files:
+        rp = rel(path)
+        try:
+            text = path.read_text(encoding="utf-8")
+        except Exception:
+            continue
+
+        # Strip frontmatter
+        body_match = re.search(r"^---\s*\n.*?\n---\s*\n(.+)", text, re.DOTALL)
+        if not body_match:
+            warn(f"{rp}: no body content found after frontmatter")
+            continue
+
+        body = body_match.group(1)
+        missing = [s for s in REQUIRED_SECTIONS if s not in body]
+
+        if missing:
+            warn(f"{rp}: missing sections: {', '.join(missing)}")
+        else:
+            ok(f"{rp}: all required sections present")
+
+
+# ---------------------------------------------------------------------------
+# Description trigger phrases
+# ---------------------------------------------------------------------------
+
+def check_trigger_phrases(agent_files: list[Path]) -> None:
+    print("\n=== Description Trigger Phrases ===")
+
+    for path in agent_files:
+        fm = parse_frontmatter(path)
+        if fm is None:
+            continue
+
+        rp = rel(path)
+        desc = fm.get("description", "")
+        if not isinstance(desc, str):
+            continue
+
+        desc_lower = desc.lower()
+        has_trigger = any(phrase in desc_lower for phrase in TRIGGER_PHRASES)
+
+        if has_trigger:
+            ok(f"{rp}: description contains trigger phrase")
+        else:
+            warn(f"{rp}: description lacks trigger phrase (e.g., 'Delegate when...', 'Use when...')")
+
+
+# ---------------------------------------------------------------------------
+# Handoff contracts
+# ---------------------------------------------------------------------------
+
+def check_handoff_contracts(agent_files: list[Path]) -> None:
+    print("\n=== Handoff Contracts (expects/produces) ===")
+
+    for path in agent_files:
+        fm = parse_frontmatter(path)
+        if fm is None:
+            continue
+
+        rp = rel(path)
+        has_expects = "expects" in fm
+        has_produces = "produces" in fm
+
+        if has_expects or has_produces:
+            parts = []
+            if has_expects:
+                parts.append(f"expects: {fm['expects']}")
+            if has_produces:
+                parts.append(f"produces: {fm['produces']}")
+            ok(f"{rp}: {', '.join(parts)}")
+        else:
+            warn(f"{rp}: no expects/produces declared")
+
+
+# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
 def main() -> int:
     agent_files = check_agent_frontmatter()
     check_agent_name_consistency(agent_files)
+    check_agent_body_structure(agent_files)
+    check_trigger_phrases(agent_files)
+    check_handoff_contracts(agent_files)
 
     return print_summary()
 

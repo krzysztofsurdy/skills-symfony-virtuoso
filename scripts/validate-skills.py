@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Validate skill frontmatter, name consistency, and size limits.
+"""Validate skill frontmatter, name consistency, size limits, and reference files.
 
 Checks:
 - Skill frontmatter validation (required fields, description length, no model, user-invocable)
 - Skill name consistency (name matches directory)
 - SKILL.md size check (warn > 500, error > 1000)
+- Reference file size check (warn > 250 lines per spec)
 
 Requires Python 3.9+ stdlib only.
 Run from the repository root: python3 scripts/validate-skills.py
@@ -27,7 +28,7 @@ from validate_common import (
 
 
 # ---------------------------------------------------------------------------
-# 2. Skill frontmatter validation
+# Skill frontmatter validation
 # ---------------------------------------------------------------------------
 
 def check_skill_frontmatter() -> list[Path]:
@@ -83,7 +84,7 @@ def check_skill_frontmatter() -> list[Path]:
 
 
 # ---------------------------------------------------------------------------
-# 4. Skill name consistency
+# Skill name consistency
 # ---------------------------------------------------------------------------
 
 def check_skill_name_consistency(skill_files: list[Path]) -> None:
@@ -102,7 +103,7 @@ def check_skill_name_consistency(skill_files: list[Path]) -> None:
 
 
 # ---------------------------------------------------------------------------
-# 8. SKILL.md size check
+# SKILL.md size check
 # ---------------------------------------------------------------------------
 
 def check_skill_size(skill_files: list[Path]) -> None:
@@ -125,6 +126,41 @@ def check_skill_size(skill_files: list[Path]) -> None:
 
 
 # ---------------------------------------------------------------------------
+# Reference file size check
+# ---------------------------------------------------------------------------
+
+def check_reference_file_sizes() -> None:
+    print("\n=== Reference File Size Check ===")
+
+    ref_files = sorted(SKILLS_DIR.rglob("references/*.md"))
+
+    if not ref_files:
+        return
+
+    over_limit = 0
+    total = len(ref_files)
+
+    for path in ref_files:
+        rp = rel(path)
+        try:
+            count = len(path.read_text(encoding="utf-8").splitlines())
+        except Exception:
+            continue
+
+        if count > 500:
+            warn(f"{rp}: {count} lines (2x over 250-line spec limit)")
+            over_limit += 1
+        elif count > 250:
+            # Only warn for the worst offenders to avoid noise
+            over_limit += 1
+
+    if over_limit > 0:
+        warn(f"{over_limit} of {total} reference files exceed 250-line spec limit")
+    else:
+        ok(f"All {total} reference files within 250-line spec limit")
+
+
+# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
@@ -132,6 +168,7 @@ def main() -> int:
     skill_files = check_skill_frontmatter()
     check_skill_name_consistency(skill_files)
     check_skill_size(skill_files)
+    check_reference_file_sizes()
 
     return print_summary()
 

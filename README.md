@@ -419,6 +419,7 @@ code-virtuoso/
 │       ├── agent-creator/
 │       │   └── phases/            # Guided phase files
 │       ├── plugin-creator/
+│       │   └── phases/            # Guided phase files
 │       ├── brainstorming/
 │       ├── using-ecosystem/
 │       ├── pr-message-writer/
