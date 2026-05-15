@@ -108,6 +108,46 @@ The gate is the key mechanism. Every phase file ends with a gate that forces the
 
 See `template/phase-template.md` for the starter template.
 
+## Platform-Specific Notes
+
+The skill body must remain portable -- it describes capabilities ("team creation tools", "interactive prompts", "file search") without naming any specific platform's tool, API, or runtime feature. Platform-specific guidance lives in a clearly marked optional section so it can be skipped on platforms it does not apply to.
+
+### When to use
+
+Use a Platform Notes section when:
+
+- The skill describes a capability that platforms implement under different names (e.g., team creation, agent dispatching, interactive prompts)
+- One platform has a strong convention or required tool that, if not used, leads to poor behavior on that platform (e.g., a user-configured rule says "always use TeamCreate")
+- Skipping the platform-specific behavior would cause the skill to misbehave on that platform
+
+Do NOT use Platform Notes to make the skill platform-specific. The body must still work on any agent CLI. Platform Notes are appendix-style hints, not the primary instructions.
+
+### Structure
+
+Place a `## Platform Notes` section near the bottom of the SKILL.md (before Reference Files and Integration sections). Use a table with one row per platform.
+
+```markdown
+## Platform Notes
+
+Platform-specific tool names and conventions for executing this skill. The instructions above stay portable; the table below maps abstract capabilities to concrete tools per platform.
+
+| Platform | Convention |
+|---|---|
+| Claude Code | Use `TeamCreate` to instantiate the team before dispatching tasks |
+| Cursor | (TBD) |
+| Other | Use the platform's equivalent for creating a multi-agent team |
+```
+
+Keep entries factual and short. If a platform's behavior is unknown, list it with `(TBD)` rather than guessing. The point is to record verified conventions, not speculation.
+
+### Rules
+
+- Platform Notes never replace portable instructions in the body
+- One section per SKILL.md, near the bottom
+- One row per platform in a table
+- Reference platform names as the user would recognize them (Claude Code, Cursor, Windsurf, Copilot)
+- Do not write platform-specific behavior into the Process or Rules sections of the skill body
+
 ## Content Guidelines
 
 - Write original content. External sources serve as inspiration only.

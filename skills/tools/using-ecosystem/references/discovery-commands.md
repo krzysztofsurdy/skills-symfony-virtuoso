@@ -44,7 +44,7 @@ ls teams/*.md 2>/dev/null
 ls .claude/teams/*.md 2>/dev/null
 
 # Bundled teams (inside the dispatching skill)
-find ~/.claude/plugins/cache -maxdepth 6 -path "*/dispatching-agent-teams/teams/*.md" 2>/dev/null
+find ~/.claude/plugins/cache -maxdepth 6 -path "*/agent-teams/teams/*.md" 2>/dev/null
 
 # Any team files anywhere in plugin cache
 find ~/.claude/plugins/cache -maxdepth 6 -path "*/teams/*.md" 2>/dev/null

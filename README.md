@@ -219,9 +219,9 @@ Pre-composed agent teams with bundled skills and coordination protocols. Pick a 
 
 | Team | Lead | Agents | Workflow | Use case |
 |------|------|--------|----------|----------|
-| [Development Team](skills/tools/dispatching-agent-teams/teams/development-team.md) | Product Manager | PM, Architect, Backend Dev, Frontend Dev, QA | Hybrid | Full feature delivery from requirements to merged PR |
-| [Review Squad](skills/tools/dispatching-agent-teams/teams/review-squad.md) | Reviewer | Reviewer, Cold Reviewer, Acceptance Verifier | Parallel | Multi-perspective code review with triaged findings |
-| [War Room](skills/tools/dispatching-agent-teams/teams/war-room.md) | Architect | Architect, PM, Backend Dev, QA | War Room | Structured debate for high-stakes technical decisions |
+| [Development Team](skills/tools/agent-teams/teams/development-team.md) | Product Manager | PM, Architect, Backend Dev, Frontend Dev, QA | Hybrid | Full feature delivery from requirements to merged PR |
+| [Review Squad](skills/tools/agent-teams/teams/review-squad.md) | Reviewer | Reviewer, Cold Reviewer, Acceptance Verifier | Parallel | Multi-perspective code review with triaged findings |
+| [War Room](skills/tools/agent-teams/teams/war-room.md) | Architect | Architect, PM, Backend Dev, QA | War Room | Structured debate for high-stakes technical decisions |
 
 ---
 
@@ -422,8 +422,9 @@ code-virtuoso/
 │       ├── ticket-writer/
 │       ├── agent-creator/
 │       │   └── phases/            # Guided phase files
-│       ├── dispatching-agent-teams/
+│       ├── agent-teams/
 │       │   └── teams/             # Bundled team library (development-team, review-squad, war-room)
+│       ├── dispatching-agent-teams/  # Team dispatcher (peer/sequential/inline modes)
 │       ├── plugin-creator/
 │       │   └── phases/            # Guided phase files
 │       ├── brainstorming/

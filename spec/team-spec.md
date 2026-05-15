@@ -9,10 +9,10 @@ Team files can live in two locations:
 | Location | Purpose |
 |---|---|
 | `teams/{name}.md` at the user's project root | User-authored teams, discovered first |
-| `skills/tools/dispatching-agent-teams/teams/{name}.md` | Bundled teams that ship with the dispatching skill |
+| `skills/tools/agent-teams/teams/{name}.md` | Bundled teams that ship with the dispatching skill |
 
 ```
-skills/tools/dispatching-agent-teams/teams/    # bundled library
+skills/tools/agent-teams/teams/    # bundled library
   development-team.md
   review-squad.md
   war-room.md
