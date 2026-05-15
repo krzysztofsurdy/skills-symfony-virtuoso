@@ -5,7 +5,7 @@
   },
   "metadata": {
     "description": "43 skills and 19 agents for software engineering — knowledge, tools, frameworks, playbooks, roles, and agents",
-    "version": "9.3.0"
+    "version": "9.4.0"
   },
   "plugins": [
     {
@@ -45,8 +45,7 @@
         "./skills/tools/using-ecosystem",
         "./skills/tools/pr-message-writer",
         "./skills/tools/report-writer",
-        "./skills/tools/stakeholder-update-writer",
-        "./skills/tools/dispatching-agent-teams"
+        "./skills/tools/stakeholder-update-writer"
       ]
     },
     {
@@ -76,7 +75,7 @@
     },
     {
       "name": "agents-virtuoso",
-      "description": "19 agents, 7 role skills, and 3 agent workflow skills — delegation patterns, subagent-driven development, verification discipline, plus all specialist and role agents",
+      "description": "19 agents, 3 pre-composed teams, 7 role skills, and agent workflow skills — delegation patterns, team dispatching, subagent-driven development, verification discipline, plus all specialist and role agents",
       "source": "./",
       "strict": false,
       "skills": [
@@ -89,7 +88,8 @@
         "./skills/roles/scrum-master",
         "./skills/knowledge/dispatching-parallel-agents",
         "./skills/knowledge/subagent-driven-development",
-        "./skills/knowledge/verification-before-completion"
+        "./skills/knowledge/verification-before-completion",
+        "./skills/tools/dispatching-agent-teams"
       ],
       "agents": [
         "./agents/investigator.md",

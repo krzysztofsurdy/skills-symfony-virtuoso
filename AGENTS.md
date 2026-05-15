@@ -139,7 +139,7 @@ The Test Gap Analyzer identifies missing test cases by priority. The Implementer
 Cold Reviewer + Acceptance Verifier (parallel) -> Reviewer (triage)
 ```
 
-The Cold Reviewer and Acceptance Verifier examine changes simultaneously from independent angles -- zero context and spec-only context respectively. The Reviewer reads both reports, adds its own full-context review, deduplicates, and triages findings. Use the pre-composed [Review Squad](teams/review-squad.md) team for this pattern.
+The Cold Reviewer and Acceptance Verifier examine changes simultaneously from independent angles -- zero context and spec-only context respectively. The Reviewer reads both reports, adds its own full-context review, deduplicates, and triages findings. Use the pre-composed [Review Squad](skills/tools/dispatching-agent-teams/teams/review-squad.md) team for this pattern.
 
 ### War Room
 
@@ -147,7 +147,7 @@ The Cold Reviewer and Acceptance Verifier examine changes simultaneously from in
 Architect (lead) + Product Manager + Backend Dev + QA Engineer -> User decides
 ```
 
-A structured debate for technical decisions. Each agent takes a position from their domain, challenges one other position, then the lead synthesizes the landscape. The user makes the final call. Unlike delivery chains, the war room produces a decision rather than code. Use the pre-composed [War Room](teams/war-room.md) team for this pattern.
+A structured debate for technical decisions. Each agent takes a position from their domain, challenges one other position, then the lead synthesizes the landscape. The user makes the final call. Unlike delivery chains, the war room produces a decision rather than code. Use the pre-composed [War Room](skills/tools/dispatching-agent-teams/teams/war-room.md) team for this pattern.
 
 ## Conventions
 

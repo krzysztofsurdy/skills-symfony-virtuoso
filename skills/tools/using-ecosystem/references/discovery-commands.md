@@ -36,15 +36,18 @@ For each found agent file, read the YAML frontmatter to extract `name`, `descrip
 
 ## Teams
 
-```bash
-# User-level teams
-ls ~/.claude/teams/*.md 2>/dev/null
+Teams ship bundled inside the `dispatching-agent-teams` skill, and users can author their own at the project root.
 
-# Project-level teams
+```bash
+# User-authored project teams
+ls teams/*.md 2>/dev/null
 ls .claude/teams/*.md 2>/dev/null
 
-# Plugin-installed teams
-find ~/.claude/plugins/cache -maxdepth 5 -path "*/teams/*.md" 2>/dev/null
+# Bundled teams (inside the dispatching skill)
+find ~/.claude/plugins/cache -maxdepth 6 -path "*/dispatching-agent-teams/teams/*.md" 2>/dev/null
+
+# Any team files anywhere in plugin cache
+find ~/.claude/plugins/cache -maxdepth 6 -path "*/teams/*.md" 2>/dev/null
 ```
 
 For each found team file, read the YAML frontmatter to extract `name`, `description`, `lead`, `agents`, `skills`, and `workflow`.

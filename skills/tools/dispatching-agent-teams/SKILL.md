@@ -25,12 +25,31 @@ Read a team definition file, resolve its agents and skills, and execute the coor
 
 ### Phase 1: Resolve the Team
 
-1. If the user provided a team name as argument, look for `teams/{name}.md` in the project directory, then user-level directories, then plugin cache.
-2. If no argument, scan for available team files and present a selection menu.
+Teams are discovered from two locations in this order:
+
+1. **Project teams** -- `teams/{name}.md` at the user's project root (user-authored teams)
+2. **Bundled teams** -- `{skill-root}/teams/{name}.md` shipped with this skill (default team library)
+
+Resolution:
+
+1. If the user provided a team name as argument, search both locations. Project teams override bundled teams when names collide.
+2. If no argument, scan both locations and present a selection menu showing which are bundled vs project-authored.
 3. Read the team file's YAML frontmatter: `name`, `lead`, `agents`, `skills`, `workflow`.
 4. Verify every agent in the `agents` list exists as an installed agent definition.
 5. Verify every skill in the `skills` list exists as an installed skill.
 6. If any agent or skill is missing, report what is missing and stop. Do not proceed with a partial team.
+
+### Bundled Team Library
+
+This skill ships with three ready-to-use teams in `teams/`:
+
+| Team | Workflow | Use when |
+|---|---|---|
+| `development-team` | hybrid | Full feature delivery from requirements to merged PR |
+| `review-squad` | parallel | Multi-perspective code review with triaged findings |
+| `war-room` | war-room | Structured technical debate that ends in a decision |
+
+Users can author their own teams at the project's `teams/` directory using the same format (see [spec/team-spec.md](../../../spec/team-spec.md)).
 
 ### Phase 2: Verify Entry Criteria
 

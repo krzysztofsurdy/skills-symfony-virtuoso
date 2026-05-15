@@ -4,16 +4,26 @@ A team is a pre-composed recipe that bundles agents, skills, and a coordination 
 
 ## File Location
 
-Team files live at the repository root in `teams/`:
+Team files can live in two locations:
+
+| Location | Purpose |
+|---|---|
+| `teams/{name}.md` at the user's project root | User-authored teams, discovered first |
+| `skills/tools/dispatching-agent-teams/teams/{name}.md` | Bundled teams that ship with the dispatching skill |
 
 ```
-teams/
+skills/tools/dispatching-agent-teams/teams/    # bundled library
   development-team.md
-  code-review-team.md
-  investigation-team.md
+  review-squad.md
+  war-room.md
+
+teams/                                          # optional, user-authored
+  my-custom-team.md
 ```
 
-Each team is a single Markdown file with YAML frontmatter and a Markdown body.
+The `dispatching-agent-teams` skill discovers teams from both locations. Project teams override bundled teams when names collide. Each team is a single Markdown file with YAML frontmatter and a Markdown body.
+
+Shipping teams alongside the skill that consumes them keeps the distribution self-contained: when a user installs `dispatching-agent-teams`, they get a working team library to dispatch immediately, without needing separate setup.
 
 ## Frontmatter Fields
 

@@ -55,7 +55,7 @@ User request
    |
    v
 Does it need multiple agents coordinating?
-   +-- Yes --> Scan teams/ for a matching team
+   +-- Yes --> Scan bundled and project teams for a match
    |            +-- Found --> Recommend the team
    |            +-- None  --> Assemble ad-hoc from agents (see chaining below)
    |
@@ -113,7 +113,7 @@ The ecosystem has five layers. The structure is stable -- it does not change whe
 |---|---|---|---|
 | **Skills** | `skills/{category}/{name}/SKILL.md` | Markdown + YAML frontmatter | Reference material, tools, playbooks, roles, frameworks |
 | **Agents** | `agents/{name}.md` | Markdown + YAML frontmatter | Specialist and role sub-agents |
-| **Teams** | `teams/{name}.md` | Markdown + YAML frontmatter | Pre-composed agent teams with coordination protocols |
+| **Teams** | Bundled inside dispatching skill or at project `teams/{name}.md` | Markdown + YAML frontmatter | Pre-composed agent teams with coordination protocols |
 | **Specs** | `spec/*.md` | Markdown | Format specifications for skills, agents, teams, plugins |
 | **Plugins** | `.claude-plugin/marketplace.json` | JSON | Distribution bundles grouping skills and agents |
 

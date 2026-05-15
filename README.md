@@ -219,9 +219,9 @@ Pre-composed agent teams with bundled skills and coordination protocols. Pick a 
 
 | Team | Lead | Agents | Workflow | Use case |
 |------|------|--------|----------|----------|
-| [Development Team](teams/development-team.md) | Product Manager | PM, Architect, Backend Dev, Frontend Dev, QA | Hybrid | Full feature delivery from requirements to merged PR |
-| [Review Squad](teams/review-squad.md) | Reviewer | Reviewer, Cold Reviewer, Acceptance Verifier | Parallel | Multi-perspective code review with triaged findings |
-| [War Room](teams/war-room.md) | Architect | Architect, PM, Backend Dev, QA | War Room | Structured debate for high-stakes technical decisions |
+| [Development Team](skills/tools/dispatching-agent-teams/teams/development-team.md) | Product Manager | PM, Architect, Backend Dev, Frontend Dev, QA | Hybrid | Full feature delivery from requirements to merged PR |
+| [Review Squad](skills/tools/dispatching-agent-teams/teams/review-squad.md) | Reviewer | Reviewer, Cold Reviewer, Acceptance Verifier | Parallel | Multi-perspective code review with triaged findings |
+| [War Room](skills/tools/dispatching-agent-teams/teams/war-room.md) | Architect | Architect, PM, Backend Dev, QA | War Room | Structured debate for high-stakes technical decisions |
 
 ---
 
@@ -422,6 +422,8 @@ code-virtuoso/
 │       ├── ticket-writer/
 │       ├── agent-creator/
 │       │   └── phases/            # Guided phase files
+│       ├── dispatching-agent-teams/
+│       │   └── teams/             # Bundled team library (development-team, review-squad, war-room)
 │       ├── plugin-creator/
 │       │   └── phases/            # Guided phase files
 │       ├── brainstorming/
@@ -435,10 +437,6 @@ code-virtuoso/
 │   ├── agent-spec.md
 │   ├── plugin-spec.md
 │   └── team-spec.md
-├── teams/                         # Pre-composed agent teams
-│   ├── development-team.md
-│   ├── review-squad.md
-│   └── war-room.md
 ├── template/                      # Starter templates
 │   ├── skill-template.md
 │   ├── agent-template.md
